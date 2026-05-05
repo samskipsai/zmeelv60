@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ProviderId, ConnectedProvider, ApiKeyCredentials } from '@accomplish_ai/agent-core';
-import { DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '@/lib/accomplish';
+import type { ProviderId, ConnectedProvider, ApiKeyCredentials } from '@zmeel/agent-core';
+import { DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
 import { useProviderModels } from './useProviderModels';
 
@@ -58,8 +58,8 @@ export function useApiKeyConnect({
   useEffect(() => {
     if (!isOpenAI) return;
     const controller = new AbortController();
-    const accomplish = getAccomplish();
-    accomplish
+    const zmeel = getZmeel();
+    zmeel
       .getOpenAiBaseUrl()
       .then((url) => {
         if (!controller.signal.aborted) setOpenAiBaseUrl(url);
@@ -117,18 +117,18 @@ export function useApiKeyConnect({
     setConnecting(true);
     setError(null);
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       // Issue #3: use openAiBaseUrl consistently for OpenAI resolvedBaseUrl
       let resolvedBaseUrl: string | undefined;
       if (isOpenAI) {
         resolvedBaseUrl = openAiBaseUrl.trim() || undefined;
-        await accomplish.setOpenAiBaseUrl(resolvedBaseUrl ?? '');
+        await zmeel.setOpenAiBaseUrl(resolvedBaseUrl ?? '');
       } else if (hasEditableBaseUrl) {
         const explicitCustomBaseUrl = customBaseUrl.trim();
         resolvedBaseUrl = explicitCustomBaseUrl || defaultBaseUrl || undefined;
       }
       const explicitCustomBaseUrl = hasEditableBaseUrl && !isOpenAI ? customBaseUrl.trim() : '';
-      const validation = await accomplish.validateApiKeyForProvider(providerId, apiKey.trim(), {
+      const validation = await zmeel.validateApiKeyForProvider(providerId, apiKey.trim(), {
         baseUrl: resolvedBaseUrl,
       });
       if (!validation.valid) {
@@ -137,10 +137,10 @@ export function useApiKeyConnect({
         return;
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await accomplish.addApiKey(providerId as any, apiKey.trim());
+      await zmeel.addApiKey(providerId as any, apiKey.trim());
       let models: Array<{ id: string; name: string }> | undefined;
       if (providerConfig?.modelsEndpoint) {
-        const fetchResult = await accomplish.fetchProviderModels(providerId, {
+        const fetchResult = await zmeel.fetchProviderModels(providerId, {
           baseUrl: resolvedBaseUrl,
         });
         if (fetchResult.success && fetchResult.models) {

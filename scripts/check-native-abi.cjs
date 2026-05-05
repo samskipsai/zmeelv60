@@ -7,11 +7,11 @@ const { NODE_VERSION } = require('../apps/desktop/scripts/node-version.cjs');
 
 const workspaces = [
   {
-    name: '@accomplish/daemon',
+    name: '@zmeel/daemon',
     dir: path.join(rootDir, 'apps', 'daemon'),
   },
   {
-    name: '@accomplish_ai/agent-core',
+    name: '@zmeel/agent-core',
     dir: path.join(rootDir, 'packages', 'agent-core'),
   },
 ];

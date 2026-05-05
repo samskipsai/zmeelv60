@@ -21,4 +21,4 @@ sleep 1
 
 # Run E2E tests
 echo "Running E2E tests..."
-pnpm -F @accomplish/desktop test:e2e:native
+pnpm -F @zmeel/desktop test:e2e:native

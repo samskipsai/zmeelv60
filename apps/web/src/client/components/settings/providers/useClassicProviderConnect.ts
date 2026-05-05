@@ -1,4 +1,4 @@
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core';
 import { useApiKeyConnect } from './useApiKeyConnect';
 import { useOAuthSignIn } from './useOAuthSignIn';
 

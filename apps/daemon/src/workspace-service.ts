@@ -7,7 +7,7 @@
  * (plan: /Users/yanai/.claude/plans/squishy-exploring-hamster.md).
  *
  * Emits `workspace.changed` on every real write. The payload type lives in
- * `@accomplish_ai/agent-core` (`common/types/daemon.ts`) so both daemon and
+ * `@zmeel/agent-core` (`common/types/daemon.ts`) so both daemon and
  * renderer subscribe to the same discriminated union.
  *
  * Invariants ported from the desktop `workspaceManager.ts` so M3 can repoint
@@ -43,7 +43,7 @@ import {
   createKnowledgeNote,
   updateKnowledgeNote,
   deleteKnowledgeNote,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import type {
   KnowledgeNote,
   KnowledgeNoteCreateInput,
@@ -54,7 +54,7 @@ import type {
   WorkspaceDeleteResult,
   WorkspaceSetActiveResult,
   WorkspaceUpdateInput,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 /**
  * Event name — subscribe via `service.on(WORKSPACE_CHANGED, listener)`. See

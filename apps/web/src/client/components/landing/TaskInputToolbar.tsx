@@ -5,7 +5,7 @@ import type { useSpeechInput } from '@/hooks/useSpeechInput';
 import { SpeechInputButton } from '@/components/ui/SpeechInputButton';
 import { ModelIndicator } from '@/components/ui/ModelIndicator';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 
 interface TaskInputToolbarProps {
   toolbarLeft?: ReactNode;
@@ -41,7 +41,7 @@ export function TaskInputToolbar({
   attachmentsCount,
 }: TaskInputToolbarProps) {
   const { t } = useTranslation('common');
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
   const submitLabel = isLoading ? t('buttons.stop') : t('buttons.submit');
   const isButtonDisabled = isSubmitDisabled || isRecording || slashCommandOpen;
 
@@ -95,7 +95,7 @@ export function TaskInputToolbar({
                 aria-label={submitLabel}
                 aria-disabled={isButtonDisabled}
                 onClick={() => {
-                  accomplish.logEvent({
+                  zmeel.logEvent({
                     level: 'info',
                     message: 'Task input submit clicked',
                     context: {
@@ -106,7 +106,7 @@ export function TaskInputToolbar({
                   onSubmit();
                 }}
                 disabled={isButtonDisabled}
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-200 ease-accomplish ${buttonColorClass}`}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-200 ease-zmeel ${buttonColorClass}`}
               >
                 {isLoading ? (
                   <span className="block h-[10px] w-[10px] rounded-[1.5px] bg-destructive-foreground" />

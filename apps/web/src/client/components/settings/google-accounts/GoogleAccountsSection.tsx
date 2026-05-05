@@ -56,10 +56,10 @@ export function GoogleAccountsSection() {
   ): Promise<void> => {
     setConnecting(true);
     try {
-      const result = await window.accomplish?.gws?.startAuth(label);
+      const result = await window.zmeel?.gws?.startAuth(label);
       if (result?.authUrl && result.authUrl.length > 0) {
-        if (window.accomplish?.openExternal) {
-          await window.accomplish.openExternal(result.authUrl);
+        if (window.zmeel?.openExternal) {
+          await window.zmeel.openExternal(result.authUrl);
         } else {
           window.open(result.authUrl, '_blank');
         }
@@ -153,7 +153,7 @@ export function GoogleAccountsSection() {
       pollTimerRef.current = null;
     }
     if (pendingAuthState) {
-      await window.accomplish?.gws?.cancelAuth(pendingAuthState);
+      await window.zmeel?.gws?.cancelAuth(pendingAuthState);
     }
     setReconnectId(null);
     setPendingAuthState(null);

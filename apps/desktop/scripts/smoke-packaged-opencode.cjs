@@ -11,13 +11,13 @@
  *   3. terminates within a short deadline after SIGTERM (or equivalent)
  *
  * Intended call sites:
- *   - local: after `pnpm -F @accomplish/desktop build:unpack`
+ *   - local: after `pnpm -F @zmeel/desktop build:unpack`
  *   - CI: after electron-builder in each per-platform release job, before
  *     the R2 upload gate
  *
  * Usage:
  *   node scripts/smoke-packaged-opencode.cjs \
- *     --artifact-dir=release/mac-arm64/Accomplish.app \
+ *     --artifact-dir=release/mac-arm64/Zmeel.app \
  *     --expected-version=1.14.18
  *
  * Optional flags:

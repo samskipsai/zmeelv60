@@ -1,12 +1,12 @@
 /**
  * SettingsService — wraps `AppSettingsAPI` + `ProviderSettingsAPI` + a couple
- * of auxiliary stores (HuggingFace Local config, Accomplish AI credits cache).
+ * of auxiliary stores (HuggingFace Local config, Zmeel AI credits cache).
  *
  * Milestone 2 of the daemon-only-SQLite migration
  * (plan: /Users/yanai/.claude/plans/squishy-exploring-hamster.md).
  *
  * Emits `settings.changed` on every write. The payload type lives in
- * `@accomplish_ai/agent-core` (`common/types/daemon.ts`) so both daemon and
+ * `@zmeel/agent-core` (`common/types/daemon.ts`) so both daemon and
  * client side agree on the shape — the daemon wires that into
  * `rpc.notify('settings.changed', payload)` and main forwards it to the
  * renderer to patch its cache.
@@ -17,7 +17,7 @@
  * close-behavior, sandbox / cloud-browser / messaging configs).
  */
 import { EventEmitter } from 'node:events';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import type {
   ConnectedProvider,
   HuggingFaceLocalConfig,
@@ -25,10 +25,10 @@ import type {
   ProviderSettings,
   SettingsChangePayload,
   SettingsSnapshot,
-} from '@accomplish_ai/agent-core';
-import type { ThemePreference, LanguagePreference } from '@accomplish_ai/agent-core';
-import type { CreditUsage } from '@accomplish_ai/agent-core';
-import type { SandboxConfig } from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
+import type { ThemePreference, LanguagePreference } from '@zmeel/agent-core';
+import type { CreditUsage } from '@zmeel/agent-core';
+import type { SandboxConfig } from '@zmeel/agent-core';
 import type {
   SelectedModel,
   OllamaConfig,
@@ -36,7 +36,7 @@ import type {
   AzureFoundryConfig,
   LMStudioConfig,
   NimConfig,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 /**
  * Event name — subscribe via `service.on(SETTINGS_CHANGED, listener)`. We
@@ -181,14 +181,14 @@ export class SettingsService extends EventEmitter {
     return this.storage.getProviderDebugMode();
   }
 
-  // ─── Accomplish AI credits cache ────────────────────────────────────────
+  // ─── Zmeel AI credits cache ────────────────────────────────────────
 
-  getAccomplishAiCredits(): CreditUsage | null {
-    return this.storage.getAccomplishAiCredits();
+  getZmeelAiCredits(): CreditUsage | null {
+    return this.storage.getZmeelAiCredits();
   }
 
-  saveAccomplishAiCredits(usage: CreditUsage): void {
-    this.storage.saveAccomplishAiCredits(usage);
+  saveZmeelAiCredits(usage: CreditUsage): void {
+    this.storage.saveZmeelAiCredits(usage);
     this.emit('settings.changed', { key: 'providerSettings' });
   }
 

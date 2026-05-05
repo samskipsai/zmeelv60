@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import type { Workspace } from '@accomplish_ai/agent-core/common';
+import type { Workspace } from '@zmeel/agent-core/common';
 import { WorkspaceRow } from './WorkspaceRow';
 import { CreateWorkspaceForm, WORKSPACE_COLORS } from './WorkspacePanelForm';
 

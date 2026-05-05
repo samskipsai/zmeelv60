@@ -2,8 +2,8 @@ import type { IpcMainInvokeEvent } from 'electron';
 import {
   validateBedrockCredentials,
   fetchBedrockModels,
-} from '@accomplish_ai/agent-core/desktop-main';
-import type { BedrockCredentials } from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
+import type { BedrockCredentials } from '@zmeel/agent-core/desktop-main';
 import { storeApiKey, getApiKey } from '../../../store/secureStorage';
 import { normalizeIpcError } from '../../validation';
 import { getLogCollector } from '../../../logging';

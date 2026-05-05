@@ -10,7 +10,7 @@ vi.mock('undici', () => ({
   setGlobalDispatcher: vi.fn(),
   getGlobalDispatcher: vi.fn(),
 }));
-import type { TaskMessage, Task, TaskUpdateEvent } from '@accomplish_ai/agent-core';
+import type { TaskMessage, Task, TaskUpdateEvent } from '@zmeel/agent-core';
 import { createTaskUpdateActions } from '@/stores/task-update-actions';
 import type { TaskState } from '@/stores/taskStore';
 
@@ -29,9 +29,9 @@ import type { TaskState } from '@/stores/taskStore';
  *     stable.
  */
 
-// Mock the accomplish logger so tests don't hit IPC/preload.
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({ logEvent: vi.fn() }),
+// Mock the zmeel logger so tests don't hit IPC/preload.
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({ logEvent: vi.fn() }),
 }));
 
 function buildTask(id: string, messages: TaskMessage[] = []): Task {

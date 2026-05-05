@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core';
-import { DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '@/lib/accomplish';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core';
+import { DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('useProviderModels');
@@ -36,8 +36,8 @@ export function useProviderModels({
     if (!providerConfig?.modelsEndpoint) return;
 
     const controller = new AbortController();
-    const accomplish = getAccomplish();
-    accomplish
+    const zmeel = getZmeel();
+    zmeel
       .fetchProviderModels(providerId, {
         baseUrl: isOpenAI ? openAiBaseUrl.trim() || undefined : connectedProviderBaseUrl,
       })

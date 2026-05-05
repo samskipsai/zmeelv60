@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Paperclip, FolderOpen } from '@phosphor-icons/react';
-import type { Skill, McpConnector } from '@accomplish_ai/agent-core/common';
+import type { Skill, McpConnector } from '@zmeel/agent-core/common';
 import {
   DropdownMenuContent,
   DropdownMenuSub,
@@ -65,7 +65,7 @@ export function PlusMenuItems({
         )}
       </DropdownMenuItem>
 
-      {window.accomplish?.pickFolder && onSelectFolder && (
+      {window.zmeel?.pickFolder && onSelectFolder && (
         <DropdownMenuItem onSelect={onSelectFolder}>
           <FolderOpen className="h-4 w-4 mr-2 shrink-0" />
           {t('plusMenu.selectFolder')}

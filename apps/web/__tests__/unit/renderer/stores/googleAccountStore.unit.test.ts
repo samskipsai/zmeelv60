@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { GoogleAccount } from '@accomplish_ai/agent-core/common';
+import type { GoogleAccount } from '@zmeel/agent-core/common';
 
 // Mock the logger to prevent console noise
 vi.mock('@/lib/logger', () => ({
@@ -25,7 +25,7 @@ function makeAccount(overrides: Partial<GoogleAccount> = {}): GoogleAccount {
   };
 }
 
-// Build a mock window.accomplish.gws API
+// Build a mock window.zmeel.gws API
 function makeGwsApi(
   overrides: Partial<{
     listAccounts: () => Promise<GoogleAccount[]>;
@@ -50,12 +50,12 @@ describe('useGoogleAccountStore', () => {
     vi.resetModules();
     gwsApi = makeGwsApi();
 
-    const g = global as unknown as { window: { accomplish?: unknown } };
+    const g = global as unknown as { window: { zmeel?: unknown } };
     if (!g.window) {
       g.window = {};
     }
-    g.window.accomplish = {
-      ...(g.window.accomplish ? (g.window.accomplish as object) : {}),
+    g.window.zmeel = {
+      ...(g.window.zmeel ? (g.window.zmeel as object) : {}),
       gws: gwsApi,
     };
   });
@@ -134,7 +134,7 @@ describe('useGoogleAccountStore', () => {
       expect(accounts[0].googleAccountId).toBe('uid-2');
     });
 
-    it('calls window.accomplish.gws.removeAccount with the correct id', async () => {
+    it('calls window.zmeel.gws.removeAccount with the correct id', async () => {
       const { useGoogleAccountStore } = await import('@/stores/googleAccountStore');
       useGoogleAccountStore.setState({ accounts: [makeAccount()] });
 

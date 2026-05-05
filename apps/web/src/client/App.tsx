@@ -2,11 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useOutlet, useLocation } from 'react-router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { isRunningInElectron, getAccomplish } from './lib/accomplish';
+import { isRunningInElectron, getZmeel } from './lib/zmeel';
 import { logger } from './lib/logger';
 import { springs, variants } from './lib/animations';
-import type { ProviderId } from '@accomplish_ai/agent-core/common';
-import { OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import type { ProviderId } from '@zmeel/agent-core/common';
+import { OAuthProviderId } from '@zmeel/agent-core/common';
 
 // Components
 import Sidebar from './components/layout/Sidebar';
@@ -41,7 +41,7 @@ function AnimatedOutletWrapper() {
   useEffect(() => {
     if (isRunningInElectron()) {
       try {
-        getAccomplish()
+        getZmeel()
           .analytics?.trackPageView(location.pathname)
           .catch(() => {});
       } catch {
@@ -131,8 +131,8 @@ export function App() {
       }
 
       try {
-        const accomplish = getAccomplish();
-        await accomplish.setOnboardingComplete(true);
+        const zmeel = getZmeel();
+        await zmeel.setOnboardingComplete(true);
         setStatus('ready');
       } catch (error) {
         logger.error('Failed to initialize app:', error);

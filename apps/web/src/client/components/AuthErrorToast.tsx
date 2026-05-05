@@ -1,7 +1,7 @@
 import { Warning, X } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { getOAuthProviderDisplayName, OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import { getOAuthProviderDisplayName, OAuthProviderId } from '@zmeel/agent-core/common';
 import { Button } from './ui/button';
 
 interface AuthErrorToastProps {

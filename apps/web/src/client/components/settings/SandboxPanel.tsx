@@ -138,7 +138,7 @@ export function SandboxPanel() {
             </p>
             <textarea
               ref={pathsRef}
-              placeholder={'/Users/you/projects\n/tmp/accomplish-workspace'}
+              placeholder={'/Users/you/projects\n/tmp/zmeel-workspace'}
               defaultValue={config.allowedPaths?.join('\n') ?? ''}
               onBlur={handleAllowedPathsBlur}
               disabled={isInteractionDisabled}

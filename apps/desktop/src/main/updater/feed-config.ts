@@ -1,11 +1,11 @@
 /**
  * Feed URL + manifest-name resolution for the auto-updater.
  *
- * URL comes from build-config (`ACCOMPLISH_UPDATER_URL`, CI-injected in Free builds
- * or opt-in via .env in dev). Manifest names are hardcoded per the accomplish-release
+ * URL comes from build-config (`ZMEEL_UPDATER_URL`, CI-injected in Free builds
+ * or opt-in via .env in dev). Manifest names are hardcoded per the zmeel-release
  * upload contract — do not parameterize.
  *
- * See: accomplish-release/scripts/upload-r2-{windows,macos,linux}.sh
+ * See: zmeel-release/scripts/upload-r2-{windows,macos,linux}.sh
  */
 
 import { getBuildConfig } from '../config/build-config';
@@ -15,12 +15,12 @@ import { getBuildConfig } from '../config/build-config';
  * double-slash (some CDNs tolerate it; some don't). Returns '' when not configured.
  */
 export function getFeedUrl(): string {
-  const url = getBuildConfig().accomplishUpdaterUrl;
+  const url = getBuildConfig().zmeelUpdaterUrl;
   return url.replace(/\/+$/, '');
 }
 
 /**
- * Manifest filenames as published by accomplish-release. DO NOT parameterize —
+ * Manifest filenames as published by zmeel-release. DO NOT parameterize —
  * the names are fixed by the upload contract (channel is encoded in the URL path
  * prefix, not the filename).
  *

@@ -16,7 +16,7 @@ import {
   getMcpConnectorDefinitions,
   OAUTH_CALLBACK_PORTS,
   OAuthProviderId,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 describe('connector registry', () => {
   it('defines exactly 8 built-in connectors', () => {

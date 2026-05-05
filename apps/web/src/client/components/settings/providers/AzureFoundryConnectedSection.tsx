@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ConnectedProvider, AzureFoundryCredentials } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider, AzureFoundryCredentials } from '@zmeel/agent-core/common';
 import { ModelSelector, ConnectedControls } from '../shared';
 
 interface AzureFoundryConnectedSectionProps {

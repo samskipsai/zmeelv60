@@ -65,7 +65,7 @@ export function registerAutoUpdaterListeners(
         title: 'Update Available',
         message: `Version ${info.version} is available.`,
         detail:
-          'Accomplish is downloading the update in the background. You will be prompted to restart when it is ready.',
+          'Zmeel is downloading the update in the background. You will be prompted to restart when it is ready.',
         buttons: ['OK'],
       });
     }
@@ -85,7 +85,7 @@ export function registerAutoUpdaterListeners(
       type: 'info',
       title: 'No Updates',
       message: `You're up to date!`,
-      detail: `Accomplish ${app.getVersion()} is the latest version.`,
+      detail: `Zmeel ${app.getVersion()} is the latest version.`,
       buttons: ['OK'],
     });
   });

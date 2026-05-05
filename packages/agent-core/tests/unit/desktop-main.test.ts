@@ -13,7 +13,7 @@ const DESKTOP_MAIN_SRC = path.resolve(__dirname, '../../src/desktop-main.ts');
  * Milestone 1 of the daemon-only-SQLite migration
  * (plan: /Users/yanai/.claude/plans/squishy-exploring-hamster.md).
  *
- * This test enforces two things about `@accomplish_ai/agent-core/desktop-main`:
+ * This test enforces two things about `@zmeel/agent-core/desktop-main`:
  *
  *   1. The runtime surface exposes the expected symbols (typeof checks).
  *   2. The source file does NOT re-export from any barrel (root `./index.js`,

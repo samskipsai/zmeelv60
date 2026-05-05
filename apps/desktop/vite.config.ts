@@ -14,9 +14,9 @@ const nodeExternals = [...builtinModules, ...builtinModules.map((m) => `node:${m
 // Vite 8 (rolldown) does not auto-convert CJS require() to ESM imports,
 // so any bundled third-party package that internally calls require() for
 // Node built-ins will fail at runtime in an ESM context.
-// Workspace packages (@accomplish_ai/*) are aliased to local source and must be bundled.
+// Workspace packages (@zmeel/*) are aliased to local source and must be bundled.
 const externalizeNodeModules = (id: string) => {
-  if (id.startsWith('@accomplish_ai/') || id.startsWith('@main/')) {
+  if (id.startsWith('@zmeel/') || id.startsWith('@main/')) {
     return false;
   }
   return !id.startsWith('.') && !id.startsWith('/') && !id.includes('\0') && !path.isAbsolute(id);
@@ -78,7 +78,7 @@ export default defineConfig(() => ({
           resolve: {
             alias: {
               '@main': path.resolve(__dirname, 'src/main'),
-              '@accomplish_ai/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
+              '@zmeel/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
             },
           },
           build: {
@@ -121,11 +121,11 @@ export default defineConfig(() => ({
   resolve: {
     alias: {
       '@main': path.resolve(__dirname, 'src/main'),
-      '@accomplish_ai/agent-core/common': path.resolve(
+      '@zmeel/agent-core/common': path.resolve(
         __dirname,
         '../../packages/agent-core/src/common',
       ),
-      '@accomplish_ai/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
+      '@zmeel/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
     },
   },
 }));

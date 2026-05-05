@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SlashCommandPopover } from '../../components/landing/SlashCommandPopover';
 import { FollowUpToolbar } from './FollowUpToolbar';
 import { DragOverlay, AttachmentList } from './FollowUpAttachments';
-import type { FileAttachmentInfo, Task } from '@accomplish_ai/agent-core';
+import type { FileAttachmentInfo, Task } from '@zmeel/agent-core';
 import type { useSpeechInput } from '../../hooks/useSpeechInput';
 import type { useSlashCommand } from '../../hooks/useSlashCommand';
 

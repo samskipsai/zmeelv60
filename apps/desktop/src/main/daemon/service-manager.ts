@@ -157,7 +157,7 @@ function getDataDir(): string {
 // macOS: LaunchAgent plist
 // =============================================================================
 
-const LAUNCH_AGENT_LABEL = 'ai.accomplish.daemon';
+const LAUNCH_AGENT_LABEL = 'ai.zmeel.daemon';
 
 function getLaunchAgentDir(): string {
   return path.join(process.env.HOME || '~', 'Library', 'LaunchAgents');
@@ -191,18 +191,18 @@ function getLaunchAgentContent(): string {
 
   // Pass path context so the daemon can resolve the opencode CLI and resources.
   // Required in both packaged and dev mode: the login-item daemon starts without
-  // Electron's environment, so ACCOMPLISH_APP_PATH would otherwise be missing.
+  // Electron's environment, so ZMEEL_APP_PATH would otherwise be missing.
   const envDict = ['  <key>EnvironmentVariables</key>', '  <dict>'];
   if (app.isPackaged) {
-    envDict.push('    <key>ACCOMPLISH_IS_PACKAGED</key><string>1</string>');
+    envDict.push('    <key>ZMEEL_IS_PACKAGED</key><string>1</string>');
   } else {
     // In dev mode, the Electron binary acts as the Node.js runtime for the daemon.
     // ELECTRON_RUN_AS_NODE=1 tells Electron to behave as plain Node.js.
     envDict.push('    <key>ELECTRON_RUN_AS_NODE</key><string>1</string>');
   }
   envDict.push(
-    `    <key>ACCOMPLISH_RESOURCES_PATH</key><string>${app.isPackaged ? process.resourcesPath : `${app.getAppPath()}/resources`}</string>`,
-    `    <key>ACCOMPLISH_APP_PATH</key><string>${app.getAppPath()}</string>`,
+    `    <key>ZMEEL_RESOURCES_PATH</key><string>${app.isPackaged ? process.resourcesPath : `${app.getAppPath()}/resources`}</string>`,
+    `    <key>ZMEEL_APP_PATH</key><string>${app.getAppPath()}</string>`,
     '  </dict>',
   );
   lines.push(...envDict);
@@ -263,7 +263,7 @@ function isLaunchAgentInstalled(): boolean {
 // Linux: systemd user service
 // =============================================================================
 
-const SYSTEMD_SERVICE_NAME = 'accomplish-daemon.service';
+const SYSTEMD_SERVICE_NAME = 'zmeel-daemon.service';
 
 function getSystemdServiceDir(): string {
   const configDir = process.env.XDG_CONFIG_HOME || path.join(process.env.HOME || '~', '.config');
@@ -281,7 +281,7 @@ function getSystemdServiceContent(): string {
 
   const lines = [
     '[Unit]',
-    'Description=Accomplish AI Daemon',
+    'Description=Zmeel AI Daemon',
     'After=default.target',
     '',
     '[Service]',
@@ -292,9 +292,9 @@ function getSystemdServiceContent(): string {
   // Pass packaged-mode context so daemon resolves paths correctly
   if (app.isPackaged) {
     lines.push(
-      `Environment=ACCOMPLISH_IS_PACKAGED=1`,
-      `Environment=ACCOMPLISH_RESOURCES_PATH=${process.resourcesPath}`,
-      `Environment=ACCOMPLISH_APP_PATH=${app.getAppPath()}`,
+      `Environment=ZMEEL_IS_PACKAGED=1`,
+      `Environment=ZMEEL_RESOURCES_PATH=${process.resourcesPath}`,
+      `Environment=ZMEEL_APP_PATH=${app.getAppPath()}`,
     );
   }
 

@@ -5,7 +5,7 @@
  * Also manages client ID, session ID, and device fingerprint state used by
  * both GA4 and Mixpanel (initialized independently of either sink).
  *
- * Ported from accomplish-commercial-fork with:
+ * Ported from zmeel-commercial-fork with:
  * - Hardcoded GA_MEASUREMENT_ID removed — read from build config
  * - Hardcoded GA_API_SECRET removed — read from build config
  * - __APP_TIER__ removed — uses getAppTier() from build-config

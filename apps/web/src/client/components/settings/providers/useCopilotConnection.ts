@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider, CopilotOAuthCredentials } from '@accomplish_ai/agent-core';
-import { COPILOT_MODELS } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider, CopilotOAuthCredentials } from '@zmeel/agent-core';
+import { COPILOT_MODELS } from '@zmeel/agent-core/common';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('useCopilotConnection');
@@ -48,8 +48,8 @@ export function useCopilotConnection({
       return;
     }
 
-    const accomplish = getAccomplish();
-    accomplish
+    const zmeel = getZmeel();
+    zmeel
       .getCopilotOAuthStatus()
       .then((status) => {
         if (status.connected) {
@@ -68,11 +68,11 @@ export function useCopilotConnection({
     let pollStarted = false;
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
       // loginGithubCopilot now returns immediately with the user code;
       // polling continues in the background on the main process side.
-      const result = await accomplish.loginGithubCopilot();
+      const result = await zmeel.loginGithubCopilot();
 
       if (result.ok) {
         if (result.userCode) {
@@ -92,7 +92,7 @@ export function useCopilotConnection({
         const poll = async () => {
           for (let i = 0; i < MAX_ATTEMPTS; i++) {
             await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
-            const status = await accomplish.getCopilotOAuthStatus();
+            const status = await zmeel.getCopilotOAuthStatus();
             if (status.connected) {
               onConnect(buildCopilotProvider());
               setUserCode(null);
@@ -127,8 +127,8 @@ export function useCopilotConnection({
 
   const handleDisconnect = async () => {
     try {
-      const accomplish = getAccomplish();
-      await accomplish.logoutGithubCopilot();
+      const zmeel = getZmeel();
+      await zmeel.logoutGithubCopilot();
     } catch (err) {
       logger.error('Failed to logout from Copilot:', err);
     }

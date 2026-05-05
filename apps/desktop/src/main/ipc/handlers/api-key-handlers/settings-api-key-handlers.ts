@@ -1,6 +1,6 @@
 import type { IpcMainInvokeEvent } from 'electron';
-import { sanitizeString } from '@accomplish_ai/agent-core/desktop-main';
-import { ALLOWED_API_KEY_PROVIDERS } from '@accomplish_ai/agent-core/desktop-main';
+import { sanitizeString } from '@zmeel/agent-core/desktop-main';
+import { ALLOWED_API_KEY_PROVIDERS } from '@zmeel/agent-core/desktop-main';
 import {
   storeApiKey,
   deleteApiKey,

@@ -18,7 +18,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider, Navigate } from 'react-router';
 
-// Create mock functions for accomplish API
+// Create mock functions for zmeel API
 const mockSetOnboardingComplete = vi.fn();
 const mockLogEvent = vi.fn();
 const mockListTasks = vi.fn();
@@ -26,8 +26,8 @@ const mockOnTaskStatusChange = vi.fn();
 const mockOnTaskUpdate = vi.fn();
 const mockGetTask = vi.fn();
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   setOnboardingComplete: mockSetOnboardingComplete,
   logEvent: mockLogEvent.mockResolvedValue(undefined),
   listTasks: mockListTasks.mockResolvedValue([]),
@@ -59,9 +59,9 @@ const mockAccomplish = {
   saveBedrockCredentials: vi.fn().mockResolvedValue(undefined),
 };
 
-// Mock the accomplish module - always return true for isRunningInElectron for most tests
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module - always return true for isRunningInElectron for most tests
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
   isRunningInElectron: () => true,
 }));
 

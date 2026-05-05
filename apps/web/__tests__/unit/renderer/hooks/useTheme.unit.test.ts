@@ -9,13 +9,13 @@ vi.mock('@/lib/theme', () => ({
   cleanupTheme: vi.fn(),
 }));
 
-// Mock getAccomplish
+// Mock getZmeel
 const mockGetTheme = vi.fn(() => Promise.resolve('system'));
 const mockSetTheme = vi.fn(() => Promise.resolve());
 const mockOnThemeChange = vi.fn(() => () => {});
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({
     getTheme: mockGetTheme,
     setTheme: mockSetTheme,
     onThemeChange: mockOnThemeChange,
@@ -78,7 +78,7 @@ describe('useTheme hook', () => {
     vi.clearAllMocks();
   });
 
-  // Flush async effects (e.g. accomplish.getTheme().then()) so state updates
+  // Flush async effects (e.g. zmeel.getTheme().then()) so state updates
   // triggered by resolved promises are wrapped in act().
   async function renderThemeHook() {
     const hook = renderHook(() => useTheme());
@@ -157,7 +157,7 @@ describe('useTheme hook', () => {
       expect(result.current.theme).toBe('light');
     });
 
-    it('should call accomplish.setTheme with the new preference after toggle', async () => {
+    it('should call zmeel.setTheme with the new preference after toggle', async () => {
       mockMatchMedia(false);
 
       const { result } = await renderThemeHook();

@@ -1,12 +1,12 @@
 // apps/desktop/src/renderer/components/settings/hooks/useProviderSettings.ts
 
 import { useState, useEffect, useCallback } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import type {
   ProviderSettings,
   ProviderId,
   ConnectedProvider,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 export function useProviderSettings() {
   const [settings, setSettings] = useState<ProviderSettings | null>(null);
@@ -15,8 +15,8 @@ export function useProviderSettings() {
 
   const fetchSettings = useCallback(async () => {
     try {
-      const accomplish = getAccomplish();
-      const data = (await accomplish.getProviderSettings()) as ProviderSettings;
+      const zmeel = getZmeel();
+      const data = (await zmeel.getProviderSettings()) as ProviderSettings;
       setSettings(data);
       setError(null);
     } catch (err) {
@@ -31,15 +31,15 @@ export function useProviderSettings() {
   }, [fetchSettings]);
 
   const setActiveProvider = useCallback(async (providerId: ProviderId | null) => {
-    const accomplish = getAccomplish();
-    await accomplish.setActiveProvider(providerId);
+    const zmeel = getZmeel();
+    await zmeel.setActiveProvider(providerId);
     setSettings((prev) => (prev ? { ...prev, activeProviderId: providerId } : null));
   }, []);
 
   const connectProvider = useCallback(
     async (providerId: ProviderId, provider: ConnectedProvider) => {
-      const accomplish = getAccomplish();
-      await accomplish.setConnectedProvider(providerId, provider);
+      const zmeel = getZmeel();
+      await zmeel.setConnectedProvider(providerId, provider);
       setSettings((prev) => {
         if (!prev) return null;
         return {
@@ -55,8 +55,8 @@ export function useProviderSettings() {
   );
 
   const disconnectProvider = useCallback(async (providerId: ProviderId) => {
-    const accomplish = getAccomplish();
-    await accomplish.removeConnectedProvider(providerId);
+    const zmeel = getZmeel();
+    await zmeel.removeConnectedProvider(providerId);
     setSettings((prev) => {
       if (!prev) return null;
       const { [providerId]: _, ...rest } = prev.connectedProviders;
@@ -69,8 +69,8 @@ export function useProviderSettings() {
   }, []);
 
   const updateModel = useCallback(async (providerId: ProviderId, modelId: string | null) => {
-    const accomplish = getAccomplish();
-    await accomplish.updateProviderModel(providerId, modelId);
+    const zmeel = getZmeel();
+    await zmeel.updateProviderModel(providerId, modelId);
     setSettings((prev) => {
       if (!prev) return null;
       const provider = prev.connectedProviders[providerId];
@@ -86,8 +86,8 @@ export function useProviderSettings() {
   }, []);
 
   const setDebugMode = useCallback(async (enabled: boolean) => {
-    const accomplish = getAccomplish();
-    await accomplish.setProviderDebugMode(enabled);
+    const zmeel = getZmeel();
+    await zmeel.setProviderDebugMode(enabled);
     setSettings((prev) => (prev ? { ...prev, debugMode: enabled } : null));
   }, []);
 
@@ -96,17 +96,17 @@ export function useProviderSettings() {
    * Rolls back the model update if activating the provider fails.
    */
   const switchProviderModel = useCallback(async (providerId: ProviderId, modelId: string) => {
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
     // Capture previousModelId before writing so the rollback target is the original value
-    const current = (await accomplish.getProviderSettings()) as ProviderSettings;
+    const current = (await zmeel.getProviderSettings()) as ProviderSettings;
     const previousModelId = current.connectedProviders[providerId]?.selectedModelId ?? null;
-    await accomplish.updateProviderModel(providerId, modelId);
+    await zmeel.updateProviderModel(providerId, modelId);
     try {
-      await accomplish.setActiveProvider(providerId);
+      await zmeel.setActiveProvider(providerId);
     } catch (err) {
       // Revert the model update so settings stay consistent
       try {
-        await accomplish.updateProviderModel(providerId, previousModelId);
+        await zmeel.updateProviderModel(providerId, previousModelId);
       } catch {
         // Best-effort rollback; ignore secondary failure
       }

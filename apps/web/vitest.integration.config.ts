@@ -10,11 +10,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src/client'),
-      '@accomplish_ai/agent-core/common': path.resolve(
+      '@zmeel/agent-core/common': path.resolve(
         __dirname,
         '../../packages/agent-core/src/common',
       ),
-      '@accomplish_ai/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
+      '@zmeel/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
       '@locales': path.resolve(__dirname, 'locales'),
     },
   },

@@ -12,7 +12,7 @@
  *   - No post-sign mutation of the .app (signatures stay valid)
  *   - Works uniformly across all electron-builder output targets
  *     (unpacked, DMG, ZIP, AppImage, deb, NSIS)
- *   - Matches what the private accomplish-release workflow does for
+ *   - Matches what the private zmeel-release workflow does for
  *     CI builds, so local and CI artifacts have the same layout
  *
  * Uses the bundled Node + npm to run `npm install`, with the bundled
@@ -32,13 +32,13 @@
  *   ABI smoke (can't `require()` a foreign-arch binary).
  *
  * Prerequisites:
- *   - `pnpm -F @accomplish/desktop download:nodejs` has been run
+ *   - `pnpm -F @zmeel/desktop download:nodejs` has been run
  *     (or the build script has chained it in)
- *   - `pnpm -F @accomplish/daemon build` has produced dist/index.js
+ *   - `pnpm -F @zmeel/daemon build` has produced dist/index.js
  *
  * Usage:
  *   node apps/desktop/scripts/stage-daemon-deps.cjs [--target-platform=<p>-<a>]
- *   (typically invoked via `pnpm -F @accomplish/desktop stage:daemon-deps`)
+ *   (typically invoked via `pnpm -F @zmeel/desktop stage:daemon-deps`)
  */
 
 'use strict';
@@ -127,7 +127,7 @@ function resolveBundledNode(target) {
   if (!fs.existsSync(platformRoot)) {
     die(
       `Bundled Node dir not found for host ${host}: ${platformRoot}. ` +
-        `Run \`pnpm -F @accomplish/desktop download:nodejs\` first.`,
+        `Run \`pnpm -F @zmeel/desktop download:nodejs\` first.`,
     );
   }
 
@@ -139,7 +139,7 @@ function resolveBundledNode(target) {
   if (!fs.existsSync(nodeDir)) {
     die(
       `Expected bundled Node directory not found: ${nodeDir}. ` +
-        `node-version.cjs pins v${NODE_VERSION}; run \`pnpm -F @accomplish/desktop download:nodejs\` ` +
+        `node-version.cjs pins v${NODE_VERSION}; run \`pnpm -F @zmeel/desktop download:nodejs\` ` +
         `(and remove any stale node-v*/ directories under ${platformRoot} if you've upgraded).`,
     );
   }
@@ -349,7 +349,7 @@ function main() {
   if (!fs.existsSync(DAEMON_DIST)) {
     die(
       `Daemon dist not found at ${DAEMON_DIST}. ` +
-        `Run \`pnpm -F @accomplish/daemon build\` first.`,
+        `Run \`pnpm -F @zmeel/daemon build\` first.`,
     );
   }
 

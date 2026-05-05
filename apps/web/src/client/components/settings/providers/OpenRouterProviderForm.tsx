@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider, OpenRouterCredentials } from '@accomplish_ai/agent-core/common';
-import { PROVIDER_META } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider, OpenRouterCredentials } from '@zmeel/agent-core/common';
+import { PROVIDER_META } from '@zmeel/agent-core/common';
 import { ConnectButton, ProviderFormHeader, FormError } from '../shared';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
 import { OpenRouterConnectedSection } from './OpenRouterConnectedSection';
@@ -45,10 +45,10 @@ export function OpenRouterProviderForm({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
       // Validate key
-      const validation = await accomplish.validateApiKeyForProvider('openrouter', apiKey.trim());
+      const validation = await zmeel.validateApiKeyForProvider('openrouter', apiKey.trim());
       if (!validation.valid) {
         setError(validation.error || t('apiKey.invalidKey'));
         setConnecting(false);
@@ -56,10 +56,10 @@ export function OpenRouterProviderForm({
       }
 
       // Save key
-      await accomplish.addApiKey('openrouter', apiKey.trim());
+      await zmeel.addApiKey('openrouter', apiKey.trim());
 
       // Fetch models
-      const result = await accomplish.fetchOpenRouterModels();
+      const result = await zmeel.fetchOpenRouterModels();
       if (!result.success) {
         setError(result.error || t('openrouter.fetchModelsFailed'));
         setConnecting(false);

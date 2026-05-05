@@ -1,11 +1,11 @@
 /**
  * Origin check for manifest `path:` URLs.
  *
- * Manifests may carry absolute download URLs (e.g. `https://downloads.accomplish.ai/...`)
- * on a different subdomain than the manifest host (`https://d.accomplish.ai/...`), so a
+ * Manifests may carry absolute download URLs (e.g. `https://downloads.zmeel.ai/...`)
+ * on a different subdomain than the manifest host (`https://d.zmeel.ai/...`), so a
  * strict same-origin check is too tight. Instead we accept any URL whose hostname shares
- * the feed URL's apex (last two labels) — covers `downloads.accomplish.ai` vs
- * `d.accomplish.ai` without accepting `evil.example.com`.
+ * the feed URL's apex (last two labels) — covers `downloads.zmeel.ai` vs
+ * `d.zmeel.ai` without accepting `evil.example.com`.
  *
  * This is defense-in-depth: the release scripts are trusted, but a poisoned manifest
  * (cache, misconfig, supply-chain compromise) should not redirect users' browsers to an
@@ -14,7 +14,7 @@
  *
  * KNOWN LIMITATION: the last-two-labels heuristic does NOT consult the Public Suffix List,
  * so a feed hosted on a multi-part TLD like `foo.co.uk` would treat any `*.co.uk` as
- * "same apex" and accept `bar.co.uk` (unrelated customer). Fine for `accomplish.ai`, but
+ * "same apex" and accept `bar.co.uk` (unrelated customer). Fine for `zmeel.ai`, but
  * operators onboarding a `.co.uk` / `.com.br` / `.github.io` feed should replace this
  * heuristic with an explicit allowed-download-host policy before shipping.
  */
@@ -31,7 +31,7 @@ export function isSameApex(candidate: string, reference: string): boolean {
     return false;
   }
   // Scheme must match. A manifest from an HTTPS feed that points `path:` at
-  // `http://downloads.accomplish.ai/...` would otherwise hand the user a
+  // `http://downloads.zmeel.ai/...` would otherwise hand the user a
   // plaintext download URL — classic downgrade attack.
   if (candidateUrl.protocol !== referenceUrl.protocol) {
     return false;
@@ -108,7 +108,7 @@ function isIpLiteral(host: string): boolean {
 function getApex(hostname: string): string {
   const labels = hostname.split('.');
   if (labels.length <= 2) {
-    // 'localhost' or a bare apex like 'accomplish.ai' — use as-is.
+    // 'localhost' or a bare apex like 'zmeel.ai' — use as-is.
     return hostname;
   }
   return labels.slice(-2).join('.');

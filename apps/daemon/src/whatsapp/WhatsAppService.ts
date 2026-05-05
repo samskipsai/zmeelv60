@@ -16,7 +16,7 @@ import type {
   MessagingConnectionStatus,
   MessagingProviderId,
   ChannelAdapter,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { normalizeMessage } from './normalizeMessage.js';
 import { cleanupAuthState } from './authCleanup.js';
 import { createReconnectState, clearReconnectTimer, type ReconnectState } from './reconnection.js';
@@ -139,7 +139,7 @@ export class WhatsAppService extends EventEmitter implements ChannelAdapter {
         auth: state,
         logger: pino({ level: 'silent' }),
         printQRInTerminal: false,
-        browser: ['Accomplish', 'Desktop', '1.0.0'],
+        browser: ['Zmeel', 'Desktop', '1.0.0'],
       });
       if (this.disposed) {
         socket.end(new Error('WhatsApp service disposed during connect'));

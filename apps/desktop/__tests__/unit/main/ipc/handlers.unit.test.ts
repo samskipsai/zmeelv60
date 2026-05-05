@@ -405,16 +405,16 @@ let mockSelectedModel: { provider: string; model: string } | null = null;
 let mockOpenAiBaseUrl = '';
 
 // Milestone 1 of the daemon-only-SQLite migration routed most Electron-main
-// value imports from `@accomplish_ai/agent-core` → `@accomplish_ai/agent-core/desktop-main`.
+// value imports from `@zmeel/agent-core` → `@zmeel/agent-core/desktop-main`.
 // Mirror the comprehensive root mock onto the new subpath so both resolution
 // paths share the same vi.fn() instances and tests can drive either one.
-vi.mock('@accomplish_ai/agent-core/desktop-main', async () => {
-  return await vi.importMock('@accomplish_ai/agent-core');
+vi.mock('@zmeel/agent-core/desktop-main', async () => {
+  return await vi.importMock('@zmeel/agent-core');
 });
 
-// Mock @accomplish_ai/agent-core - comprehensive mock covering all exports used by handlers.ts
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@accomplish_ai/agent-core')>();
+// Mock @zmeel/agent-core - comprehensive mock covering all exports used by handlers.ts
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@zmeel/agent-core')>();
 
   // Storage methods shared between module-level exports and createStorage() return value.
   // Using a shared object ensures test spy assertions (e.g. `const { setDebugMode } = await import(...)`)
@@ -644,7 +644,7 @@ vi.mock('@main/store/secureStorage', () => ({
   listStoredCredentials: vi.fn(() => mockStoredCredentials),
 }));
 
-// Note: App settings and provider settings are now mocked via @accomplish/core mock above
+// Note: App settings and provider settings are now mocked via @zmeel/core mock above
 
 // Mock logging module
 const mockLogFn = vi.fn();
@@ -1008,7 +1008,7 @@ describe('IPC Handlers Integration', () => {
     });
 
     it('opencode:auth:slack:status should return Slack MCP auth status', async () => {
-      const { getSlackMcpOauthStatus } = await import('@accomplish_ai/agent-core/desktop-main');
+      const { getSlackMcpOauthStatus } = await import('@zmeel/agent-core/desktop-main');
       vi.mocked(getSlackMcpOauthStatus).mockReturnValue({
         connected: true,
         pendingAuthorization: false,
@@ -1652,7 +1652,7 @@ describe('IPC Handlers Integration', () => {
       await invokeHandler('task:start', config);
 
       // Assert — storage is NOT called directly; daemon handles persistence
-      const { saveTask } = await import('@accomplish_ai/agent-core');
+      const { saveTask } = await import('@zmeel/agent-core');
       expect(saveTask).not.toHaveBeenCalled();
       expect(mockDaemonClient.call).toHaveBeenCalledWith(
         'task.start',
@@ -1764,7 +1764,7 @@ describe('IPC Handlers Integration', () => {
 
       // Assert — daemon returns the task; storage is NOT called directly
       expect(result).toEqual(expect.objectContaining({ id: existingTaskId, status: 'running' }));
-      const { updateTaskStatus } = await import('@accomplish_ai/agent-core');
+      const { updateTaskStatus } = await import('@zmeel/agent-core');
       expect(updateTaskStatus).not.toHaveBeenCalled();
     });
 
@@ -1785,7 +1785,7 @@ describe('IPC Handlers Integration', () => {
         }),
       );
       // Storage not called directly
-      const { addTaskMessage } = await import('@accomplish_ai/agent-core');
+      const { addTaskMessage } = await import('@zmeel/agent-core');
       expect(addTaskMessage).not.toHaveBeenCalled();
     });
   });

@@ -1,4 +1,4 @@
-# Functional Sequence Diagrams — Accomplish Architecture
+# Functional Sequence Diagrams — Zmeel Architecture
 
 > **Companion to** [functional-viewpoint.md](functional-viewpoint.md). That document describes **what** each component is and **how** they connect at a structural level. This one shows **in what order** messages flow across those components, for the three flows where the message order is load-bearing: task start-up, human-in-the-loop gating, and the Free-build LLM-gateway integration.
 
@@ -54,7 +54,7 @@ sequenceDiagram
 
     Note over User,LLM: Forward path — user prompt reaches the LLM
     User->>R: types and clicks Start
-    R->>M: window.accomplish.startTask(cfg)<br/>[IPC invoke]
+    R->>M: window.zmeel.startTask(cfg)<br/>[IPC invoke]
     M->>D: client.call('task.start', cfg)<br/>[JSON-RPC over socket]
     D->>OC: spawn + session.create + session.prompt<br/>[spawn + HTTP]
     OC->>GW: chat completion, tagged with taskId<br/>[HTTPS, Free build only]
@@ -62,7 +62,7 @@ sequenceDiagram
 
     Note over User,LLM: Response path — tokens, tool events, gate events stream back
     LLM-->>GW: streaming tokens + tool calls
-    GW-->>OC: streamed completion + X-Accomplish-Usage header
+    GW-->>OC: streamed completion + X-Zmeel-Usage header
     OC-->>D: SSE events<br/>(message.part.updated, todo.updated,<br/>permission.asked, question.asked, session.idle)<br/>[SSE]
     D-->>M: rpc.notify on task.message /<br/>permission.request / todo.update<br/>[JSON-RPC notify]
     M-->>R: webContents.send<br/>[IPC push]
@@ -85,9 +85,9 @@ sequenceDiagram
 | Electron Main             | IPC handlers, `DaemonClient`, notification forwarder, OAuth popups, tray                                   | IPC to Renderer; JSON-RPC over socket to Daemon                      |
 | Daemon                    | `TaskService`, `OpenCodeAdapter`, `CompletionEnforcer`, `OpenCodeServerManager`, `DaemonRpcServer`, SQLite | JSON-RPC socket to Main; spawns + HTTP/SSE to `opencode serve`       |
 | `opencode serve` per task | Session, agent loop, built-in tools, MCP tools, native permission/question gate                            | HTTPS outbound to Gateway or provider; HTTP + SSE back to Daemon     |
-| Outbound HTTPS            | Accomplish LLM Gateway (Free only) and the AI provider                                                     | LLM Gateway proxies, tags per-task, and forwards to the actual model |
+| Outbound HTTPS            | Zmeel LLM Gateway (Free only) and the AI provider                                                     | LLM Gateway proxies, tags per-task, and forwards to the actual model |
 
-> **Note on terminology:** in the PTY era the gate shown inside `opencode serve` was an MCP server Accomplish shipped (`file-permission`, `ask-user-question`). In the SDK era it is native OpenCode functionality emitting `permission.asked` / `question.asked` events over the same SSE channel — no MCP server on that hop.
+> **Note on terminology:** in the PTY era the gate shown inside `opencode serve` was an MCP server Zmeel shipped (`file-permission`, `ask-user-question`). In the SDK era it is native OpenCode functionality emitting `permission.asked` / `question.asked` events over the same SSE channel — no MCP server on that hop.
 
 The per-hop breakdowns are in §1 (task start), §2 (permission/question gate), and §3 (LLM Gateway internals).
 
@@ -115,7 +115,7 @@ sequenceDiagram
       participant TS as TaskService
     end
 
-    UI->>Pre: window.accomplish.startTask(cfg)
+    UI->>Pre: window.zmeel.startTask(cfg)
     Pre->>H: ipcRenderer.invoke('task:start', cfg)<br/>[IPC invoke]
     H->>DC: client.call('task.start', cfg)
     DC->>RPC: JSON-RPC request 'task.start'<br/>[JSON-RPC, Unix socket / named pipe]
@@ -219,7 +219,7 @@ sequenceDiagram
     OC-->>A: SSE session.idle
 ```
 
-**What this phase does:** everything inside the opencode serve process. Accomplish is a passive observer on the SSE side — it never drives the LLM or the tool calls directly, it just reacts to events.
+**What this phase does:** everything inside the opencode serve process. Zmeel is a passive observer on the SSE side — it never drives the LLM or the tool calls directly, it just reacts to events.
 
 ### 1e. Event fan-out — SSE event to React state
 
@@ -347,7 +347,7 @@ sequenceDiagram
 
 ## 3. LLM-Gateway integration (Free build)
 
-The private package `@accomplish/llm-gateway-client` is loaded via dynamic `import()` at daemon startup. In OSS builds the import fails and `noopRuntime` takes over — every call below becomes a no-op except for `isAvailable()` returning `false`. The two diagrams below only make sense in a Free build.
+The private package `@zmeel/llm-gateway-client` is loaded via dynamic `import()` at daemon startup. In OSS builds the import fails and `noopRuntime` takes over — every call below becomes a no-op except for `isAvailable()` returning `false`. The two diagrams below only make sense in a Free build.
 
 ### 3a. Connect / usage reporting (user-driven)
 
@@ -355,7 +355,7 @@ The private package `@accomplish/llm-gateway-client` is loaded via dynamic `impo
 sequenceDiagram
     autonumber
     box mistyrose Electron Renderer process
-      participant UI as Settings UI<br/>("Use Accomplish AI")
+      participant UI as Settings UI<br/>("Use Zmeel AI")
       participant Pre as Preload
     end
     box aliceblue Electron Main process
@@ -364,16 +364,16 @@ sequenceDiagram
     end
     box honeydew Daemon process
       participant RPC as DaemonRpcServer
-      participant RT as AccomplishRuntime<br/>(Free impl, dynamically loaded)
+      participant RT as ZmeelRuntime<br/>(Free impl, dynamically loaded)
     end
     box lavender Outbound HTTPS
-      participant GW as Accomplish LLM Gateway
+      participant GW as Zmeel LLM Gateway
     end
 
-    UI->>Pre: window.accomplish.connectAccomplishAi()
-    Pre->>H: ipcRenderer.invoke('accomplish-ai:connect')<br/>[IPC invoke]
-    H->>DC: client.call('accomplish-ai.connect')
-    DC->>RPC: JSON-RPC 'accomplish-ai.connect'<br/>[JSON-RPC]
+    UI->>Pre: window.zmeel.connectZmeelAi()
+    Pre->>H: ipcRenderer.invoke('zmeel-ai:connect')<br/>[IPC invoke]
+    H->>DC: client.call('zmeel-ai.connect')
+    DC->>RPC: JSON-RPC 'zmeel-ai.connect'<br/>[JSON-RPC]
     RPC->>RT: runtime.connect(storageDeps)
     RT->>GW: OAuth / device-code flow<br/>[HTTPS, DPoP-signed]
     GW-->>RT: tokens + initial usage balance
@@ -383,8 +383,8 @@ sequenceDiagram
     Note over RT,GW: Long-lived listener subscription<br/>runtime.onUsageUpdate(listener)
 
     loop on each gateway response
-      GW-->>RT: response header:<br/>X-Accomplish-Usage: { remaining, plan }
-      RT->>RPC: rpc.notify('accomplish-ai.usage-update', usage)<br/>[JSON-RPC notify]
+      GW-->>RT: response header:<br/>X-Zmeel-Usage: { remaining, plan }
+      RT->>RPC: rpc.notify('zmeel-ai.usage-update', usage)<br/>[JSON-RPC notify]
       RPC-->>UI: IPC push then Zustand update<br/>then badge re-renders
     end
 ```
@@ -399,13 +399,13 @@ sequenceDiagram
     box honeydew Daemon process
       participant TS as TaskService
       participant A as OpenCodeAdapter
-      participant RT as AccomplishRuntime
+      participant RT as ZmeelRuntime
     end
     box oldlace opencode serve subprocess
       participant OC as opencode serve
     end
     box lavender Outbound HTTPS
-      participant GW as Accomplish LLM Gateway
+      participant GW as Zmeel LLM Gateway
       participant AI as Upstream AI Provider
     end
 
@@ -420,7 +420,7 @@ sequenceDiagram
     GW->>GW: debit credits on RT's<br/>current proxyTaskId bucket
     GW->>AI: upstream forward<br/>[HTTPS]
     AI-->>GW: response stream + usage metadata
-    GW-->>OC: streamed completion +<br/>X-Accomplish-Usage header
+    GW-->>OC: streamed completion +<br/>X-Zmeel-Usage header
     GW-->>RT: (also) usage-update listener fires<br/>(see §3a last loop)
     OC-->>A: SSE message.part.delta / tool events<br/>[SSE]
 
@@ -431,9 +431,9 @@ sequenceDiagram
 **Key points:**
 
 - **Where the taskId is injected.** `setProxyTaskId` is the single hot-path call between OSS code and the private runtime. It runs at `OpenCodeAdapter.startTask` and again (with `undefined`) at `teardown`. Every gateway-bound LLM request in between gets attributed to that task.
-- **OpenCode doesn't know about the gateway.** From `opencode serve`'s point of view it is calling a normal provider endpoint — the swap happens inside the provider config that `buildAccomplishAiConfig` emits. That's why the integration survives OpenCode SDK upgrades without changes.
+- **OpenCode doesn't know about the gateway.** From `opencode serve`'s point of view it is calling a normal provider endpoint — the swap happens inside the provider config that `buildZmeelAiConfig` emits. That's why the integration survives OpenCode SDK upgrades without changes.
 - **Two usage signal paths.** The response header feeds the in-UI balance; the gateway's own accounting tracks per-task credit spend for rate-limiting and abuse detection.
-- **OSS parity.** In the OSS build `setProxyTaskId` is `undefined` (optional-chain short-circuits), `buildAccomplishAiConfig` returns empty, and `accomplish-ai.*` RPCs throw `accomplish_runtime_unavailable`. None of these diagrams' Free-specific arrows fire.
+- **OSS parity.** In the OSS build `setProxyTaskId` is `undefined` (optional-chain short-circuits), `buildZmeelAiConfig` returns empty, and `zmeel-ai.*` RPCs throw `zmeel_runtime_unavailable`. None of these diagrams' Free-specific arrows fire.
 
 ---
 
@@ -441,7 +441,7 @@ sequenceDiagram
 
 The two tables below enumerate every wire that leaves a process. **Every port we open is bound to `127.0.0.1`** — no service in this document is reachable from the network. The "What it does" column is the short version; hop details live in §1–§3.
 
-### 4.1 Local ports Accomplish opens
+### 4.1 Local ports Zmeel opens
 
 | Port     | What it does                                                                                                | Caller → Listener                    | Protocol                               | Status |
 | -------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------ | -------------------------------------- | ------ |
@@ -468,7 +468,7 @@ All calls are outbound HTTPS. Credentials are loaded from `SecureStorage` (AES-2
 | Azure Foundry / Azure OpenAI | `cognitiveservices.azure.com` (via local `:9228` proxy) | Azure-hosted OpenAI models with Azure AD auth                                | local proxy → Azure                                            |
 | AWS Bedrock                  | `bedrock-runtime.<region>.amazonaws.com`                | Anthropic and others via AWS IAM (for enterprise AWS users)                  | `opencode serve`                                               |
 | ElevenLabs STT               | `api.elevenlabs.io`                                     | Voice-to-text transcription for the task-launcher mic button                 | Daemon `SpeechService`                                         |
-| Accomplish LLM Gateway       | `ACCOMPLISH_GATEWAY_URL` (build-env)                    | **Free build only:** proxies LLM calls so users spend Accomplish credits     | `opencode serve` via proxy env injected by the private runtime |
+| Zmeel LLM Gateway       | `ZMEEL_GATEWAY_URL` (build-env)                    | **Free build only:** proxies LLM calls so users spend Zmeel credits     | `opencode serve` via proxy env injected by the private runtime |
 | MCP connectors               | user-configured                                         | Remote MCP tool endpoints (Linear, GitHub, etc.) — OAuth 2.0 auto-discovered | `opencode serve` / MCP OAuth client                            |
 | WhatsApp (Baileys)           | WhatsApp servers via Baileys WebSocket                  | Inbound + outbound WhatsApp messages as a task source/sink                   | Daemon `WhatsAppDaemonService`                                 |
 

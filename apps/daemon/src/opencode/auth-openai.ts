@@ -69,7 +69,7 @@ import {
   getOpenAiOauthStatus,
   getOpenCodeAuthJsonPath,
   type OpenAiOauthPlan,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import type { OpencodeClient } from '@opencode-ai/sdk/v2';
 import { log } from '../logger.js';
 import { createTransientOpencodeClient, type ServerManagerDeps } from './server-manager.js';

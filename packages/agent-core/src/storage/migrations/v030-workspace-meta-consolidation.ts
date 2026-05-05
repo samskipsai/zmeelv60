@@ -2,7 +2,7 @@ import type { Database } from 'better-sqlite3';
 import type { Migration } from './index.js';
 
 /**
- * Consolidate `workspace-meta.db` into `accomplish.db`.
+ * Consolidate `workspace-meta.db` into `zmeel.db`.
  *
  * WHY:
  *   The workspace metadata tables (`workspaces`, `workspace_meta`,

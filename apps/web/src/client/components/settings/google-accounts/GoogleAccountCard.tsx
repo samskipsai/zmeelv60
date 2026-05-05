@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { GoogleAccount } from '@accomplish_ai/agent-core/common';
+import type { GoogleAccount } from '@zmeel/agent-core/common';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

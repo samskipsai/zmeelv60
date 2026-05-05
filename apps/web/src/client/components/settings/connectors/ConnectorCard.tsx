@@ -1,6 +1,6 @@
 import { memo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { McpConnector, ConnectorStatus } from '@accomplish_ai/agent-core/common';
+import type { McpConnector, ConnectorStatus } from '@zmeel/agent-core/common';
 
 interface ConnectorCardProps {
   connector: McpConnector;

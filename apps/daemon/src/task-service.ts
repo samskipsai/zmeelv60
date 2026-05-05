@@ -16,7 +16,7 @@ import {
   type PermissionResponse,
   type TaskSource,
   type FileAttachmentInfo,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import {
   type TaskConfigBuilderOptions,
   isCliAvailable,
@@ -54,7 +54,7 @@ export class TaskService extends EventEmitter {
       isPackaged: options.isPackaged ?? false,
       resourcesPath: options.resourcesPath ?? '',
       appPath: options.appPath ?? '',
-      accomplishRuntime: options.accomplishRuntime,
+      zmeelRuntime: options.zmeelRuntime,
     };
     // Default probe: treat UI as always connected. Tests + tooling that
     // construct TaskService without an RPC server get this default — the
@@ -100,7 +100,7 @@ export class TaskService extends EventEmitter {
       isPackaged: this.opts.isPackaged,
       resourcesPath: this.opts.resourcesPath,
       appPath: this.opts.appPath,
-      accomplishRuntime: this.opts.accomplishRuntime,
+      zmeelRuntime: this.opts.zmeelRuntime,
     });
 
     this.taskManager = createTaskManager({

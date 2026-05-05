@@ -1,18 +1,18 @@
 /**
  * Integration tests for taskStore (Zustand)
- * Tests store actions with mocked window.accomplish API
+ * Tests store actions with mocked window.zmeel API
  * @module __tests__/integration/renderer/taskStore.integration.test
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { STARTUP_STAGES } from '@accomplish_ai/agent-core/common';
+import { STARTUP_STAGES } from '@zmeel/agent-core/common';
 import type {
   Task,
   TaskConfig,
   TaskStatus,
   TaskMessage,
   TaskResult,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 // Helper to create a mock task
 function createMockTask(
@@ -54,8 +54,8 @@ function createDeferred<T>() {
   return { promise, resolve, reject };
 }
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   startTask: vi.fn(),
   cancelTask: vi.fn(),
   interruptTask: vi.fn(),
@@ -91,12 +91,12 @@ const mockAccomplish = {
   saveBedrockCredentials: vi.fn().mockResolvedValue(undefined),
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
-// Mock window.accomplish for global subscriptions
+// Mock window.zmeel for global subscriptions
 const mockOnTaskProgress = vi.fn();
 const mockOnTaskUpdate = vi.fn();
 
@@ -109,7 +109,7 @@ function getTaskProgressHandler(): (progress: unknown) => void {
 }
 
 vi.stubGlobal('window', {
-  accomplish: {
+  zmeel: {
     onTaskProgress: mockOnTaskProgress,
     onTaskUpdate: mockOnTaskUpdate,
     onTodoUpdate: vi.fn(),
@@ -225,7 +225,7 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       const mockTask = createMockTask('task-123', 'Test prompt', 'running');
-      mockAccomplish.startTask.mockResolvedValueOnce(mockTask);
+      mockZmeel.startTask.mockResolvedValueOnce(mockTask);
 
       const config: TaskConfig = { prompt: 'Test prompt' };
 
@@ -234,7 +234,7 @@ describe('taskStore Integration', () => {
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.startTask).toHaveBeenCalledWith(config);
+      expect(mockZmeel.startTask).toHaveBeenCalledWith(config);
       expect(result).toEqual(mockTask);
       expect(state.currentTask).toEqual(mockTask);
       expect(state.isLoading).toBe(false);
@@ -245,7 +245,7 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       const mockTask = createMockTask('task-123', 'Test prompt', 'queued');
-      mockAccomplish.startTask.mockResolvedValueOnce(mockTask);
+      mockZmeel.startTask.mockResolvedValueOnce(mockTask);
 
       // Act
       await useTaskStore.getState().startTask({ prompt: 'Test prompt' });
@@ -258,7 +258,7 @@ describe('taskStore Integration', () => {
     it('should set error state on failure', async () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
-      mockAccomplish.startTask.mockRejectedValueOnce(new Error('API Error'));
+      mockZmeel.startTask.mockRejectedValueOnce(new Error('API Error'));
 
       // Act
       const result = await useTaskStore.getState().startTask({ prompt: 'Test prompt' });
@@ -273,7 +273,7 @@ describe('taskStore Integration', () => {
     it('should handle non-Error exceptions gracefully', async () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
-      mockAccomplish.startTask.mockRejectedValueOnce('String error');
+      mockZmeel.startTask.mockRejectedValueOnce('String error');
 
       // Act
       const result = await useTaskStore.getState().startTask({ prompt: 'Test' });
@@ -288,7 +288,7 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       const mockTask = createMockTask('task-123', 'Test', 'running');
-      mockAccomplish.startTask.mockResolvedValueOnce(mockTask);
+      mockZmeel.startTask.mockResolvedValueOnce(mockTask);
 
       // Set existing tasks
       useTaskStore.setState({ tasks: [createMockTask('existing-task')] });
@@ -307,7 +307,7 @@ describe('taskStore Integration', () => {
       const { useTaskStore } = await import('@/stores/taskStore');
       const existingTask = createMockTask('task-123', 'Old prompt', 'pending');
       const updatedTask = createMockTask('task-123', 'New prompt', 'running');
-      mockAccomplish.startTask.mockResolvedValueOnce(updatedTask);
+      mockZmeel.startTask.mockResolvedValueOnce(updatedTask);
 
       useTaskStore.setState({ tasks: [existingTask] });
 
@@ -324,8 +324,8 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       const deferred = createDeferred<Task>();
-      mockAccomplish.startTask.mockReturnValueOnce(deferred.promise);
-      mockAccomplish.clearTaskHistory.mockResolvedValueOnce(undefined);
+      mockZmeel.startTask.mockReturnValueOnce(deferred.promise);
+      mockZmeel.clearTaskHistory.mockResolvedValueOnce(undefined);
 
       // Act
       const startTaskPromise = useTaskStore.getState().startTask({ prompt: 'Test prompt' });
@@ -355,7 +355,7 @@ describe('taskStore Integration', () => {
 
       // Assert
       expect(useTaskStore.getState().error).toBe('No active task to continue');
-      expect(mockAccomplish.logEvent).toHaveBeenCalledWith(
+      expect(mockZmeel.logEvent).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'warn',
           message: 'UI follow-up failed: no active task',
@@ -382,7 +382,7 @@ describe('taskStore Integration', () => {
       expect(useTaskStore.getState().error).toBe(
         'No session to continue - please start a new task',
       );
-      expect(mockAccomplish.logEvent).toHaveBeenCalledWith(
+      expect(mockZmeel.logEvent).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'warn',
           message: 'UI follow-up failed: missing session',
@@ -396,7 +396,7 @@ describe('taskStore Integration', () => {
         ...createMockTask('task-123', 'Original', 'interrupted'),
       };
       const newTask = createMockTask('task-456', 'Fresh start', 'running');
-      mockAccomplish.startTask.mockResolvedValueOnce(newTask);
+      mockZmeel.startTask.mockResolvedValueOnce(newTask);
 
       useTaskStore.setState({ currentTask: interruptedTask, tasks: [interruptedTask] });
 
@@ -404,7 +404,7 @@ describe('taskStore Integration', () => {
       await useTaskStore.getState().sendFollowUp('New message');
 
       // Assert
-      expect(mockAccomplish.startTask).toHaveBeenCalled();
+      expect(mockZmeel.startTask).toHaveBeenCalled();
     });
 
     it('should resume session when task has sessionId', async () => {
@@ -415,7 +415,7 @@ describe('taskStore Integration', () => {
         sessionId: 'session-abc',
       };
       const resumedTask = createMockTask('task-123', 'Test', 'running');
-      mockAccomplish.resumeSession.mockResolvedValueOnce(resumedTask);
+      mockZmeel.resumeSession.mockResolvedValueOnce(resumedTask);
 
       useTaskStore.setState({ currentTask: taskWithSession, tasks: [taskWithSession] });
 
@@ -424,7 +424,7 @@ describe('taskStore Integration', () => {
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.resumeSession).toHaveBeenCalledWith(
+      expect(mockZmeel.resumeSession).toHaveBeenCalledWith(
         'session-abc',
         'Continue please',
         'task-123',
@@ -441,7 +441,7 @@ describe('taskStore Integration', () => {
         result: { status: 'success', sessionId: 'result-session-xyz' },
       };
       const resumedTask = createMockTask('task-123', 'Test', 'running');
-      mockAccomplish.resumeSession.mockResolvedValueOnce(resumedTask);
+      mockZmeel.resumeSession.mockResolvedValueOnce(resumedTask);
 
       useTaskStore.setState({ currentTask: taskWithResultSession, tasks: [taskWithResultSession] });
 
@@ -449,7 +449,7 @@ describe('taskStore Integration', () => {
       await useTaskStore.getState().sendFollowUp('More work');
 
       // Assert
-      expect(mockAccomplish.resumeSession).toHaveBeenCalledWith(
+      expect(mockZmeel.resumeSession).toHaveBeenCalledWith(
         'result-session-xyz',
         'More work',
         'task-123',
@@ -465,7 +465,7 @@ describe('taskStore Integration', () => {
         sessionId: 'session-abc',
         messages: [],
       };
-      mockAccomplish.resumeSession.mockResolvedValueOnce(
+      mockZmeel.resumeSession.mockResolvedValueOnce(
         createMockTask('task-123', 'Test', 'running'),
       );
 
@@ -488,7 +488,7 @@ describe('taskStore Integration', () => {
         ...createMockTask('task-123', 'Test', 'completed'),
         sessionId: 'session-abc',
       };
-      mockAccomplish.resumeSession.mockRejectedValueOnce(new Error('Resume failed'));
+      mockZmeel.resumeSession.mockRejectedValueOnce(new Error('Resume failed'));
 
       useTaskStore.setState({ currentTask: taskWithSession, tasks: [taskWithSession] });
 
@@ -511,8 +511,8 @@ describe('taskStore Integration', () => {
         sessionId: 'session-abc',
       };
       useTaskStore.setState({ currentTask: taskWithSession, tasks: [taskWithSession] });
-      mockAccomplish.resumeSession.mockReturnValueOnce(deferred.promise);
-      mockAccomplish.clearTaskHistory.mockResolvedValueOnce(undefined);
+      mockZmeel.resumeSession.mockReturnValueOnce(deferred.promise);
+      mockZmeel.clearTaskHistory.mockResolvedValueOnce(undefined);
 
       // Act
       const followUpPromise = useTaskStore.getState().sendFollowUp('Continue');
@@ -536,14 +536,14 @@ describe('taskStore Integration', () => {
       const { useTaskStore } = await import('@/stores/taskStore');
       const runningTask = createMockTask('task-123', 'Test', 'running');
       useTaskStore.setState({ currentTask: runningTask, tasks: [runningTask] });
-      mockAccomplish.cancelTask.mockResolvedValueOnce(undefined);
+      mockZmeel.cancelTask.mockResolvedValueOnce(undefined);
 
       // Act
       await useTaskStore.getState().cancelTask();
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.cancelTask).toHaveBeenCalledWith('task-123');
+      expect(mockZmeel.cancelTask).toHaveBeenCalledWith('task-123');
       expect(state.currentTask?.status).toBe('cancelled');
       expect(state.tasks[0].status).toBe('cancelled');
     });
@@ -556,7 +556,7 @@ describe('taskStore Integration', () => {
       await useTaskStore.getState().cancelTask();
 
       // Assert
-      expect(mockAccomplish.cancelTask).not.toHaveBeenCalled();
+      expect(mockZmeel.cancelTask).not.toHaveBeenCalled();
     });
   });
 
@@ -566,13 +566,13 @@ describe('taskStore Integration', () => {
       const { useTaskStore } = await import('@/stores/taskStore');
       const runningTask = createMockTask('task-123', 'Test', 'running');
       useTaskStore.setState({ currentTask: runningTask });
-      mockAccomplish.interruptTask.mockResolvedValueOnce(undefined);
+      mockZmeel.interruptTask.mockResolvedValueOnce(undefined);
 
       // Act
       await useTaskStore.getState().interruptTask();
 
       // Assert
-      expect(mockAccomplish.interruptTask).toHaveBeenCalledWith('task-123');
+      expect(mockZmeel.interruptTask).toHaveBeenCalledWith('task-123');
     });
 
     it('should not call API for non-running task', async () => {
@@ -585,7 +585,7 @@ describe('taskStore Integration', () => {
       await useTaskStore.getState().interruptTask();
 
       // Assert
-      expect(mockAccomplish.interruptTask).not.toHaveBeenCalled();
+      expect(mockZmeel.interruptTask).not.toHaveBeenCalled();
     });
 
     it('should not change task status', async () => {
@@ -593,7 +593,7 @@ describe('taskStore Integration', () => {
       const { useTaskStore } = await import('@/stores/taskStore');
       const runningTask = createMockTask('task-123', 'Test', 'running');
       useTaskStore.setState({ currentTask: runningTask });
-      mockAccomplish.interruptTask.mockResolvedValueOnce(undefined);
+      mockZmeel.interruptTask.mockResolvedValueOnce(undefined);
 
       // Act
       await useTaskStore.getState().interruptTask();
@@ -702,7 +702,7 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       useTaskStore.setState({ error: 'Previous error' });
-      mockAccomplish.startTask.mockResolvedValueOnce(createMockTask('task-123'));
+      mockZmeel.startTask.mockResolvedValueOnce(createMockTask('task-123'));
 
       // Act
       await useTaskStore.getState().startTask({ prompt: 'Test' });
@@ -724,7 +724,7 @@ describe('taskStore Integration', () => {
         tasks: [taskWithSession],
         error: 'Previous error',
       });
-      mockAccomplish.resumeSession.mockResolvedValueOnce(
+      mockZmeel.resumeSession.mockResolvedValueOnce(
         createMockTask('task-123', 'Test', 'running'),
       );
 
@@ -746,14 +746,14 @@ describe('taskStore Integration', () => {
         createMockTask('task-2'),
         createMockTask('task-3'),
       ];
-      mockAccomplish.listTasks.mockResolvedValueOnce(mockTasks);
+      mockZmeel.listTasks.mockResolvedValueOnce(mockTasks);
 
       // Act
       await useTaskStore.getState().loadTasks();
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.listTasks).toHaveBeenCalled();
+      expect(mockZmeel.listTasks).toHaveBeenCalled();
       expect(state.tasks).toEqual(mockTasks);
     });
   });
@@ -763,14 +763,14 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       const mockTask = createMockTask('task-123', 'Loaded task');
-      mockAccomplish.getTask.mockResolvedValueOnce(mockTask);
+      mockZmeel.getTask.mockResolvedValueOnce(mockTask);
 
       // Act
       await useTaskStore.getState().loadTaskById('task-123');
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.getTask).toHaveBeenCalledWith('task-123');
+      expect(mockZmeel.getTask).toHaveBeenCalledWith('task-123');
       expect(state.currentTask).toEqual(mockTask);
       expect(state.error).toBeNull();
     });
@@ -778,7 +778,7 @@ describe('taskStore Integration', () => {
     it('should set error when task not found', async () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
-      mockAccomplish.getTask.mockResolvedValueOnce(null);
+      mockZmeel.getTask.mockResolvedValueOnce(null);
 
       // Act
       await useTaskStore.getState().loadTaskById('non-existent');
@@ -795,8 +795,8 @@ describe('taskStore Integration', () => {
       const deferred = createDeferred<Task | null>();
       const trackedTask = createMockTask('task-123', 'Tracked task');
       useTaskStore.setState({ tasks: [trackedTask] });
-      mockAccomplish.getTask.mockReturnValueOnce(deferred.promise);
-      mockAccomplish.deleteTask.mockResolvedValueOnce(undefined);
+      mockZmeel.getTask.mockReturnValueOnce(deferred.promise);
+      mockZmeel.deleteTask.mockResolvedValueOnce(undefined);
 
       // Act
       const loadTaskPromise = useTaskStore.getState().loadTaskById('task-123');
@@ -818,14 +818,14 @@ describe('taskStore Integration', () => {
       const { useTaskStore } = await import('@/stores/taskStore');
       const tasks = [createMockTask('task-1'), createMockTask('task-2'), createMockTask('task-3')];
       useTaskStore.setState({ tasks });
-      mockAccomplish.deleteTask.mockResolvedValueOnce(undefined);
+      mockZmeel.deleteTask.mockResolvedValueOnce(undefined);
 
       // Act
       await useTaskStore.getState().deleteTask('task-2');
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.deleteTask).toHaveBeenCalledWith('task-2');
+      expect(mockZmeel.deleteTask).toHaveBeenCalledWith('task-2');
       expect(state.tasks).toHaveLength(2);
       expect(state.tasks.find((t) => t.id === 'task-2')).toBeUndefined();
     });
@@ -844,12 +844,12 @@ describe('taskStore Integration', () => {
             id: 'perm-1',
             taskId: 'task-1',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
           'task-2': {
             id: 'perm-2',
             taskId: 'task-2',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
         },
         setupProgress: 'Downloading dependencies...',
         setupProgressTaskId: 'task-2',
@@ -864,7 +864,7 @@ describe('taskStore Integration', () => {
         todos: [{ id: 'todo-1', content: 'Finish setup', status: 'in_progress' }],
         todosTaskId: 'task-2',
       });
-      mockAccomplish.deleteTask.mockResolvedValueOnce(undefined);
+      mockZmeel.deleteTask.mockResolvedValueOnce(undefined);
 
       await useTaskStore.getState().deleteTask('task-2');
       onTaskProgress({
@@ -911,7 +911,7 @@ describe('taskStore Integration', () => {
             id: 'perm-1',
             taskId: 'task-1',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
         },
         setupProgress: 'Downloading dependencies...',
         setupProgressTaskId: 'task-1',
@@ -926,7 +926,7 @@ describe('taskStore Integration', () => {
         todos: [{ id: 'todo-1', content: 'Finish setup', status: 'in_progress' }],
         todosTaskId: 'task-1',
       });
-      mockAccomplish.deleteTask.mockResolvedValueOnce(undefined);
+      mockZmeel.deleteTask.mockResolvedValueOnce(undefined);
 
       await useTaskStore.getState().deleteTask('task-2');
       const state = useTaskStore.getState();
@@ -957,14 +957,14 @@ describe('taskStore Integration', () => {
       // Arrange
       const { useTaskStore } = await import('@/stores/taskStore');
       useTaskStore.setState({ tasks: [createMockTask('task-1'), createMockTask('task-2')] });
-      mockAccomplish.clearTaskHistory.mockResolvedValueOnce(undefined);
+      mockZmeel.clearTaskHistory.mockResolvedValueOnce(undefined);
 
       // Act
       await useTaskStore.getState().clearHistory();
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.clearTaskHistory).toHaveBeenCalled();
+      expect(mockZmeel.clearTaskHistory).toHaveBeenCalled();
       expect(state.tasks).toEqual([]);
     });
 
@@ -982,7 +982,7 @@ describe('taskStore Integration', () => {
             id: 'perm-1',
             taskId: 'task-1',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
         },
         setupProgress: 'Downloading dependencies...',
         setupProgressTaskId: 'task-1',
@@ -997,7 +997,7 @@ describe('taskStore Integration', () => {
         todos: [{ id: 'todo-1', content: 'Finish setup', status: 'in_progress' }],
         todosTaskId: 'task-1',
       });
-      mockAccomplish.clearTaskHistory.mockResolvedValueOnce(undefined);
+      mockZmeel.clearTaskHistory.mockResolvedValueOnce(undefined);
 
       await useTaskStore.getState().clearHistory();
       onTaskProgress({
@@ -1042,7 +1042,7 @@ describe('taskStore Integration', () => {
             id: 'perm-1',
             taskId: 'task-1',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
         },
         setupProgress: 'Downloading...',
         setupProgressTaskId: 'task-1',
@@ -1076,10 +1076,10 @@ describe('taskStore Integration', () => {
             id: 'perm-1',
             taskId: 'task-1',
             type: 'file',
-          } as import('@accomplish_ai/agent-core/common').PermissionRequest,
+          } as import('@zmeel/agent-core/common').PermissionRequest,
         },
       });
-      mockAccomplish.respondToPermission.mockResolvedValueOnce(undefined);
+      mockZmeel.respondToPermission.mockResolvedValueOnce(undefined);
 
       const response = { requestId: 'perm-1', taskId: 'task-1', decision: 'allow' as const };
 
@@ -1088,7 +1088,7 @@ describe('taskStore Integration', () => {
       const state = useTaskStore.getState();
 
       // Assert
-      expect(mockAccomplish.respondToPermission).toHaveBeenCalledWith(response);
+      expect(mockZmeel.respondToPermission).toHaveBeenCalledWith(response);
       expect(state.permissionRequests['task-1']).toBeUndefined();
     });
   });

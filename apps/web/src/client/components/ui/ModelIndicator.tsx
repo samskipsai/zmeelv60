@@ -22,8 +22,8 @@ import {
   getModelDisplayName,
   DEFAULT_PROVIDERS,
   PROVIDER_META,
-} from '@accomplish_ai/agent-core/common';
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core/common';
 import { useProviderSettings } from '@/components/settings/hooks/useProviderSettings';
 import { logger } from '@/lib/logger';
 import { ProviderSubMenu } from '@/components/ui/ProviderSubMenu';

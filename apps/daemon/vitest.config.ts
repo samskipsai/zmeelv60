@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   resolve: {
     alias: {
-      '@accomplish_ai/agent-core': resolve(__dirname, '../../packages/agent-core/src'),
+      '@zmeel/agent-core': resolve(__dirname, '../../packages/agent-core/src'),
     },
   },
   test: {

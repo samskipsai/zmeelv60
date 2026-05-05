@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Skill } from '@accomplish_ai/agent-core';
-import { getAccomplish } from '@/lib/accomplish';
+import type { Skill } from '@zmeel/agent-core';
+import { getZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
 import { filterSkills, findSlashContext, INITIAL_SLASH_STATE } from './useSlashCommandFilter';
 import type {
@@ -30,8 +30,8 @@ export function useSlashCommand({
 
   const loadSkills = useCallback(async () => {
     try {
-      const accomplish = getAccomplish();
-      const skills = await accomplish.getEnabledSkills();
+      const zmeel = getZmeel();
+      const skills = await zmeel.getEnabledSkills();
       const visible = skills.filter((s) => !s.isHidden);
       skillsCacheRef.current = visible;
       return visible;

@@ -10,7 +10,7 @@
  * concurrently, which was the driver of the entire migration.
  *
  * Post-M5 the daemon is the sole owner. Main no longer opens
- * `accomplish.db`, the `secure-storage.json` file, or the legacy
+ * `zmeel.db`, the `secure-storage.json` file, or the legacy
  * `workspace-meta.db`. The only thing left on this side is *path math*
  * so main can (a) hand the right paths to the daemon on spawn, and
  * (b) surface the legacy electron-store JSON paths the daemon imports
@@ -25,7 +25,7 @@ import { app } from 'electron';
 import path from 'path';
 
 export function getDatabasePath(): string {
-  const dbName = app.isPackaged ? 'accomplish.db' : 'accomplish-dev.db';
+  const dbName = app.isPackaged ? 'zmeel.db' : 'zmeel-dev.db';
   return path.join(app.getPath('userData'), dbName);
 }
 

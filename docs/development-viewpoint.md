@@ -1,4 +1,4 @@
-# Development Viewpoint — Accomplish Architecture
+# Development Viewpoint — Zmeel Architecture
 
 > Rozanski & Woods Development Viewpoint: describes the code structure, module organization, build pipeline, and technology choices that developers need to understand.
 
@@ -10,12 +10,12 @@ The monorepo contains two apps and one shared library, coordinated by **pnpm wor
 
 ```mermaid
 graph TD
-  subgraph MONOREPO["Accomplish Monorepo (pnpm workspaces)"]
+  subgraph MONOREPO["Zmeel Monorepo (pnpm workspaces)"]
     direction TB
 
-    DESKTOP["@accomplish/desktop<br/><i>Electron app · v0.3.8</i><br/>apps/desktop/"]
-    WEB["@accomplish/web<br/><i>React UI · v0.0.1</i><br/>apps/web/"]
-    CORE["@accomplish_ai/agent-core<br/><i>Shared library · v0.4.0</i><br/>packages/agent-core/"]
+    DESKTOP["@zmeel/desktop<br/><i>Electron app · v0.3.8</i><br/>apps/desktop/"]
+    WEB["@zmeel/web<br/><i>React UI · v0.0.1</i><br/>apps/web/"]
+    CORE["@zmeel/agent-core<br/><i>Shared library · v0.4.0</i><br/>packages/agent-core/"]
     MCP_TOOLS["MCP Tools<br/><i>8 standalone Node.js packages</i><br/>packages/agent-core/mcp-tools/"]
   end
 
@@ -259,8 +259,8 @@ graph TD
 | Aspect               | Details                                                             |
 | -------------------- | ------------------------------------------------------------------- |
 | **Monorepo**         | pnpm workspaces (`apps/*`, `packages/*`)                            |
-| **Apps**             | `@accomplish/desktop` (Electron 35), `@accomplish/web` (React 19)   |
-| **Shared library**   | `@accomplish_ai/agent-core` (TypeScript ESM)                        |
+| **Apps**             | `@zmeel/desktop` (Electron 35), `@zmeel/web` (React 19)   |
+| **Shared library**   | `@zmeel/agent-core` (TypeScript ESM)                        |
 | **Build tools**      | Vite 6, tsc, esbuild, electron-builder                              |
 | **OpenCode CLI**     | Go binary v1.14.18, distributed as npm packages (platform-specific) |
 | **Database**         | SQLite (better-sqlite3) + AES-256-GCM encrypted secure storage      |

@@ -31,7 +31,7 @@ export function getNodeExecutable(bundledNodeBinPath?: string): string {
   if (!bundledNodeBinPath) {
     throw new Error(
       '[Browser] Bundled Node.js path is missing. ' +
-        'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild artifacts.',
+        'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild artifacts.',
     );
   }
 
@@ -43,7 +43,7 @@ export function getNodeExecutable(bundledNodeBinPath?: string): string {
 
   throw new Error(
     `[Browser] Missing bundled Node.js executable: ${nodePath}. ` +
-      'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild artifacts.',
+      'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild artifacts.',
   );
 }
 

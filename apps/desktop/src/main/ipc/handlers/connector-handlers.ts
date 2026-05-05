@@ -8,12 +8,12 @@ import {
   generatePkceChallenge,
   buildAuthorizationUrl,
   exchangeCodeForTokens,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import type {
   McpConnector,
   OAuthMetadata,
   OAuthClientRegistration,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import { handle } from './utils';
 import { getDaemonClient } from '../../daemon-bootstrap';
 
@@ -114,8 +114,8 @@ export function registerConnectorHandlers(): void {
     if (!clientReg) {
       clientReg = await registerOAuthClient(
         metadata,
-        'accomplish://callback/mcp',
-        'Accomplish Desktop',
+        'zmeel://callback/mcp',
+        'Zmeel Desktop',
       );
     }
 
@@ -144,7 +144,7 @@ export function registerConnectorHandlers(): void {
     const authUrl = buildAuthorizationUrl({
       authorizationEndpoint: metadata.authorizationEndpoint,
       clientId: clientReg.clientId,
-      redirectUri: 'accomplish://callback/mcp',
+      redirectUri: 'zmeel://callback/mcp',
       codeChallenge: pkce.codeChallenge,
       state,
       scope: metadata.scopesSupported?.join(' '),
@@ -171,7 +171,7 @@ export function registerConnectorHandlers(): void {
         codeVerifier: flow.codeVerifier,
         clientId: flow.clientRegistration.clientId,
         clientSecret: flow.clientRegistration.clientSecret,
-        redirectUri: 'accomplish://callback/mcp',
+        redirectUri: 'zmeel://callback/mcp',
       });
 
       const client = getDaemonClient();

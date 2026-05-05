@@ -3,10 +3,10 @@
  *
  * All translations are bundled as static imports. Language preference is
  * persisted in localStorage. This module remains platform-agnostic, but when running
- * in an Electron renderer, it will call window.accomplish.setLanguage() (IPC to main process)
+ * in an Electron renderer, it will call window.zmeel.setLanguage() (IPC to main process)
  * if present, to sync the language preference with the main process. This integration is
- * fully optional: calls are guarded by (typeof window !== 'undefined' && window.accomplish?.setLanguage)
- * and are fire-and-forget with error logging. See the symbols window.accomplish.setLanguage and
+ * fully optional: calls are guarded by (typeof window !== 'undefined' && window.zmeel?.setLanguage)
+ * and are fire-and-forget with error logging. See the symbols window.zmeel.setLanguage and
  * getLanguagePreference in this module for the conditional Electron integration logic.
  */
 
@@ -68,7 +68,7 @@ export const NAMESPACES = [
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 export type Namespace = (typeof NAMESPACES)[number];
 
-export const LANGUAGE_STORAGE_KEY = 'openwork-language';
+export const LANGUAGE_STORAGE_KEY = 'zmeel-language';
 
 // Flag to track initialization
 let isInitialized = false;
@@ -191,9 +191,9 @@ export async function initI18n(): Promise<void> {
     isInitialized = true;
     logger.info(`Initialized with language: ${initialLanguage}`);
     // Sync initial language to main process so the agent reflects the stored preference
-    if (typeof window !== 'undefined' && window.accomplish?.setLanguage) {
+    if (typeof window !== 'undefined' && window.zmeel?.setLanguage) {
       const storedPref = getLanguagePreference();
-      window.accomplish.setLanguage(storedPref).catch((error) => {
+      window.zmeel.setLanguage(storedPref).catch((error) => {
         logger.warn('Failed to sync initial language preference to main process', { error });
       });
     }
@@ -213,8 +213,8 @@ export async function changeLanguage(
   await i18n.changeLanguage(resolvedLanguage);
   updateDocumentDirection(resolvedLanguage);
   // Persist to main process so the agent reads the correct language
-  if (typeof window !== 'undefined' && window.accomplish?.setLanguage) {
-    window.accomplish.setLanguage(language).catch((error) => {
+  if (typeof window !== 'undefined' && window.zmeel?.setLanguage) {
+    window.zmeel.setLanguage(language).catch((error) => {
       logger.warn('Failed to sync language preference to main process', { error });
     });
   }

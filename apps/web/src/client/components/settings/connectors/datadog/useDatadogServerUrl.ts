@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { DATADOG_REGIONS, findDatadogRegionByMcpUrl } from './regions';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 
 interface UseDatadogServerUrl {
   serverUrl: string | null;
@@ -28,7 +28,7 @@ export function useDatadogServerUrl(): UseDatadogServerUrl {
   const [urlLoading, setUrlLoading] = useState(true);
 
   useEffect(() => {
-    getAccomplish()
+    getZmeel()
       .datadogGetServerUrl()
       .then((url) => {
         setServerUrl(url);
@@ -60,7 +60,7 @@ export function useDatadogServerUrl(): UseDatadogServerUrl {
       setSaving(true);
       setSaveError(null);
       try {
-        await getAccomplish().datadogSetServerUrl(region.mcpUrl);
+        await getZmeel().datadogSetServerUrl(region.mcpUrl);
         setServerUrl(region.mcpUrl);
         setEditing(false);
         await refetch();

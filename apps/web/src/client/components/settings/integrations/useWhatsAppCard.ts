@@ -6,7 +6,7 @@
  * IPC subscriptions are delegated to useWhatsAppSubscriptions.
  */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { useWhatsAppSubscriptions } from './useWhatsAppSubscriptions';
 
 const VALID_STATUSES = new Set([
@@ -40,7 +40,7 @@ export interface WhatsAppCardActions {
 }
 
 export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
-  const accomplish = useMemo(() => getAccomplish(), []);
+  const zmeel = useMemo(() => getZmeel(), []);
 
   const [config, setConfig] = useState<WhatsAppCardState['config']>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +79,7 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
 
   const fetchConfig = useCallback(async () => {
     try {
-      const result = await accomplish.getWhatsAppConfig();
+      const result = await zmeel.getWhatsAppConfig();
       if (result?.enabled) {
         const status = normalizeStatus(result.status);
         setConfig({
@@ -101,14 +101,14 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
     } finally {
       setLoading(false);
     }
-  }, [accomplish]);
+  }, [zmeel]);
 
   useEffect(() => {
     fetchConfig();
   }, [fetchConfig]);
 
   useWhatsAppSubscriptions({
-    accomplish,
+    zmeel,
     qrTimerRef,
     connectTimeoutRef,
     setQrCode,
@@ -136,7 +136,7 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
       });
     }, 30_000);
     try {
-      await accomplish.connectWhatsApp();
+      await zmeel.connectWhatsApp();
     } catch (err) {
       if (connectTimeoutRef.current) {
         clearTimeout(connectTimeoutRef.current);
@@ -145,7 +145,7 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
       setError(err instanceof Error ? err.message : 'Failed to connect');
       setConnecting(false);
     }
-  }, [accomplish]);
+  }, [zmeel]);
 
   const handleDisconnect = useCallback(async () => {
     if (!confirmDisconnect) {
@@ -155,7 +155,7 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
     setDisconnecting(true);
     setConfirmDisconnect(false);
     try {
-      await accomplish.disconnectWhatsApp();
+      await zmeel.disconnectWhatsApp();
       setConfig(null);
       setQrCode(null);
       setError(null);
@@ -164,7 +164,7 @@ export function useWhatsAppCard(): WhatsAppCardState & WhatsAppCardActions {
     } finally {
       setDisconnecting(false);
     }
-  }, [confirmDisconnect, accomplish]);
+  }, [confirmDisconnect, zmeel]);
 
   return {
     config,

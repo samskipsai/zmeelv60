@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
-import type { Workspace } from '@accomplish_ai/agent-core/common';
+import type { Workspace } from '@zmeel/agent-core/common';
 import { EditWorkspaceForm } from './WorkspacePanelForm';
 import { KnowledgeNotesPanel } from './KnowledgeNotesPanel';
 

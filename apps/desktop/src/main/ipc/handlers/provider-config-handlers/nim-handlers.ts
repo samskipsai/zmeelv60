@@ -1,6 +1,6 @@
 import type { IpcMainInvokeEvent } from 'electron';
-import { testNimConnection, fetchNimModels } from '@accomplish_ai/agent-core/desktop-main';
-import type { NimConfig } from '@accomplish_ai/agent-core/desktop-main';
+import { testNimConnection, fetchNimModels } from '@zmeel/agent-core/desktop-main';
+import type { NimConfig } from '@zmeel/agent-core/desktop-main';
 import type { IpcHandler } from '../../types';
 import { getApiKey } from '../../../store/secureStorage';
 import { getDaemonClient } from '../../../daemon-bootstrap';

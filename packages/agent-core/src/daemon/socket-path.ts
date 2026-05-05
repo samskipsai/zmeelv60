@@ -2,10 +2,10 @@ import { createHash } from 'node:crypto';
 import { homedir, platform } from 'node:os';
 import { join } from 'node:path';
 
-const DAEMON_DIR_NAME = '.accomplish';
+const DAEMON_DIR_NAME = '.zmeel';
 const SOCKET_FILE_NAME = 'daemon.sock';
 const PID_FILE_NAME = 'daemon.pid';
-const WINDOWS_PIPE_BASE = 'accomplish-daemon';
+const WINDOWS_PIPE_BASE = 'zmeel-daemon';
 
 /**
  * Default daemon directory when no dataDir is provided.
@@ -23,7 +23,7 @@ export function getDaemonDir(): string {
  * On Windows, named pipes are kernel-level objects, so we hash the dataDir
  * to create a unique pipe name.
  *
- * @param dataDir — Explicit data directory. Falls back to `~/.accomplish`.
+ * @param dataDir — Explicit data directory. Falls back to `~/.zmeel`.
  */
 export function getSocketPath(dataDir?: string): string {
   const dir = dataDir ?? getDaemonDir();
@@ -38,7 +38,7 @@ export function getSocketPath(dataDir?: string): string {
 /**
  * Get the PID lock file path.
  *
- * @param dataDir — Explicit data directory. Falls back to `~/.accomplish`.
+ * @param dataDir — Explicit data directory. Falls back to `~/.zmeel`.
  */
 export function getPidFilePath(dataDir?: string): string {
   const dir = dataDir ?? getDaemonDir();

@@ -1,6 +1,6 @@
 import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core';
+import type { FileAttachmentInfo } from '@zmeel/agent-core';
 import { MAX_FILES, processFileAttachments } from '@/lib/fileUtils';
 
 interface UsePromptAttachmentsParams {

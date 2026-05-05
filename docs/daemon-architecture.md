@@ -23,7 +23,7 @@ sequenceDiagram
     participant PTY as OpenCode CLI<br/>(PTY subprocess)
 
     User->>React: "Organize my Downloads"
-    React->>Preload: accomplish.startTask(config)
+    React->>Preload: zmeel.startTask(config)
     Preload->>IPC: ipcRenderer.invoke('task:start', config)
 
     Note over IPC: Direct singleton access:<br/>getTaskManager()<br/>getStorage()
@@ -87,7 +87,7 @@ graph TB
     end
 
     subgraph CLI_BRIDGE["CLI Bridge"]
-        CLI["accomplish CLI commands"]
+        CLI["zmeel CLI commands"]
     end
 
     %% Active path: UI → IPC → singletons directly

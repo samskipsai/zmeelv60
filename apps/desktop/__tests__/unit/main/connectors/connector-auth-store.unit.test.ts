@@ -17,7 +17,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ConnectorAuthStore } from '@main/connectors/connector-auth-store';
-import type { ConnectorAuthStoreConfig } from '@accomplish_ai/agent-core/common';
+import type { ConnectorAuthStoreConfig } from '@zmeel/agent-core/common';
 import type { StoredAuthEntry } from '@main/connectors/connector-auth-types';
 
 // Shared in-memory state for the daemon-mock. Each test resets it in beforeEach.

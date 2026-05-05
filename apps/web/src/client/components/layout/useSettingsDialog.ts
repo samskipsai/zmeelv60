@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core/common';
-import { hasAnyReadyProvider, isProviderReady } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '@/lib/accomplish';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core/common';
+import { hasAnyReadyProvider, isProviderReady } from '@zmeel/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
 import { useProviderSettings } from '@/components/settings/hooks/useProviderSettings';
 import { FIRST_FOUR_PROVIDERS, type SettingsTabId } from './settings-tabs';
 
@@ -40,17 +40,17 @@ export function useSettingsDialog({
     updateModel,
     refetch,
   } = useProviderSettings();
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
 
   useEffect(() => {
     if (!open) {
       return;
     }
     refetch();
-    accomplish.getDebugMode().then(setDebugModeState);
-    accomplish.getNotificationsEnabled().then(setNotificationsEnabledState);
-    accomplish.getVersion().then(setAppVersion);
-  }, [open, refetch, accomplish]);
+    zmeel.getDebugMode().then(setDebugModeState);
+    zmeel.getNotificationsEnabled().then(setNotificationsEnabledState);
+    zmeel.getVersion().then(setAppVersion);
+  }, [open, refetch, zmeel]);
 
   useEffect(() => {
     if (!open) {
@@ -160,15 +160,15 @@ export function useSettingsDialog({
 
   const handleDebugToggle = useCallback(async () => {
     const newValue = !debugMode;
-    await accomplish.setDebugMode(newValue);
+    await zmeel.setDebugMode(newValue);
     setDebugModeState(newValue);
-  }, [debugMode, accomplish]);
+  }, [debugMode, zmeel]);
 
   const handleNotificationsToggle = useCallback(async () => {
     const newValue = !notificationsEnabled;
-    await accomplish.setNotificationsEnabled(newValue);
+    await zmeel.setNotificationsEnabled(newValue);
     setNotificationsEnabledState(newValue);
-  }, [notificationsEnabled, accomplish]);
+  }, [notificationsEnabled, zmeel]);
 
   const handleDone = useCallback(() => {
     if (!settings) {

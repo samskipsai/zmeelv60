@@ -1,5 +1,5 @@
 // =============================================================================
-// @accomplish_ai/agent-core/desktop-main
+// @zmeel/agent-core/desktop-main
 // =============================================================================
 // Safe entrypoint for the Electron main process. Every export re-exports from
 // a concrete source module that is DB-free (i.e. does NOT transitively import
@@ -210,7 +210,7 @@ export type {
   ProviderId,
   ConnectedProvider,
   ZaiRegion,
-  AccomplishAiCredentials,
+  ZmeelAiCredentials,
 } from './common/types/providerSettings.js';
 
 export type { CreditUsage } from './common/types/gateway.js';

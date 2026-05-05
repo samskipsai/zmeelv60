@@ -195,9 +195,9 @@ describe('DockerSandboxProvider', () => {
     it('should preserve cwd and include original env vars merged with sandbox env', async () => {
       const result = await provider.wrapSpawnArgs(BASE_SPAWN_ARGS, DOCKER_CONFIG);
       expect(result.cwd).toBe(BASE_SPAWN_ARGS.cwd);
-      // env is a new merged object: original vars preserved + ACCOMPLISH_SANDBOX_MODE injected
+      // env is a new merged object: original vars preserved + ZMEEL_SANDBOX_MODE injected
       expect(result.env).toMatchObject(BASE_SPAWN_ARGS.env);
-      expect(result.env['ACCOMPLISH_SANDBOX_MODE']).toBe('docker');
+      expect(result.env['ZMEEL_SANDBOX_MODE']).toBe('docker');
     });
   });
 });

@@ -37,7 +37,7 @@ export async function showNoUpdatesDialog(): Promise<void> {
     type: 'info',
     title: 'No Updates',
     message: `You're up to date!`,
-    detail: `Accomplish ${app.getVersion()} is the latest version.`,
+    detail: `Zmeel ${app.getVersion()} is the latest version.`,
     buttons: ['OK'],
   });
 }
@@ -69,7 +69,7 @@ export async function showManualUpdateDialog(
   const response = await dialog.showMessageBox({
     type: 'info',
     title: 'Update Available',
-    message: `A new version of Accomplish is available!`,
+    message: `A new version of Zmeel is available!`,
     detail:
       `Version ${newVersion} is available.\n` +
       `You are currently on version ${currentVersion}.\n\n` +

@@ -32,7 +32,7 @@ export type ProviderType =
   | 'venice'
   | 'nim'
   | 'copilot'
-  | 'accomplish-ai';
+  | 'zmeel-ai';
 
 export type ApiKeyProvider =
   | 'anthropic'
@@ -490,16 +490,16 @@ export const DEFAULT_PROVIDERS: ProviderConfig[] = [
     models: [],
   },
   {
-    id: 'accomplish-ai',
-    name: 'Accomplish AI',
+    id: 'zmeel-ai',
+    name: 'Zmeel AI',
     requiresApiKey: false,
-    defaultModelId: 'accomplish-ai/accomplish-free',
+    defaultModelId: 'samskipsai/zmeelv60-free',
     models: [
       {
-        id: 'accomplish-free',
-        displayName: 'Accomplish',
-        provider: 'accomplish-ai',
-        fullId: 'accomplish-ai/accomplish-free',
+        id: 'zmeel-free',
+        displayName: 'Zmeel',
+        provider: 'zmeel-ai',
+        fullId: 'samskipsai/zmeelv60-free',
         contextWindow: 128_000,
         maxOutputTokens: 32_000,
         supportsVision: true,

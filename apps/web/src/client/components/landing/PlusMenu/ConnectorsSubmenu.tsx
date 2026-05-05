@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { McpConnector, ConnectorStatus } from '@accomplish_ai/agent-core/common';
+import type { McpConnector, ConnectorStatus } from '@zmeel/agent-core/common';
 import { DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 interface ConnectorsSubmenuProps {

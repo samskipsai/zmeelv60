@@ -5,7 +5,7 @@
  */
 
 import { vi } from 'vitest';
-import type { PermissionRequest } from '@accomplish_ai/agent-core';
+import type { PermissionRequest } from '@zmeel/agent-core';
 
 // Mock framer-motion for simpler testing
 vi.mock('framer-motion', () => ({

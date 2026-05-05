@@ -1,6 +1,6 @@
 /**
- * @deprecated Import from '@accomplish_ai/agent-core/desktop-main' instead.
+ * @deprecated Import from '@zmeel/agent-core/desktop-main' instead.
  * This file re-exports from the core package for backward compatibility.
  */
 
-export { generateTaskSummary, type GetApiKeyFn } from '@accomplish_ai/agent-core/desktop-main';
+export { generateTaskSummary, type GetApiKeyFn } from '@zmeel/agent-core/desktop-main';

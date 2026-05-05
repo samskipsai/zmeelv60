@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { SearchableSelect } from '@/components/ui/searchable-select';
 import { VERTEX_LOCATIONS } from './locations';
 
@@ -24,9 +24,9 @@ export function VertexAdcTab({
 
   useEffect(() => {
     let cancelled = false;
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
 
-    Promise.all([accomplish.listVertexProjects(), accomplish.detectVertexProject()])
+    Promise.all([zmeel.listVertexProjects(), zmeel.detectVertexProject()])
       .then(([listResult, detectResult]) => {
         if (cancelled) return;
 

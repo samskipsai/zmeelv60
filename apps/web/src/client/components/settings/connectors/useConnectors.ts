@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { McpConnector } from '@accomplish_ai/agent-core/common';
-import type { ConnectorAuthStatus, OAuthProviderId } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '@/lib/accomplish';
+import type { McpConnector } from '@zmeel/agent-core/common';
+import type { ConnectorAuthStatus, OAuthProviderId } from '@zmeel/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('useConnectors');
@@ -24,12 +24,12 @@ export function useConnectors() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchConnectors = useCallback(async () => {
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
     try {
       const [connectorsResult, slackStatusResult, builtInStatusResult] = await Promise.allSettled([
-        accomplish.getConnectors(),
-        accomplish.getSlackMcpOauthStatus(),
-        accomplish.getBuiltInConnectorAuthStatus(),
+        zmeel.getConnectors(),
+        zmeel.getSlackMcpOauthStatus(),
+        zmeel.getBuiltInConnectorAuthStatus(),
       ]);
 
       if (connectorsResult.status === 'fulfilled') {
@@ -70,15 +70,15 @@ export function useConnectors() {
   }, [fetchConnectors]);
 
   const addConnector = useCallback(async (name: string, url: string) => {
-    const accomplish = getAccomplish();
-    const connector = await accomplish.addConnector(name, url);
+    const zmeel = getZmeel();
+    const connector = await zmeel.addConnector(name, url);
     setConnectors((prev) => [connector, ...prev]);
     return connector;
   }, []);
 
   const deleteConnector = useCallback(async (id: string) => {
-    const accomplish = getAccomplish();
-    await accomplish.deleteConnector(id);
+    const zmeel = getZmeel();
+    await zmeel.deleteConnector(id);
     setConnectors((prev) => prev.filter((c) => c.id !== id));
   }, []);
 
@@ -89,8 +89,8 @@ export function useConnectors() {
         return;
       }
 
-      const accomplish = getAccomplish();
-      await accomplish.setConnectorEnabled(id, !connector.isEnabled);
+      const zmeel = getZmeel();
+      await zmeel.setConnectorEnabled(id, !connector.isEnabled);
       setConnectors((prev) =>
         prev.map((c) => (c.id === id ? { ...c, isEnabled: !c.isEnabled } : c)),
       );
@@ -104,8 +104,8 @@ export function useConnectors() {
     );
 
     try {
-      const accomplish = getAccomplish();
-      return await accomplish.startConnectorOAuth(connectorId);
+      const zmeel = getZmeel();
+      return await zmeel.startConnectorOAuth(connectorId);
     } catch (err) {
       setConnectors((prev) =>
         prev.map((c) => (c.id === connectorId ? { ...c, status: 'error' as const } : c)),
@@ -115,8 +115,8 @@ export function useConnectors() {
   }, []);
 
   const completeOAuth = useCallback(async (state: string, code: string) => {
-    const accomplish = getAccomplish();
-    const updated = await accomplish.completeConnectorOAuth(state, code);
+    const zmeel = getZmeel();
+    const updated = await zmeel.completeConnectorOAuth(state, code);
     if (updated) {
       setConnectors((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     }
@@ -124,8 +124,8 @@ export function useConnectors() {
   }, []);
 
   const disconnect = useCallback(async (connectorId: string) => {
-    const accomplish = getAccomplish();
-    await accomplish.disconnectConnector(connectorId);
+    const zmeel = getZmeel();
+    await zmeel.disconnectConnector(connectorId);
     setConnectors((prev) =>
       prev.map((c) => (c.id === connectorId ? { ...c, status: 'disconnected' as const } : c)),
     );
@@ -143,8 +143,8 @@ export function useConnectors() {
       }));
 
       try {
-        const accomplish = getAccomplish();
-        await accomplish.loginBuiltInConnector(providerId);
+        const zmeel = getZmeel();
+        await zmeel.loginBuiltInConnector(providerId);
         await fetchConnectors();
       } catch (err) {
         setBuiltInAuthStates((prev) => ({
@@ -161,8 +161,8 @@ export function useConnectors() {
   );
 
   const disconnectBuiltIn = useCallback(async (providerId: OAuthProviderId) => {
-    const accomplish = getAccomplish();
-    await accomplish.logoutBuiltInConnector(providerId);
+    const zmeel = getZmeel();
+    await zmeel.logoutBuiltInConnector(providerId);
     setBuiltInAuthStates((prev) => ({
       ...prev,
       [providerId]: {
@@ -174,7 +174,7 @@ export function useConnectors() {
   }, []);
 
   const authenticateSlack = useCallback(async () => {
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
 
     setSlackAuth(() => ({
       connected: false,
@@ -183,16 +183,16 @@ export function useConnectors() {
 
     try {
       if (slackAuth.pendingAuthorization) {
-        await accomplish.logoutSlackMcp();
+        await zmeel.logoutSlackMcp();
       }
 
-      await accomplish.loginSlackMcp();
-      const status = await accomplish.getSlackMcpOauthStatus();
+      await zmeel.loginSlackMcp();
+      const status = await zmeel.getSlackMcpOauthStatus();
       setSlackAuth(status);
       return status;
     } catch (err) {
       try {
-        const status = await accomplish.getSlackMcpOauthStatus();
+        const status = await zmeel.getSlackMcpOauthStatus();
         setSlackAuth(status);
       } catch {
         setSlackAuth({ connected: false, pendingAuthorization: false });
@@ -202,8 +202,8 @@ export function useConnectors() {
   }, [slackAuth.pendingAuthorization]);
 
   const disconnectSlack = useCallback(async () => {
-    const accomplish = getAccomplish();
-    await accomplish.logoutSlackMcp();
+    const zmeel = getZmeel();
+    await zmeel.logoutSlackMcp();
     setSlackAuth({ connected: false, pendingAuthorization: false });
   }, []);
 

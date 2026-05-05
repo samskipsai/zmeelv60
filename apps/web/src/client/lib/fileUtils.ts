@@ -1,4 +1,4 @@
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 
 export const MAX_FILES = 5;
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB

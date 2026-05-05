@@ -13,7 +13,7 @@ import {
   arePropsEqual,
 } from './BrowserScriptCardHelpers';
 
-// Spinning Accomplish icon component
+// Spinning Zmeel icon component
 const SpinningIcon = ({ className }: { className?: string }) => (
   <img src={loadingSymbol} alt="" className={cn('animate-spin-ccw', className)} />
 );

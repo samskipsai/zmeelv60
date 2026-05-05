@@ -5,7 +5,7 @@ import { oauthStatusTextClass, oauthStatusDotClass, getOAuthStatusKey } from './
 import { useDatadogServerUrl } from './datadog/useDatadogServerUrl';
 import { DATADOG_REGIONS, findDatadogRegionByMcpUrl } from './datadog/regions';
 import datadogIcon from '/assets/icons/integrations/datadog.svg';
-import type { ConnectorAuthStatus } from '@accomplish_ai/agent-core/common';
+import type { ConnectorAuthStatus } from '@zmeel/agent-core/common';
 
 interface DatadogConnectorCardProps {
   authState: Pick<ConnectorAuthStatus, 'connected' | 'pendingAuthorization'>;

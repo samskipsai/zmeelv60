@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Cross-platform Vite starter for desktop app
- * Sets ACCOMPLISH_ROUTER_URL environment variable and starts Vite.
+ * Sets ZMEEL_ROUTER_URL environment variable and starts Vite.
  *
  * Contributed by shiv669 (PR #590 feat/integrations-whatsapp-400).
  * Fixes Windows compatibility where inline env var assignment (VAR=value cmd)
@@ -12,7 +12,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 // Set the environment variable for all platforms
-process.env.ACCOMPLISH_ROUTER_URL = 'http://localhost:5173';
+process.env.ZMEEL_ROUTER_URL = 'http://localhost:5173';
 
 // Ensure System32 is in PATH on Windows so vite-plugin-electron can use taskkill
 if (process.platform === 'win32') {
@@ -23,7 +23,7 @@ if (process.platform === 'win32') {
   }
 }
 
-console.log('[dev-vite] Starting Vite with ACCOMPLISH_ROUTER_URL=http://localhost:5173');
+console.log('[dev-vite] Starting Vite with ZMEEL_ROUTER_URL=http://localhost:5173');
 
 // Spawn vite process from the correct directory
 const desktopDir = path.resolve(__dirname, '..');

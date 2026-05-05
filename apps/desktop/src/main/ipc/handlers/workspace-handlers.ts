@@ -5,7 +5,7 @@ import type {
   KnowledgeNoteUpdateInput,
   WorkspaceCreateInput,
   WorkspaceUpdateInput,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import * as workspaceManager from '../../store/workspaceManager';
 import { handle } from './utils';
 import { getDaemonClient } from '../../daemon-bootstrap';

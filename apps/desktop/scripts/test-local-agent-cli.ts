@@ -200,7 +200,7 @@ async function runOpenCode(
   model?: string,
   cwd?: string,
 ): Promise<void> {
-  const args = ['run', prompt, '--format', 'json', '--agent', 'accomplish'];
+  const args = ['run', prompt, '--format', 'json', '--agent', 'zmeel'];
 
   if (model) {
     args.push('--model', model);

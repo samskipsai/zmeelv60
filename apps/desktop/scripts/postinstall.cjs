@@ -27,11 +27,11 @@ const path = require('path');
 // Prevent infinite recursion when `npm install` triggered by this script
 // walks back up the tree and re-runs the parent postinstall. Happens most
 // often on Windows where path handling encourages upward walks.
-if (process.env.ACCOMPLISH_POSTINSTALL_RUNNING) {
+if (process.env.ZMEEL_POSTINSTALL_RUNNING) {
   console.log('> Postinstall already running, skipping nested invocation');
   process.exit(0);
 }
-process.env.ACCOMPLISH_POSTINSTALL_RUNNING = '1';
+process.env.ZMEEL_POSTINSTALL_RUNNING = '1';
 
 function runCommand(command, description) {
   console.log(`\n> ${description}...`);
@@ -42,7 +42,7 @@ function runCommand(command, description) {
       shell: true,
       env: {
         ...process.env,
-        ACCOMPLISH_POSTINSTALL_RUNNING: '1',
+        ZMEEL_POSTINSTALL_RUNNING: '1',
       },
     });
   } catch (_error) {
@@ -51,7 +51,7 @@ function runCommand(command, description) {
   }
 }
 
-const useBundledMcp = process.env.ACCOMPLISH_BUNDLED_MCP === '1' || process.env.CI === 'true';
+const useBundledMcp = process.env.ZMEEL_BUNDLED_MCP === '1' || process.env.CI === 'true';
 
 // Install shared MCP tools runtime dependencies (Playwright) at mcp-tools/ root.
 // MCP tools live in packages/agent-core/mcp-tools.

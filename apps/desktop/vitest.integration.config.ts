@@ -8,11 +8,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@main': path.resolve(__dirname, 'src/main'),
-      '@accomplish_ai/agent-core/common': path.resolve(
+      '@zmeel/agent-core/common': path.resolve(
         __dirname,
         '../../packages/agent-core/src/common',
       ),
-      '@accomplish_ai/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
+      '@zmeel/agent-core': path.resolve(__dirname, '../../packages/agent-core/src'),
     },
   },
   test: {

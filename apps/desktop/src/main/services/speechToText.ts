@@ -28,12 +28,12 @@ import {
   type SecureStorageAPI,
   type TranscriptionResult,
   type TranscriptionError,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 
 export type {
   TranscriptionResult,
   TranscriptionError,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 
 /**
  * Build a one-shot `SpeechService` pre-seeded with the ElevenLabs API key

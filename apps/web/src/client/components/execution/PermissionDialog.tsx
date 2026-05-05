@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AlertTriangle, AlertCircle, File, Brain } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { PermissionRequest } from '@accomplish_ai/agent-core/common';
+import type { PermissionRequest } from '@zmeel/agent-core/common';
 import { isDeleteOperation, getDisplayFilePaths } from './permission-utils';
 import { PermissionDialogFile } from './PermissionDialogFile';
 import { PermissionDialogQuestion } from './PermissionDialogQuestion';

@@ -41,7 +41,7 @@ export interface StorageOptions {
    * the returned API — i.e. desktop `getStorage()` and daemon
    * `StorageService.initialize()`. On the v30 upgrade boot the initializer
    * invokes `importLegacyWorkspaceMeta` to copy the old rows into
-   * `accomplish.db`; after successful import the deletion helper uses the
+   * `zmeel.db`; after successful import the deletion helper uses the
    * same path to remove the retired file.
    *
    * MUST NOT be passed by callers that use the API for secure-storage only
@@ -245,10 +245,10 @@ export interface ProviderSettingsAPI {
   hasReadyProvider(): boolean;
   /** Get IDs of all connected providers */
   getConnectedProviderIds(): ProviderId[];
-  /** Get cached Accomplish AI credit usage (last known from gateway) */
-  getAccomplishAiCredits(): CreditUsage | null;
-  /** Cache Accomplish AI credit usage */
-  saveAccomplishAiCredits(usage: CreditUsage): void;
+  /** Get cached Zmeel AI credit usage (last known from gateway) */
+  getZmeelAiCredits(): CreditUsage | null;
+  /** Cache Zmeel AI credit usage */
+  saveZmeelAiCredits(usage: CreditUsage): void;
 }
 
 /** API for encrypted credential storage (AES-256-GCM) */

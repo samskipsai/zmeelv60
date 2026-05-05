@@ -1,4 +1,4 @@
-import type { SandboxConfig } from '@accomplish_ai/agent-core';
+import type { SandboxConfig } from '@zmeel/agent-core';
 
 interface SandboxModeSelectorProps {
   mode: SandboxConfig['mode'];

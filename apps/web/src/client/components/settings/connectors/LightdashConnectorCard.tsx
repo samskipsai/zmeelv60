@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { oauthStatusTextClass, oauthStatusDotClass, getOAuthStatusKey } from './oauth-status';
 import { useLightdashServerUrl } from './lightdash/useLightdashServerUrl';
-import type { ConnectorAuthStatus } from '@accomplish_ai/agent-core/common';
+import type { ConnectorAuthStatus } from '@zmeel/agent-core/common';
 import lightdashIcon from '/assets/icons/integrations/lightdash.svg';
 
 interface LightdashConnectorCardProps {

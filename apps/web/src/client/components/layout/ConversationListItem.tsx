@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import type { Task } from '@accomplish_ai/agent-core/common';
+import type { Task } from '@zmeel/agent-core/common';
 import { cn } from '@/lib/utils';
 import { X, Star, SpinnerGap } from '@phosphor-icons/react';
 import { useTaskStore } from '@/stores/taskStore';

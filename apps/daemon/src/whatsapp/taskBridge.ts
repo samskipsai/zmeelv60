@@ -1,5 +1,5 @@
 /**
- * TaskBridge — routes incoming WhatsApp messages to Accomplish task creation.
+ * TaskBridge — routes incoming WhatsApp messages to Zmeel task creation.
  *
  * Contributed by aryan877 (PR #595 feat/whatsapp-integration).
  * - Rate-limiting (per-sender and global)
@@ -7,7 +7,7 @@
  * - Session continuity across conversations
  * - Prompt injection protection (sanitizeString)
  */
-import { sanitizeString } from '@accomplish_ai/agent-core';
+import { sanitizeString } from '@zmeel/agent-core';
 import { log } from '../logger.js';
 import {
   type InboundMessage,

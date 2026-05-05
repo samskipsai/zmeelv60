@@ -9,7 +9,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Warning } from '@phosphor-icons/react';
-import { useAccomplish } from '@/lib/accomplish';
+import { useZmeel } from '@/lib/zmeel';
 import { useDaemonStore } from '@/stores/daemonStore';
 import { Button } from '@/components/ui/button';
 
@@ -80,7 +80,7 @@ function getStatusDotClass(displayStatus: string): string {
 const TRANSITIONAL_STATES = new Set(['starting', 'stopping', 'reconnecting']);
 
 export function DaemonSection() {
-  const accomplish = useAccomplish();
+  const zmeel = useZmeel();
   const { t } = useTranslation('settings');
 
   // Read status from global store — single source of truth
@@ -96,7 +96,7 @@ export function DaemonSection() {
 
   const pollStatus = useCallback(async () => {
     try {
-      const result = await accomplish.daemonPing();
+      const result = await zmeel.daemonPing();
       if (result.status === 'ok') {
         setUptime(result.uptime);
         // Only set connected if not in a transitional state
@@ -117,7 +117,7 @@ export function DaemonSection() {
       // Don't override store status on poll failure — store handles
       // disconnect/reconnect events with more nuance
     }
-  }, [accomplish, setGlobalStatus]);
+  }, [zmeel, setGlobalStatus]);
 
   useEffect(() => {
     void pollStatus();
@@ -136,7 +136,7 @@ export function DaemonSection() {
     setActionInProgress('restart');
     setGlobalStatus('reconnecting');
     try {
-      await accomplish.daemonRestart();
+      await zmeel.daemonRestart();
       setGlobalStatus('connected'); // Explicit: daemon is healthy
       await pollStatus(); // Updates uptime/lastPing
     } catch {
@@ -150,7 +150,7 @@ export function DaemonSection() {
     setActionInProgress('stop');
     setGlobalStatus('stopping');
     try {
-      await accomplish.daemonStop();
+      await zmeel.daemonStop();
       setGlobalStatus('stopped');
       setUptime(0);
     } catch {
@@ -164,7 +164,7 @@ export function DaemonSection() {
     setActionInProgress('start');
     setGlobalStatus('starting');
     try {
-      await accomplish.daemonStart();
+      await zmeel.daemonStart();
       setGlobalStatus('connected'); // Explicit: daemon is healthy
       await pollStatus(); // Updates uptime/lastPing
     } catch {

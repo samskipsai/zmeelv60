@@ -25,7 +25,7 @@ export function registerLogHandlers(): void {
     const logDir = collector.getLogDir();
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    const defaultFilename = `accomplish-logs-${timestamp}.txt`;
+    const defaultFilename = `zmeel-logs-${timestamp}.txt`;
 
     const result = await dialog.showSaveDialog(window, {
       title: 'Export Application Logs',
@@ -45,7 +45,7 @@ export function registerLogHandlers(): void {
       if (fs.existsSync(logPath)) {
         fs.copyFileSync(logPath, result.filePath);
       } else {
-        const header = `Accomplish Application Logs\nExported: ${new Date().toISOString()}\nLog Directory: ${logDir}\n\nNo logs recorded yet.\n`;
+        const header = `Zmeel Application Logs\nExported: ${new Date().toISOString()}\nLog Directory: ${logDir}\n\nNo logs recorded yet.\n`;
         fs.writeFileSync(result.filePath, header);
       }
 

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import type { ConnectedProvider, LiteLLMCredentials } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider, LiteLLMCredentials } from '@zmeel/agent-core/common';
 import { ModelSelector, ConnectedControls } from '../shared';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
 

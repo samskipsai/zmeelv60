@@ -20,7 +20,7 @@ export function SkillsFilterBar({ filter, filterCounts, onFilterChange }: Skills
     all: t('skills.filterAll'),
     active: t('skills.filterActive'),
     inactive: t('skills.filterInactive'),
-    official: t('skills.byAccomplish'),
+    official: t('skills.byZmeel'),
   };
 
   const filterLabel = filterLabelMap[filter];
@@ -71,7 +71,7 @@ export function SkillsFilterBar({ filter, filterCounts, onFilterChange }: Skills
           onClick={() => onFilterChange('official')}
           className="flex justify-between"
         >
-          {t('skills.byAccomplish')}{' '}
+          {t('skills.byZmeel')}{' '}
           <span className="text-muted-foreground">{filterCounts.official}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

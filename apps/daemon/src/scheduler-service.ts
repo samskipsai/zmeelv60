@@ -6,7 +6,7 @@
  * and updates the database with last_run_at / next_run_at.
  */
 
-import type { StorageAPI, ScheduledTask } from '@accomplish_ai/agent-core';
+import type { StorageAPI, ScheduledTask } from '@zmeel/agent-core';
 import { log } from './logger.js';
 
 // =============================================================================

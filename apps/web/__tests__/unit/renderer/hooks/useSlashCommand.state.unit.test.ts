@@ -5,13 +5,13 @@ import {
   createTextareaRef,
   createKeyboardEvent,
 } from '../__helpers__/slashCommandTestUtils';
-import type { Skill } from '@accomplish_ai/agent-core/common';
+import type { Skill } from '@zmeel/agent-core/common';
 import type { UseSlashCommandReturn } from '@/hooks/useSlashCommand';
 
 const mockGetEnabledSkills = vi.fn().mockResolvedValue(mockSkillsWithHidden);
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({
     getEnabledSkills: mockGetEnabledSkills,
   }),
 }));

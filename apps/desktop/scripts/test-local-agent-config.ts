@@ -10,7 +10,7 @@ const TEST_LOCAL_AGENT_HTTP_PORT = 9226;
 const TEST_LOCAL_AGENT_CDP_PORT = 9227;
 const TEST_LOCAL_AGENT_CHROME_PROFILE = path.join(
   os.homedir(),
-  '.accomplish-test-local-agent-chrome',
+  '.zmeel-test-local-agent-chrome',
 );
 
 // The file-permission and ask-user-question MCP shims were replaced by
@@ -50,7 +50,7 @@ function getSystemPrompt(): string {
         : 'You are running on Linux.';
 
   return `<identity>
-You are Accomplish, a browser automation assistant.
+You are Zmeel, a browser automation assistant.
 </identity>
 
 <environment>
@@ -88,11 +88,11 @@ export function generateTestLocalAgentConfig(): string {
 
   const config: OpenCodeConfig = {
     $schema: 'https://opencode.ai/config.json',
-    default_agent: 'accomplish',
+    default_agent: 'zmeel',
     enabled_providers: ['anthropic', 'openai', 'google', 'xai'],
     permission: 'allow',
     agent: {
-      accomplish: {
+      zmeel: {
         description: 'Browser automation assistant for test local agent',
         prompt: getSystemPrompt(),
         mode: 'primary',

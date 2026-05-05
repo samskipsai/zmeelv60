@@ -1,11 +1,11 @@
 /**
- * Unit tests for Accomplish API library
+ * Unit tests for Zmeel API library
  *
  * Tests the Electron detection and shell utilities:
  * - isRunningInElectron() detection
  * - getShellVersion() retrieval
  * - getShellPlatform() retrieval
- * - getAccomplish() and useAccomplish() API access
+ * - getZmeel() and useZmeel() API access
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -13,7 +13,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // Store original window
 const originalWindow = globalThis.window;
 
-describe('Accomplish API', () => {
+describe('Zmeel API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
@@ -26,73 +26,73 @@ describe('Accomplish API', () => {
   });
 
   describe('isRunningInElectron', () => {
-    it('should return true when accomplishShell.isElectron is true', async () => {
-      (globalThis as unknown as { window: { accomplishShell: { isElectron: boolean } } }).window = {
-        accomplishShell: { isElectron: true },
+    it('should return true when zmeelShell.isElectron is true', async () => {
+      (globalThis as unknown as { window: { zmeelShell: { isElectron: boolean } } }).window = {
+        zmeelShell: { isElectron: true },
       };
 
-      const { isRunningInElectron } = await import('@/lib/accomplish');
+      const { isRunningInElectron } = await import('@/lib/zmeel');
       expect(isRunningInElectron()).toBe(true);
     });
 
-    it('should return false when accomplishShell.isElectron is false', async () => {
-      (globalThis as unknown as { window: { accomplishShell: { isElectron: boolean } } }).window = {
-        accomplishShell: { isElectron: false },
+    it('should return false when zmeelShell.isElectron is false', async () => {
+      (globalThis as unknown as { window: { zmeelShell: { isElectron: boolean } } }).window = {
+        zmeelShell: { isElectron: false },
       };
 
-      const { isRunningInElectron } = await import('@/lib/accomplish');
+      const { isRunningInElectron } = await import('@/lib/zmeel');
       expect(isRunningInElectron()).toBe(false);
     });
 
-    it('should return false when accomplishShell is unavailable', async () => {
+    it('should return false when zmeelShell is unavailable', async () => {
       // Test undefined, null, missing property, and empty object
       const unavailableScenarios = [
-        { accomplishShell: undefined },
-        { accomplishShell: null },
-        { accomplishShell: { version: '1.0.0' } }, // missing isElectron
-        {}, // no accomplishShell at all
+        { zmeelShell: undefined },
+        { zmeelShell: null },
+        { zmeelShell: { version: '1.0.0' } }, // missing isElectron
+        {}, // no zmeelShell at all
       ];
 
       for (const scenario of unavailableScenarios) {
         vi.resetModules();
         (globalThis as unknown as { window: Record<string, unknown> }).window = scenario;
-        const { isRunningInElectron } = await import('@/lib/accomplish');
+        const { isRunningInElectron } = await import('@/lib/zmeel');
         expect(isRunningInElectron()).toBe(false);
       }
     });
 
     it('should use strict equality for isElectron check', async () => {
       // Truthy but not true should return false
-      (globalThis as unknown as { window: { accomplishShell: { isElectron: number } } }).window = {
-        accomplishShell: { isElectron: 1 },
+      (globalThis as unknown as { window: { zmeelShell: { isElectron: number } } }).window = {
+        zmeelShell: { isElectron: 1 },
       };
 
-      const { isRunningInElectron } = await import('@/lib/accomplish');
+      const { isRunningInElectron } = await import('@/lib/zmeel');
       expect(isRunningInElectron()).toBe(false);
     });
   });
 
   describe('getShellVersion', () => {
     it('should return version when available', async () => {
-      (globalThis as unknown as { window: { accomplishShell: { version: string } } }).window = {
-        accomplishShell: { version: '1.2.3' },
+      (globalThis as unknown as { window: { zmeelShell: { version: string } } }).window = {
+        zmeelShell: { version: '1.2.3' },
       };
 
-      const { getShellVersion } = await import('@/lib/accomplish');
+      const { getShellVersion } = await import('@/lib/zmeel');
       expect(getShellVersion()).toBe('1.2.3');
     });
 
     it('should return null when version is unavailable', async () => {
       const unavailableScenarios = [
-        { accomplishShell: undefined },
-        { accomplishShell: { isElectron: true } }, // no version property
+        { zmeelShell: undefined },
+        { zmeelShell: { isElectron: true } }, // no version property
         {},
       ];
 
       for (const scenario of unavailableScenarios) {
         vi.resetModules();
         (globalThis as unknown as { window: Record<string, unknown> }).window = scenario;
-        const { getShellVersion } = await import('@/lib/accomplish');
+        const { getShellVersion } = await import('@/lib/zmeel');
         expect(getShellVersion()).toBeNull();
       }
     });
@@ -102,10 +102,10 @@ describe('Accomplish API', () => {
 
       for (const version of versions) {
         vi.resetModules();
-        (globalThis as unknown as { window: { accomplishShell: { version: string } } }).window = {
-          accomplishShell: { version },
+        (globalThis as unknown as { window: { zmeelShell: { version: string } } }).window = {
+          zmeelShell: { version },
         };
-        const { getShellVersion } = await import('@/lib/accomplish');
+        const { getShellVersion } = await import('@/lib/zmeel');
         expect(getShellVersion()).toBe(version);
       }
     });
@@ -117,32 +117,32 @@ describe('Accomplish API', () => {
 
       for (const platform of platforms) {
         vi.resetModules();
-        (globalThis as unknown as { window: { accomplishShell: { platform: string } } }).window = {
-          accomplishShell: { platform },
+        (globalThis as unknown as { window: { zmeelShell: { platform: string } } }).window = {
+          zmeelShell: { platform },
         };
-        const { getShellPlatform } = await import('@/lib/accomplish');
+        const { getShellPlatform } = await import('@/lib/zmeel');
         expect(getShellPlatform()).toBe(platform);
       }
     });
 
     it('should return null when platform is unavailable', async () => {
       const unavailableScenarios = [
-        { accomplishShell: undefined },
-        { accomplishShell: { isElectron: true } }, // no platform property
+        { zmeelShell: undefined },
+        { zmeelShell: { isElectron: true } }, // no platform property
         {},
       ];
 
       for (const scenario of unavailableScenarios) {
         vi.resetModules();
         (globalThis as unknown as { window: Record<string, unknown> }).window = scenario;
-        const { getShellPlatform } = await import('@/lib/accomplish');
+        const { getShellPlatform } = await import('@/lib/zmeel');
         expect(getShellPlatform()).toBeNull();
       }
     });
   });
 
-  describe('getAccomplish', () => {
-    it('should return accomplish API when available', async () => {
+  describe('getZmeel', () => {
+    it('should return zmeel API when available', async () => {
       const mockApi = {
         getVersion: vi.fn(),
         startTask: vi.fn(),
@@ -150,13 +150,13 @@ describe('Accomplish API', () => {
         saveBedrockCredentials: vi.fn(),
         getBedrockCredentials: vi.fn(),
       };
-      (globalThis as unknown as { window: { accomplish: typeof mockApi } }).window = {
-        accomplish: mockApi,
+      (globalThis as unknown as { window: { zmeel: typeof mockApi } }).window = {
+        zmeel: mockApi,
       };
 
-      const { getAccomplish } = await import('@/lib/accomplish');
-      const result = getAccomplish();
-      // getAccomplish returns a wrapper object with spread methods + Bedrock wrappers
+      const { getZmeel } = await import('@/lib/zmeel');
+      const result = getZmeel();
+      // getZmeel returns a wrapper object with spread methods + Bedrock wrappers
       expect(result.getVersion).toBeDefined();
       expect(result.startTask).toBeDefined();
       expect(result.validateBedrockCredentials).toBeDefined();
@@ -164,39 +164,39 @@ describe('Accomplish API', () => {
       expect(result.getBedrockCredentials).toBeDefined();
     });
 
-    it('should throw when accomplish API is not available', async () => {
-      const unavailableScenarios = [{ accomplish: undefined }, {}];
+    it('should throw when zmeel API is not available', async () => {
+      const unavailableScenarios = [{ zmeel: undefined }, {}];
 
       for (const scenario of unavailableScenarios) {
         vi.resetModules();
         (globalThis as unknown as { window: Record<string, unknown> }).window = scenario;
-        const { getAccomplish } = await import('@/lib/accomplish');
-        expect(() => getAccomplish()).toThrow(
-          'Accomplish API not available - not running in Electron',
+        const { getZmeel } = await import('@/lib/zmeel');
+        expect(() => getZmeel()).toThrow(
+          'Zmeel API not available - not running in Electron',
         );
       }
     });
   });
 
-  describe('useAccomplish', () => {
-    it('should return accomplish API when available', async () => {
+  describe('useZmeel', () => {
+    it('should return zmeel API when available', async () => {
       const mockApi = { getVersion: vi.fn(), startTask: vi.fn() };
-      (globalThis as unknown as { window: { accomplish: typeof mockApi } }).window = {
-        accomplish: mockApi,
+      (globalThis as unknown as { window: { zmeel: typeof mockApi } }).window = {
+        zmeel: mockApi,
       };
 
-      const { useAccomplish } = await import('@/lib/accomplish');
-      expect(useAccomplish()).toBe(mockApi);
+      const { useZmeel } = await import('@/lib/zmeel');
+      expect(useZmeel()).toBe(mockApi);
     });
 
-    it('should throw when accomplish API is not available', async () => {
-      (globalThis as unknown as { window: { accomplish?: unknown } }).window = {
-        accomplish: undefined,
+    it('should throw when zmeel API is not available', async () => {
+      (globalThis as unknown as { window: { zmeel?: unknown } }).window = {
+        zmeel: undefined,
       };
 
-      const { useAccomplish } = await import('@/lib/accomplish');
-      expect(() => useAccomplish()).toThrow(
-        'Accomplish API not available - not running in Electron',
+      const { useZmeel } = await import('@/lib/zmeel');
+      expect(() => useZmeel()).toThrow(
+        'Zmeel API not available - not running in Electron',
       );
     });
   });
@@ -208,12 +208,12 @@ describe('Accomplish API', () => {
         platform: 'darwin',
         isElectron: true as const,
       };
-      (globalThis as unknown as { window: { accomplishShell: typeof completeShell } }).window = {
-        accomplishShell: completeShell,
+      (globalThis as unknown as { window: { zmeelShell: typeof completeShell } }).window = {
+        zmeelShell: completeShell,
       };
 
       const { isRunningInElectron, getShellVersion, getShellPlatform } =
-        await import('@/lib/accomplish');
+        await import('@/lib/zmeel');
 
       expect(isRunningInElectron()).toBe(true);
       expect(getShellVersion()).toBe('1.0.0');
@@ -222,12 +222,12 @@ describe('Accomplish API', () => {
 
     it('should handle partial shell object gracefully', async () => {
       const partialShell = { version: '1.0.0', isElectron: true as const };
-      (globalThis as unknown as { window: { accomplishShell: typeof partialShell } }).window = {
-        accomplishShell: partialShell,
+      (globalThis as unknown as { window: { zmeelShell: typeof partialShell } }).window = {
+        zmeelShell: partialShell,
       };
 
       const { isRunningInElectron, getShellVersion, getShellPlatform } =
-        await import('@/lib/accomplish');
+        await import('@/lib/zmeel');
 
       expect(isRunningInElectron()).toBe(true);
       expect(getShellVersion()).toBe('1.0.0');

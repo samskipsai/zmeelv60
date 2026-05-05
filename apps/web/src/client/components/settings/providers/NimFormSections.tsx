@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import type { ConnectedProvider, NimCredentials } from '@accomplish_ai/agent-core';
+import type { ConnectedProvider, NimCredentials } from '@zmeel/agent-core';
 import { ModelSelector, ConnectedControls, FormError, ConnectButton } from '../shared';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
 

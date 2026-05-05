@@ -7,7 +7,7 @@
 
 import { app, BrowserWindow, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
 import path from 'path';
-import type { ProviderId } from '@accomplish_ai/agent-core/desktop-main';
+import type { ProviderId } from '@zmeel/agent-core/desktop-main';
 import { migrateLegacyData } from './store/legacyMigration';
 import { getLegacyElectronStorePaths } from './store/storage';
 import { getApiKey } from './store/secureStorage';
@@ -89,10 +89,10 @@ async function bootstrapDaemonWithRetry(): Promise<'connected' | 'quit'> {
       for (;;) {
         const response = await dialog.showMessageBox({
           type: 'error',
-          title: 'Accomplish cannot start',
+          title: 'Zmeel cannot start',
           message: 'The background service failed to start.',
           detail:
-            'Accomplish stores your settings, conversations, and credentials in a background ' +
+            'Zmeel stores your settings, conversations, and credentials in a background ' +
             'process. Without it the app cannot load.\n\n' +
             `Error: ${err instanceof Error ? err.message : String(err)}`,
           buttons: ['Retry', 'Open Logs', 'Quit'],
@@ -141,7 +141,7 @@ export async function startApp(
 
   // Set build identity for daemon version-guard (used by in-process DaemonServer
   // and compared against standalone daemon's ping response)
-  process.env.ACCOMPLISH_BUILD_ID = getBuildId();
+  process.env.ZMEEL_BUILD_ID = getBuildId();
 
   if (process.env.CLEAN_START !== '1') {
     try {
@@ -165,12 +165,12 @@ export async function startApp(
   // block (M3 3d), so there's nothing left to do between the legacy
   // file-copy migration above and `bootstrapDaemon()` below.
 
-  // HuggingFace auto-start + accomplish-ai cleanup used to run here in the
+  // HuggingFace auto-start + zmeel-ai cleanup used to run here in the
   // pre-M3 flow, but both read state the legacy electron-store import
   // writes on first upgrade. The import now runs post-bootstrap (it needs
   // the daemon), so moving these two consumers to after the import closes
   // a first-upgrade correctness gap: on an OSS build that previously stored
-  // `accomplish-ai` under the free tier, the old pre-import cleanup would
+  // `zmeel-ai` under the free tier, the old pre-import cleanup would
   // no-op (nothing yet) and the subsequent import would restore the stale
   // provider; on any upgrade with HF configured, the auto-start would miss
   // the imported `selected_model_id` and not fire until the next launch.
@@ -338,7 +338,7 @@ export async function startApp(
           });
       }
 
-      // Clean up stale accomplish-ai provider if free mode is no longer
+      // Clean up stale zmeel-ai provider if free mode is no longer
       // available (user switched from Free to OSS build). Pre-M5 this
       // path read/wrote provider settings via `getStorage()`; now it
       // goes through `provider.*` RPCs. The `snap.providers` blob is
@@ -347,16 +347,16 @@ export async function startApp(
       try {
         const { isFreeMode } = await import('./config/build-config');
         if (!isFreeMode()) {
-          const connected = snap.providers.connectedProviders['accomplish-ai'];
+          const connected = snap.providers.connectedProviders['zmeel-ai'];
           if (connected) {
             const client = getDaemonClient();
-            await client.call('provider.removeConnected', { providerId: 'accomplish-ai' });
-            if (snap.providers.activeProviderId === 'accomplish-ai') {
+            await client.call('provider.removeConnected', { providerId: 'zmeel-ai' });
+            if (snap.providers.activeProviderId === 'zmeel-ai') {
               await client.call('provider.setActive', { providerId: null });
             }
             logMain(
               'INFO',
-              '[Main] Removed stale accomplish-ai provider (free mode not available)',
+              '[Main] Removed stale zmeel-ai provider (free mode not available)',
             );
           }
         }

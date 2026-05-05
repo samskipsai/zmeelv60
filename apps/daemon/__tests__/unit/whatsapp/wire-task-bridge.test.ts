@@ -5,9 +5,9 @@ import { EventEmitter } from 'events';
 // Mocks — must be declared before dynamic imports
 // ---------------------------------------------------------------------------
 
-vi.mock('@accomplish_ai/agent-core', async () => {
-  const actual = await vi.importActual<typeof import('@accomplish_ai/agent-core')>(
-    '@accomplish_ai/agent-core',
+vi.mock('@zmeel/agent-core', async () => {
+  const actual = await vi.importActual<typeof import('@zmeel/agent-core')>(
+    '@zmeel/agent-core',
   );
   return {
     ...actual,
@@ -75,7 +75,7 @@ class MockTaskService extends EventEmitter {
 }
 
 // Request-ID prefixes used in tests below. Must match the constants exported
-// from `@accomplish_ai/agent-core/common/types/permission`; wireTaskBridge
+// from `@zmeel/agent-core/common/types/permission`; wireTaskBridge
 // uses those for auto-deny classification after the Phase 2 PermissionService
 // deletion. We rely on real strings rather than the mocked module's actual
 // constants so the test module graph stays simple.

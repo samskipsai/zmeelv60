@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
-import type { ConnectedProvider } from '@accomplish_ai/agent-core/common';
-import type { HuggingFaceLocalCredentials } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider } from '@zmeel/agent-core/common';
+import type { HuggingFaceLocalCredentials } from '@zmeel/agent-core/common';
 import {
   ConnectButton,
   ConnectedControls,

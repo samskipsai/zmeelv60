@@ -1,6 +1,6 @@
-import type { TaskStatus, TaskUpdateEvent, TaskMessage } from '@accomplish_ai/agent-core';
-import { upsertTaskMessages } from '@accomplish_ai/agent-core';
-import { getAccomplish } from '../lib/accomplish';
+import type { TaskStatus, TaskUpdateEvent, TaskMessage } from '@zmeel/agent-core';
+import { upsertTaskMessages } from '@zmeel/agent-core';
+import { getZmeel } from '../lib/zmeel';
 import type { TaskState } from './taskStore';
 
 type SetFn = (partial: Partial<TaskState> | ((state: TaskState) => Partial<TaskState>)) => void;
@@ -10,8 +10,8 @@ type GetFn = () => TaskState;
 export function createTaskUpdateActions(set: SetFn, _get: GetFn) {
   return {
     addTaskUpdate: (event: TaskUpdateEvent) => {
-      const accomplish = getAccomplish();
-      void accomplish.logEvent({
+      const zmeel = getZmeel();
+      void zmeel.logEvent({
         level: 'debug',
         message: 'UI task update received',
         context: { ...event },
@@ -102,8 +102,8 @@ export function createTaskUpdateActions(set: SetFn, _get: GetFn) {
     },
 
     addTaskUpdateBatch: (event: { taskId: string; messages: TaskMessage[] }) => {
-      const accomplish = getAccomplish();
-      void accomplish.logEvent({
+      const zmeel = getZmeel();
+      void zmeel.logEvent({
         level: 'debug',
         message: 'UI task batch update received',
         context: { taskId: event.taskId, messageCount: event.messages.length },

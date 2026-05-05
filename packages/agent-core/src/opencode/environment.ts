@@ -20,7 +20,7 @@ export interface EnvironmentConfig {
   vertexServiceAccountKeyPath?: string;
   /** Path to bundled Node.js bin directory (optional) */
   bundledNodeBinPath?: string;
-  /** Task ID to set in ACCOMPLISH_TASK_ID (optional) */
+  /** Task ID to set in ZMEEL_TASK_ID (optional) */
   taskId?: string;
   /** OpenAI base URL override (optional) */
   openAiBaseUrl?: string;
@@ -130,7 +130,7 @@ export function buildOpenCodeEnvironment(
 
   // Set task ID if provided
   if (config.taskId) {
-    env.ACCOMPLISH_TASK_ID = config.taskId;
+    env.ZMEEL_TASK_ID = config.taskId;
   }
 
   // Set API key environment variables

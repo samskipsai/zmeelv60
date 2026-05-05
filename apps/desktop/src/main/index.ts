@@ -4,11 +4,11 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
-const APP_DATA_NAME = 'Accomplish';
+const APP_DATA_NAME = 'Zmeel';
 app.setPath('userData', path.join(app.getPath('appData'), APP_DATA_NAME));
 
 if (process.platform === 'win32') {
-  app.setAppUserModelId('ai.accomplish.desktop');
+  app.setAppUserModelId('ai.zmeel.desktop');
 }
 
 import { getLogCollector, initializeLogCollector } from './logging';
@@ -65,10 +65,10 @@ const CLEAN_START_SHUTDOWN_TIMEOUT_MS = 45_000;
  *   - `no-daemon`     — socket connect failed; either no daemon was
  *                       running, or any pid file is stale. Safe to
  *                       rmSync.
- *   - `exited`        — we connected to an Accomplish daemon, sent it
+ *   - `exited`        — we connected to an Zmeel daemon, sent it
  *                       `daemon.shutdown`, and observed the socket
  *                       close within the drain window. Safe to rmSync.
- *   - `still-alive`   — we connected to a live Accomplish daemon but
+ *   - `still-alive`   — we connected to a live Zmeel daemon but
  *                       it did NOT close the socket within the drain
  *                       window. Rm under a live owner would corrupt
  *                       state — caller must abort.
@@ -110,10 +110,10 @@ async function stopDetachedDaemonForCleanStart(
     return 'no-daemon';
   }
 
-  let DaemonClientCtor: typeof import('@accomplish_ai/agent-core/desktop-main').DaemonClient;
-  let createSocketTransport: typeof import('@accomplish_ai/agent-core/desktop-main').createSocketTransport;
+  let DaemonClientCtor: typeof import('@zmeel/agent-core/desktop-main').DaemonClient;
+  let createSocketTransport: typeof import('@zmeel/agent-core/desktop-main').createSocketTransport;
   try {
-    const mod = await import('@accomplish_ai/agent-core/desktop-main');
+    const mod = await import('@zmeel/agent-core/desktop-main');
     DaemonClientCtor = mod.DaemonClient;
     createSocketTransport = mod.createSocketTransport;
   } catch (err) {
@@ -124,7 +124,7 @@ async function stopDetachedDaemonForCleanStart(
   }
 
   // Attempt to connect to the profile-scoped socket. A successful
-  // connect proves the peer is an Accomplish daemon for THIS userData.
+  // connect proves the peer is an Zmeel daemon for THIS userData.
   let transport: Awaited<ReturnType<typeof createSocketTransport>>;
   try {
     transport = await createSocketTransport({
@@ -209,13 +209,13 @@ if (process.env.CLEAN_START === '1') {
 
   if (shutdownState === 'still-alive') {
     // Round-4 review finding P1.G: we confirmed via socket identity
-    // that an Accomplish daemon owns this profile and it didn't exit
+    // that an Zmeel daemon owns this profile and it didn't exit
     // inside the daemon's own 40s drain window. Deleting under it
     // would corrupt SQLite/secure-storage state. Abort with a clear
     // error directed at the user — the daemon will finish its active
     // tasks and exit on its own, after which CLEAN_START can retry.
     const abortMsg =
-      '[CLEAN_START] Aborted: an Accomplish daemon is still active on this profile and did ' +
+      '[CLEAN_START] Aborted: an Zmeel daemon is still active on this profile and did ' +
       `not exit within ${CLEAN_START_SHUTDOWN_TIMEOUT_MS / 1000}s. Deleting userData under a ` +
       'live owner would corrupt SQLite and secure-storage state.\n\n' +
       'Fully quit the app (check the system tray for a running daemon) and retry ' +
@@ -246,7 +246,7 @@ if (process.env.CLEAN_START === '1') {
   logMain('INFO', '[Clean Mode] userData wiped; daemon will reinitialize on spawn');
 }
 
-app.setName('Accomplish');
+app.setName('Zmeel Desktop');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const envPath = app.isPackaged
@@ -266,7 +266,7 @@ loadBuildConfig();
 import { initSentry } from './sentry';
 initSentry();
 
-const ROUTER_URL = process.env.ACCOMPLISH_ROUTER_URL;
+const ROUTER_URL = process.env.ZMEEL_ROUTER_URL;
 const WEB_DIST = app.isPackaged // In production, web's build output is an extraResource.
   ? path.join(process.resourcesPath, 'web-ui')
   : path.join(process.env.APP_ROOT, '../web/dist/client');
@@ -364,9 +364,9 @@ app.on('before-quit', (event) => {
 });
 
 if (process.platform === 'win32' && !app.isPackaged) {
-  app.setAsDefaultProtocolClient('accomplish', process.execPath, [path.resolve(process.argv[1])]);
+  app.setAsDefaultProtocolClient('zmeel', process.execPath, [path.resolve(process.argv[1])]);
 } else {
-  app.setAsDefaultProtocolClient('accomplish');
+  app.setAsDefaultProtocolClient('zmeel');
 }
 
 handleProtocolUrlFromArgs(() => mainWindow);

@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 import { createLogger } from '../../lib/logger';
 import { MAX_FILES } from '../../lib/fileUtils';
-import { getAccomplish } from '../../lib/accomplish';
+import { getZmeel } from '../../lib/zmeel';
 
 const logger = createLogger('ExecutionAttachments');
 
-type Accomplish = ReturnType<typeof getAccomplish>;
+type Zmeel = ReturnType<typeof getZmeel>;
 
-export function useExecutionAttachments(accomplish: Accomplish) {
+export function useExecutionAttachments(zmeel: Zmeel) {
   const [attachments, setAttachments] = useState<FileAttachmentInfo[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [_dragCounter, setDragCounter] = useState(0);
@@ -18,11 +18,11 @@ export function useExecutionAttachments(accomplish: Accomplish) {
   };
 
   const handlePickFiles = async () => {
-    if (!accomplish.pickFiles) {
+    if (!zmeel.pickFiles) {
       return;
     }
     try {
-      const newFiles = await accomplish.pickFiles();
+      const newFiles = await zmeel.pickFiles();
       if (newFiles.length > 0) {
         setAttachments((prev) => {
           const remaining = MAX_FILES - prev.length;
@@ -42,7 +42,7 @@ export function useExecutionAttachments(accomplish: Accomplish) {
     e.stopPropagation();
     setDragCounter(0);
     setIsDragging(false);
-    if (!accomplish.processDroppedFiles) {
+    if (!zmeel.processDroppedFiles) {
       logger.warn('Direct file drop is not supported in this environment yet.');
       return;
     }
@@ -67,9 +67,9 @@ export function useExecutionAttachments(accomplish: Accomplish) {
     const filePaths: string[] = [];
     for (const file of extractedFiles) {
       let filePath = 'path' in file ? (file as File & { path: string }).path : undefined;
-      if (accomplish.getFilePath) {
+      if (zmeel.getFilePath) {
         try {
-          filePath = accomplish.getFilePath(file);
+          filePath = zmeel.getFilePath(file);
         } catch (err) {
           logger.error('Unexpected error', err);
         }
@@ -82,7 +82,7 @@ export function useExecutionAttachments(accomplish: Accomplish) {
       return;
     }
     try {
-      const newAttachments = await accomplish.processDroppedFiles(filePaths);
+      const newAttachments = await zmeel.processDroppedFiles(filePaths);
       if (newAttachments.length > 0) {
         setAttachments((prev) => {
           const remaining = MAX_FILES - prev.length;

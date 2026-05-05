@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { getAccomplish } from '../lib/accomplish';
-import { isProviderReady, type ProviderId } from '@accomplish_ai/agent-core/common';
-import type { CreditUsage } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '../lib/zmeel';
+import { isProviderReady, type ProviderId } from '@zmeel/agent-core/common';
+import type { CreditUsage } from '@zmeel/agent-core/common';
 
 export type { CreditUsage };
 
@@ -14,28 +14,28 @@ export function getCreditStatusColor(usage: CreditUsage): string {
 }
 
 export function useCreditsState() {
-  const accomplish = useMemo(() => getAccomplish(), []);
+  const zmeel = useMemo(() => getZmeel(), []);
 
   const [usage, setUsage] = useState<CreditUsage | null>(null);
   const [isCreditsBlocked, setIsCreditsBlocked] = useState(false);
   const [hasAlternativeReadyProvider, setHasAlternativeReadyProvider] = useState(false);
   const [showQuotaInline, setShowQuotaInline] = useState(false);
 
-  type ProviderSettingsSnapshot = Awaited<ReturnType<typeof accomplish.getProviderSettings>>;
+  type ProviderSettingsSnapshot = Awaited<ReturnType<typeof zmeel.getProviderSettings>>;
 
   const applyLiveUsage = useCallback(
     (settings: ProviderSettingsSnapshot, liveUsage: CreditUsage): boolean => {
-      const connectedAccomplish = settings.connectedProviders['accomplish-ai'];
+      const connectedZmeel = settings.connectedProviders['zmeel-ai'];
       const readyAlternativeExists = (
         Object.keys(settings.connectedProviders) as ProviderId[]
       ).some(
         (providerId) =>
-          providerId !== 'accomplish-ai' &&
+          providerId !== 'zmeel-ai' &&
           isProviderReady(settings.connectedProviders[providerId]),
       );
       setHasAlternativeReadyProvider(readyAlternativeExists);
 
-      if (connectedAccomplish?.connectionStatus !== 'connected') {
+      if (connectedZmeel?.connectionStatus !== 'connected') {
         setUsage(null);
         setIsCreditsBlocked(false);
         setShowQuotaInline(false);
@@ -44,8 +44,8 @@ export function useCreditsState() {
 
       const isExhausted = liveUsage.remainingCredits <= 0;
       const shouldBlock =
-        settings.activeProviderId === 'accomplish-ai' &&
-        isProviderReady(connectedAccomplish) &&
+        settings.activeProviderId === 'zmeel-ai' &&
+        isProviderReady(connectedZmeel) &&
         isExhausted;
 
       setUsage(liveUsage);
@@ -61,14 +61,14 @@ export function useCreditsState() {
 
   const refreshCreditsState = useCallback(async (): Promise<boolean> => {
     try {
-      const settings = await accomplish.getProviderSettings();
-      const connectedAccomplish = settings.connectedProviders['accomplish-ai'];
-      if (connectedAccomplish?.connectionStatus !== 'connected') {
+      const settings = await zmeel.getProviderSettings();
+      const connectedZmeel = settings.connectedProviders['zmeel-ai'];
+      if (connectedZmeel?.connectionStatus !== 'connected') {
         const readyAlternativeExists = (
           Object.keys(settings.connectedProviders) as ProviderId[]
         ).some(
           (providerId) =>
-            providerId !== 'accomplish-ai' &&
+            providerId !== 'zmeel-ai' &&
             isProviderReady(settings.connectedProviders[providerId]),
         );
         setHasAlternativeReadyProvider(readyAlternativeExists);
@@ -77,7 +77,7 @@ export function useCreditsState() {
         setShowQuotaInline(false);
         return false;
       }
-      const liveUsage = await accomplish.accomplishAiGetUsage();
+      const liveUsage = await zmeel.zmeelAiGetUsage();
       return applyLiveUsage(settings, liveUsage);
     } catch {
       setHasAlternativeReadyProvider(false);
@@ -86,7 +86,7 @@ export function useCreditsState() {
       setShowQuotaInline(false);
       return false;
     }
-  }, [accomplish, applyLiveUsage]);
+  }, [zmeel, applyLiveUsage]);
 
   const openQuotaBlockExperience = useCallback(() => {
     setShowQuotaInline(true);
@@ -98,26 +98,26 @@ export function useCreditsState() {
     (async () => {
       try {
         const [usageData, settings] = await Promise.all([
-          accomplish.accomplishAiGetUsage?.(),
-          accomplish.getProviderSettings(),
+          zmeel.zmeelAiGetUsage?.(),
+          zmeel.getProviderSettings(),
         ]);
         if (cancelled || !usageData) return;
         applyLiveUsage(settings, usageData);
       } catch {
-        // Accomplish AI not connected — no-op
+        // Zmeel AI not connected — no-op
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [accomplish, applyLiveUsage]);
+  }, [zmeel, applyLiveUsage]);
 
   // Subscribe to live usage updates
   useEffect(() => {
-    const unsubscribe = accomplish.onAccomplishAiUsageUpdate?.((liveUsage) => {
+    const unsubscribe = zmeel.onZmeelAiUsageUpdate?.((liveUsage) => {
       void (async () => {
         try {
-          const settings = await accomplish.getProviderSettings();
+          const settings = await zmeel.getProviderSettings();
           applyLiveUsage(settings, liveUsage);
         } catch {
           setHasAlternativeReadyProvider(false);
@@ -131,7 +131,7 @@ export function useCreditsState() {
     return () => {
       unsubscribe?.();
     };
-  }, [accomplish, applyLiveUsage]);
+  }, [zmeel, applyLiveUsage]);
 
   return {
     usage,

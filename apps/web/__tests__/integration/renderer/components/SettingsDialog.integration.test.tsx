@@ -26,7 +26,7 @@ function translateSettingsKey(key: string, options?: Record<string, unknown>): s
   }, value);
 }
 
-const mockAccomplish = {
+const mockZmeel = {
   getOllamaConfig: vi.fn().mockResolvedValue(null),
   isE2EMode: vi.fn().mockResolvedValue(false),
   getProviderSettings: vi.fn().mockResolvedValue({
@@ -76,9 +76,9 @@ const mockAccomplish = {
   onThemeChange: undefined,
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -157,13 +157,13 @@ describe('SettingsDialog Integration', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAccomplish.getConnectors.mockResolvedValue([]);
-    mockAccomplish.getSlackMcpOauthStatus.mockResolvedValue({
+    mockZmeel.getConnectors.mockResolvedValue([]);
+    mockZmeel.getSlackMcpOauthStatus.mockResolvedValue({
       connected: false,
       pendingAuthorization: false,
     });
-    mockAccomplish.loginSlackMcp.mockResolvedValue({ ok: true });
-    mockAccomplish.logoutSlackMcp.mockResolvedValue(undefined);
+    mockZmeel.loginSlackMcp.mockResolvedValue({ ok: true });
+    mockZmeel.logoutSlackMcp.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -205,7 +205,7 @@ describe('SettingsDialog Integration', () => {
 
       // Assert - new provider-based SettingsDialog fetches provider settings
       await waitFor(() => {
-        expect(mockAccomplish.getProviderSettings).toHaveBeenCalled();
+        expect(mockZmeel.getProviderSettings).toHaveBeenCalled();
       });
     });
 
@@ -254,7 +254,7 @@ describe('SettingsDialog Integration', () => {
       // the expected behavior here and rely on E2E tests for full validation.
 
       // Initial state: anthropic is connected and active
-      mockAccomplish.getProviderSettings = vi.fn().mockResolvedValue({
+      mockZmeel.getProviderSettings = vi.fn().mockResolvedValue({
         activeProviderId: 'anthropic',
         connectedProviders: {
           anthropic: {
@@ -280,7 +280,7 @@ describe('SettingsDialog Integration', () => {
 
       // Verify the initial state: anthropic is active
       // This confirms the test setup is correct
-      expect(mockAccomplish.getProviderSettings).toHaveBeenCalled();
+      expect(mockZmeel.getProviderSettings).toHaveBeenCalled();
     });
   });
 
@@ -295,11 +295,11 @@ describe('SettingsDialog Integration', () => {
       });
 
       expect(screen.getByRole('button', { name: 'Authenticate Slack' })).toBeInTheDocument();
-      expect(mockAccomplish.getSlackMcpOauthStatus).toHaveBeenCalled();
+      expect(mockZmeel.getSlackMcpOauthStatus).toHaveBeenCalled();
     });
 
     it('should authenticate Slack from the connectors tab', async () => {
-      mockAccomplish.getSlackMcpOauthStatus
+      mockZmeel.getSlackMcpOauthStatus
         .mockResolvedValueOnce({ connected: false, pendingAuthorization: false })
         .mockResolvedValueOnce({ connected: true, pendingAuthorization: false });
 
@@ -314,7 +314,7 @@ describe('SettingsDialog Integration', () => {
       fireEvent.click(screen.getByTestId('slack-auth-button'));
 
       await waitFor(() => {
-        expect(mockAccomplish.loginSlackMcp).toHaveBeenCalled();
+        expect(mockZmeel.loginSlackMcp).toHaveBeenCalled();
       });
 
       await waitFor(() => {

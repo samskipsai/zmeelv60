@@ -1,4 +1,4 @@
-export { redact } from '@accomplish_ai/agent-core/desktop-main';
+export { redact } from '@zmeel/agent-core/desktop-main';
 export {
   getLogFileWriter,
   initializeLogFileWriter,

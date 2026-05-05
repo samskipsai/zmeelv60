@@ -6,7 +6,7 @@ const log = createConsoleLogger({ prefix: 'legacy-meta' });
 
 /**
  * Copy workspace / workspace_meta / knowledge_notes rows out of the legacy
- * `workspace-meta{.db,-dev.db}` file and into the main `accomplish.db`.
+ * `workspace-meta{.db,-dev.db}` file and into the main `zmeel.db`.
  *
  * Runs OUTSIDE the migration runner (ATTACH/DETACH is not allowed inside an
  * active SQLite transaction, and the migration runner wraps every `up()` in
@@ -142,7 +142,7 @@ function openLegacy(path: string): Database.Database {
  * each other's terminal outcomes.
  *
  * Rationale: on first upgrade, desktop and daemon both open the same
- * `accomplish.db` moments apart. Both may observe `status=missing` before
+ * `zmeel.db` moments apart. Both may observe `status=missing` before
  * either acquires a write lock. Without this guard, whichever one fails
  * second (e.g. because `INSERT OR IGNORE` now finds rows already present
  * and the count-mismatch throws) would unconditionally write `'failed'`
@@ -347,7 +347,7 @@ export function importLegacyWorkspaceMeta(
       //    imported table with an FK (knowledge_notes.workspace_id ->
       //    workspaces.id). Scoping matters: an unscoped
       //    `PRAGMA foreign_key_check` would return rows for unrelated
-      //    pre-existing FK issues elsewhere in accomplish.db (e.g. an
+      //    pre-existing FK issues elsewhere in zmeel.db (e.g. an
       //    orphan task_messages row violating task_messages.task_id ->
       //    tasks.id per v001-initial.ts:59), wrongly failing an
       //    otherwise-valid import.

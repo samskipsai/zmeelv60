@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Trash } from '@phosphor-icons/react';
 import { Switch } from '@/components/ui/switch';
-import type { ScheduledTask } from '@accomplish_ai/agent-core/common';
+import type { ScheduledTask } from '@zmeel/agent-core/common';
 
 interface ScheduleCardProps {
   schedule: ScheduledTask;

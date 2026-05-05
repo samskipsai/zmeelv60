@@ -79,7 +79,7 @@ vi.mock('@main/store/workspaceManager', () => ({
   deleteWorkspace: vi.fn(() => true),
 }));
 
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,

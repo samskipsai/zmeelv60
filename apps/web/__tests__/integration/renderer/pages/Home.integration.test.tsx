@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import type { Task, TaskStatus } from '@accomplish_ai/agent-core';
+import type { Task, TaskStatus } from '@zmeel/agent-core';
 
 // Create mock functions
 const mockStartTask = vi.fn();
@@ -35,8 +35,8 @@ function createMockTask(
   };
 }
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   hasAnyApiKey: mockHasAnyApiKey,
   getSelectedModel: vi.fn().mockResolvedValue({ provider: 'anthropic', id: 'claude-3-opus' }),
   getOllamaConfig: vi.fn().mockResolvedValue(null),
@@ -67,9 +67,9 @@ const mockAccomplish = {
   speechIsConfigured: vi.fn().mockResolvedValue(true),
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 // Mock store state holder
@@ -180,7 +180,7 @@ describe('Home Page Integration', () => {
     // Default to having API key (legacy)
     mockHasAnyApiKey.mockResolvedValue(true);
     // Default to having a ready provider (new provider settings)
-    mockAccomplish.getProviderSettings.mockResolvedValue({
+    mockZmeel.getProviderSettings.mockResolvedValue({
       activeProviderId: 'anthropic',
       connectedProviders: {
         anthropic: {
@@ -205,7 +205,7 @@ describe('Home Page Integration', () => {
 
       // Assert
       expect(
-        screen.getByRole('heading', { name: /what will you accomplish today/i }),
+        screen.getByRole('heading', { name: /what will you zmeel today/i }),
       ).toBeInTheDocument();
     });
 
@@ -310,13 +310,13 @@ describe('Home Page Integration', () => {
 
       // Assert - should check provider settings (via isE2EMode and getProviderSettings)
       await waitFor(() => {
-        expect(mockAccomplish.isE2EMode).toHaveBeenCalled();
+        expect(mockZmeel.isE2EMode).toHaveBeenCalled();
       });
     });
 
     it('should open settings dialog when no provider is ready', async () => {
       // Arrange - Set up mock to return no ready providers
-      mockAccomplish.getProviderSettings.mockResolvedValue({
+      mockZmeel.getProviderSettings.mockResolvedValue({
         activeProviderId: null,
         connectedProviders: {},
         debugMode: false,
@@ -380,7 +380,7 @@ describe('Home Page Integration', () => {
 
       // Assert - empty tasks return early, no provider check or task start
       await waitFor(() => {
-        expect(mockAccomplish.isE2EMode).not.toHaveBeenCalled();
+        expect(mockZmeel.isE2EMode).not.toHaveBeenCalled();
         expect(mockStartTask).not.toHaveBeenCalled();
       });
     });
@@ -402,14 +402,14 @@ describe('Home Page Integration', () => {
 
       // Assert - whitespace-only input should not trigger any API calls
       await waitFor(() => {
-        expect(mockAccomplish.isE2EMode).not.toHaveBeenCalled();
+        expect(mockZmeel.isE2EMode).not.toHaveBeenCalled();
         expect(mockStartTask).not.toHaveBeenCalled();
       });
     });
 
     it('should execute task after configuring provider in settings', async () => {
       // Arrange - No ready provider initially
-      mockAccomplish.getProviderSettings.mockResolvedValue({
+      mockZmeel.getProviderSettings.mockResolvedValue({
         activeProviderId: null,
         connectedProviders: {},
         debugMode: false,
@@ -573,7 +573,7 @@ describe('Home Page Integration', () => {
   describe('settings dialog interaction', () => {
     it('should close settings dialog without executing when cancelled', async () => {
       // Arrange - No ready provider
-      mockAccomplish.getProviderSettings.mockResolvedValue({
+      mockZmeel.getProviderSettings.mockResolvedValue({
         activeProviderId: null,
         connectedProviders: {},
         debugMode: false,

@@ -6,11 +6,11 @@
  * desktop-github so the gh CLI token can be persisted across restarts.
  */
 
-import { getConnectorDefinitions, OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import { getConnectorDefinitions, OAuthProviderId } from '@zmeel/agent-core/common';
 import type {
   ConnectorMcpDcrOAuthDefinition,
   ConnectorMcpFixedClientOAuthDefinition,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { ConnectorAuthStore } from './connector-auth-store';
 
 function hasStore(oauth: {

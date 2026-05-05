@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import type { OAuthProviderId } from '@zmeel/agent-core/common';
 import { useConnectors } from './useConnectors';
 import { createLogger } from '@/lib/logger';
 
@@ -34,7 +34,7 @@ export function useConnectorsPanel() {
   const [oauthError, setOauthError] = useState<string | null>(null);
 
   useEffect(() => {
-    const unsubscribe = window.accomplish?.onMcpAuthCallback?.((callbackUrl: string) => {
+    const unsubscribe = window.zmeel?.onMcpAuthCallback?.((callbackUrl: string) => {
       try {
         const parsed = new URL(callbackUrl);
         const code = parsed.searchParams.get('code');

@@ -62,7 +62,7 @@ export function resolveLlamaCppRuntimeModelName(
     'llama-cpp-models',
     sanitizeForFilename(modelId),
   );
-  const mlxManifestPath = path.join(modelDir, '.accomplish-mlx-manifest.json');
+  const mlxManifestPath = path.join(modelDir, '.zmeel-mlx-manifest.json');
   if (!fileExists(mlxManifestPath)) {
     return modelId;
   }

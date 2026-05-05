@@ -129,7 +129,7 @@ export function getNodePath(config: PlatformConfig): string {
   }
   throw new Error(
     `[Bundled Node] Bundled Node.js not found at ${bundled?.nodePath ?? '(unknown path)'}. ` +
-      'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild required artifacts.',
+      'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild required artifacts.',
   );
 }
 
@@ -140,7 +140,7 @@ export function getNpmPath(config: PlatformConfig): string {
   }
   throw new Error(
     `[Bundled Node] Bundled npm not found at ${bundled?.npmPath ?? '(unknown path)'}. ` +
-      'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild required artifacts.',
+      'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild required artifacts.',
   );
 }
 
@@ -151,7 +151,7 @@ export function getNpxPath(config: PlatformConfig): string {
   }
   throw new Error(
     `[Bundled Node] Bundled npx not found at ${bundled?.npxPath ?? '(unknown path)'}. ` +
-      'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild required artifacts.',
+      'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild required artifacts.',
   );
 }
 
@@ -161,7 +161,7 @@ export function logBundledNodeInfo(config: PlatformConfig): void {
   if (!paths) {
     log.warn(
       '[Bundled Node] Node.js runtime artifacts are missing. ' +
-        'Run "pnpm -F @accomplish/desktop download:nodejs" to install them.',
+        'Run "pnpm -F @zmeel/desktop download:nodejs" to install them.',
     );
     return;
   }

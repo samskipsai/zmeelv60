@@ -12,7 +12,7 @@ import {
   createTaskId,
   type TaskConfig,
   type FileAttachmentInfo,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import {
   isMockTaskEventsEnabled,
   createMockTask,

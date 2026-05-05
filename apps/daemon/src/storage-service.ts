@@ -5,17 +5,17 @@ import {
   createStorage,
   deleteLegacyWorkspaceMetaFiles,
   type StorageAPI,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 // Deep import so the daemon's raw-SQL helpers (legacy electron-store import,
 // etc.) can reach the underlying `better-sqlite3` handle without widening
 // the `StorageAPI` interface — agent-core keeps its public surface free of
 // the native Database type. Daemon is the sole DB owner post-migration, so
 // this coupling is intentional and scoped.
-import { getDatabase } from '@accomplish_ai/agent-core/storage/database';
+import { getDatabase } from '@zmeel/agent-core/storage/database';
 import type { Database } from 'better-sqlite3';
 import { log } from './logger.js';
 
-const DEV_DEFAULT_DATA_DIR = join(homedir(), '.accomplish');
+const DEV_DEFAULT_DATA_DIR = join(homedir(), '.zmeel');
 
 export class StorageService {
   private storage: StorageAPI | null = null;
@@ -24,18 +24,18 @@ export class StorageService {
    * Initialize storage.
    *
    * @param dataDir — Data directory. Required in production (passed via --data-dir).
-   *                   In dev mode (no --data-dir), falls back to `~/.accomplish`.
+   *                   In dev mode (no --data-dir), falls back to `~/.zmeel`.
    */
   initialize(dataDir?: string): StorageAPI {
     const dir = dataDir || DEV_DEFAULT_DATA_DIR;
     mkdirSync(dir, { recursive: true, mode: 0o700 });
 
     // Match the desktop app's database naming:
-    // - Packaged (ACCOMPLISH_IS_PACKAGED=1): accomplish.db + secure-storage.json
-    // - Dev mode: accomplish-dev.db + secure-storage-dev.json
+    // - Packaged (ZMEEL_IS_PACKAGED=1): zmeel.db + secure-storage.json
+    // - Dev mode: zmeel-dev.db + secure-storage-dev.json
     // This ensures both the daemon and Electron read/write the same database.
-    const isPackaged = process.env.ACCOMPLISH_IS_PACKAGED === '1';
-    const dbName = isPackaged ? 'accomplish.db' : 'accomplish-dev.db';
+    const isPackaged = process.env.ZMEEL_IS_PACKAGED === '1';
+    const dbName = isPackaged ? 'zmeel.db' : 'zmeel-dev.db';
     const secureFileName = isPackaged ? 'secure-storage.json' : 'secure-storage-dev.json';
     const databasePath = join(dir, dbName);
 

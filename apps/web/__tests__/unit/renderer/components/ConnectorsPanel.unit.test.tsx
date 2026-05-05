@@ -27,7 +27,7 @@ function translateSettingsKey(key: string, options?: Record<string, unknown>): s
   }, value);
 }
 
-const mockAccomplish = {
+const mockZmeel = {
   getConnectors: vi.fn().mockResolvedValue([]),
   getSlackMcpOauthStatus: vi
     .fn()
@@ -48,8 +48,8 @@ const mockAccomplish = {
   datadogSetServerUrl: vi.fn().mockResolvedValue(undefined),
 };
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -78,12 +78,12 @@ import { IntegrationsPanel } from '@/components/settings/integrations';
 describe('ConnectorsPanel (via IntegrationsPanel)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAccomplish.getConnectors.mockResolvedValue([]);
-    mockAccomplish.getSlackMcpOauthStatus.mockResolvedValue({
+    mockZmeel.getConnectors.mockResolvedValue([]);
+    mockZmeel.getSlackMcpOauthStatus.mockResolvedValue({
       connected: false,
       pendingAuthorization: false,
     });
-    mockAccomplish.loginSlackMcp.mockResolvedValue({ ok: true });
+    mockZmeel.loginSlackMcp.mockResolvedValue({ ok: true });
   });
 
   afterEach(() => {
@@ -102,7 +102,7 @@ describe('ConnectorsPanel (via IntegrationsPanel)', () => {
   });
 
   it('starts Slack authentication from the card button', async () => {
-    mockAccomplish.getSlackMcpOauthStatus
+    mockZmeel.getSlackMcpOauthStatus
       .mockResolvedValueOnce({ connected: false, pendingAuthorization: false })
       .mockResolvedValueOnce({ connected: true, pendingAuthorization: false });
 
@@ -115,7 +115,7 @@ describe('ConnectorsPanel (via IntegrationsPanel)', () => {
     fireEvent.click(screen.getByTestId('slack-auth-button'));
 
     await waitFor(() => {
-      expect(mockAccomplish.loginSlackMcp).toHaveBeenCalled();
+      expect(mockZmeel.loginSlackMcp).toHaveBeenCalled();
     });
 
     await waitFor(() => {

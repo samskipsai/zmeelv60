@@ -30,7 +30,7 @@ export const THINKING_PHRASES = [
   'Executing...',
   'Running...',
   'Handling it...',
-  'Accomplishing...',
+  'Zmeeling...',
 ];
 
 export const TOOL_PROGRESS_MAP: Record<string, { label: string; icon: typeof FileText }> = {

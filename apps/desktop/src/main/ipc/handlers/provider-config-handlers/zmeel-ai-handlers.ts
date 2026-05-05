@@ -1,22 +1,22 @@
 /**
- * Accomplish AI IPC handlers.
+ * Zmeel AI IPC handlers.
  *
- * These handlers bridge the renderer's accomplish-ai IPC calls to the daemon
+ * These handlers bridge the renderer's zmeel-ai IPC calls to the daemon
  * via JSON-RPC. The daemon owns the proxy, the identity, the provider
  * settings table and the credit cache — these handlers just orchestrate.
  *
  * Milestone 5 of the daemon-only-SQLite migration
  * (plan: /Users/yanai/.claude/plans/squishy-exploring-hamster.md):
  * every `getStorage()` call is gone. Reads go through `provider.getSettings`
- * / `provider.getAccomplishAiCredits`, writes through
- * `provider.setConnected` / `provider.saveAccomplishAiCredits` /
+ * / `provider.getZmeelAiCredits`, writes through
+ * `provider.setConnected` / `provider.saveZmeelAiCredits` /
  * `provider.removeConnected` / `provider.setActive`.
  */
 
 import type { IpcMainInvokeEvent } from 'electron';
-import type { CreditUsage, AccomplishAiCredentials } from '@accomplish_ai/agent-core/desktop-main';
+import type { CreditUsage, ZmeelAiCredentials } from '@zmeel/agent-core/desktop-main';
 
-type AccomplishConnectRpcResult = { deviceFingerprint: string; usage: CreditUsage | null };
+type ZmeelConnectRpcResult = { deviceFingerprint: string; usage: CreditUsage | null };
 import { getDaemonClient } from '../../../daemon-bootstrap';
 import { getLogCollector } from '../../../logging';
 
@@ -26,12 +26,12 @@ type HandleFn = <Args extends unknown[], ReturnType = unknown>(
 ) => void;
 
 const RUNTIME_UNAVAILABLE_MSG =
-  'Free tier is not available in this build. Please use the official Accomplish release or connect your own API key.';
+  'Free tier is not available in this build. Please use the official Zmeel release or connect your own API key.';
 
 /** Normalize runtime-unavailable errors to a user-friendly message. */
 function normalizeRuntimeError(err: unknown): never {
   const msg = err instanceof Error ? err.message : String(err);
-  if (msg.includes('accomplish_runtime_unavailable')) {
+  if (msg.includes('zmeel_runtime_unavailable')) {
     throw new Error(RUNTIME_UNAVAILABLE_MSG);
   }
   throw err;
@@ -39,7 +39,7 @@ function normalizeRuntimeError(err: unknown): never {
 
 function log(level: 'INFO' | 'WARN' | 'ERROR', msg: string) {
   try {
-    getLogCollector()?.log(level, 'main' as const, `[accomplish-ai] ${msg}`);
+    getLogCollector()?.log(level, 'main' as const, `[zmeel-ai] ${msg}`);
   } catch {
     /* best-effort */
   }
@@ -64,28 +64,28 @@ function hasReadyProvider(
   );
 }
 
-export function registerAccomplishAiHandlers(handle: HandleFn): void {
-  handle('accomplish-ai:connect', async () => {
-    let result: AccomplishConnectRpcResult;
+export function registerZmeelAiHandlers(handle: HandleFn): void {
+  handle('zmeel-ai:connect', async () => {
+    let result: ZmeelConnectRpcResult;
     try {
       const client = getDaemonClient();
-      result = await client.call('accomplish-ai.connect');
+      result = await client.call('zmeel-ai.connect');
     } catch (err) {
       normalizeRuntimeError(err);
     }
 
     const client = getDaemonClient();
-    const credentials: AccomplishAiCredentials = {
-      type: 'accomplish-ai',
+    const credentials: ZmeelAiCredentials = {
+      type: 'zmeel-ai',
       deviceFingerprint: result.deviceFingerprint,
     };
 
     await client.call('provider.setConnected', {
-      providerId: 'accomplish-ai',
+      providerId: 'zmeel-ai',
       provider: {
-        providerId: 'accomplish-ai',
+        providerId: 'zmeel-ai',
         connectionStatus: 'connected',
-        selectedModelId: 'accomplish-ai/accomplish-free',
+        selectedModelId: 'samskipsai/zmeelv60-free',
         credentials,
         lastConnectedAt: new Date().toISOString(),
       },
@@ -93,7 +93,7 @@ export function registerAccomplishAiHandlers(handle: HandleFn): void {
 
     // Cache credits if available
     if (result.usage) {
-      await client.call('provider.saveAccomplishAiCredits', { usage: result.usage });
+      await client.call('provider.saveZmeelAiCredits', { usage: result.usage });
     }
 
     log('INFO', `Connected with fingerprint ${result.deviceFingerprint.substring(0, 8)}...`);
@@ -104,35 +104,35 @@ export function registerAccomplishAiHandlers(handle: HandleFn): void {
     };
   });
 
-  handle('accomplish-ai:ensure-ready', async () => {
+  handle('zmeel-ai:ensure-ready', async () => {
     const client = getDaemonClient();
     const settings = await client.call('provider.getSettings');
-    const existing = settings.connectedProviders['accomplish-ai'];
+    const existing = settings.connectedProviders['zmeel-ai'];
     if (existing?.connectionStatus === 'connected') {
       return {
-        deviceFingerprint: (existing.credentials as AccomplishAiCredentials).deviceFingerprint,
+        deviceFingerprint: (existing.credentials as ZmeelAiCredentials).deviceFingerprint,
       };
     }
 
     // Not connected yet — connect without stealing active model
-    let result: AccomplishConnectRpcResult;
+    let result: ZmeelConnectRpcResult;
     try {
-      result = await client.call('accomplish-ai.connect');
+      result = await client.call('zmeel-ai.connect');
     } catch (err) {
       normalizeRuntimeError(err);
     }
 
-    const credentials: AccomplishAiCredentials = {
-      type: 'accomplish-ai',
+    const credentials: ZmeelAiCredentials = {
+      type: 'zmeel-ai',
       deviceFingerprint: result.deviceFingerprint,
     };
 
     await client.call('provider.setConnected', {
-      providerId: 'accomplish-ai',
+      providerId: 'zmeel-ai',
       provider: {
-        providerId: 'accomplish-ai',
+        providerId: 'zmeel-ai',
         connectionStatus: 'connected',
-        selectedModelId: 'accomplish-ai/accomplish-free',
+        selectedModelId: 'samskipsai/zmeelv60-free',
         credentials,
         lastConnectedAt: new Date().toISOString(),
       },
@@ -143,48 +143,48 @@ export function registerAccomplishAiHandlers(handle: HandleFn): void {
     // here would introduce a race where another flow could connect a
     // provider between the two reads.
     if (!hasReadyProvider(settings)) {
-      await client.call('provider.setActive', { providerId: 'accomplish-ai' });
+      await client.call('provider.setActive', { providerId: 'zmeel-ai' });
     }
 
     if (result.usage) {
-      await client.call('provider.saveAccomplishAiCredits', { usage: result.usage });
+      await client.call('provider.saveZmeelAiCredits', { usage: result.usage });
     }
 
     return { deviceFingerprint: result.deviceFingerprint };
   });
 
-  handle('accomplish-ai:disconnect', async () => {
+  handle('zmeel-ai:disconnect', async () => {
     const client = getDaemonClient();
     try {
-      await client.call('accomplish-ai.disconnect');
+      await client.call('zmeel-ai.disconnect');
     } catch (err) {
       log('WARN', `Daemon disconnect failed: ${String(err)}`);
     }
 
     // Credits are cleared automatically by removeConnectedProvider
     // (per the daemon-side SettingsService — same invariant pre-M5).
-    await client.call('provider.removeConnected', { providerId: 'accomplish-ai' });
+    await client.call('provider.removeConnected', { providerId: 'zmeel-ai' });
   });
 
-  handle('accomplish-ai:get-usage', async () => {
+  handle('zmeel-ai:get-usage', async () => {
     const client = getDaemonClient();
 
     /** Attempt to fetch live usage. */
     async function fetchLiveUsage(): Promise<CreditUsage> {
-      return client.call('accomplish-ai.get-usage');
+      return client.call('zmeel-ai.get-usage');
     }
 
     /** Reconnect daemon identity if it was lost (daemon restart) */
     async function reconnectAndRetry(): Promise<CreditUsage | null> {
       const settings = await client.call('provider.getSettings');
-      const provider = settings.connectedProviders['accomplish-ai'];
+      const provider = settings.connectedProviders['zmeel-ai'];
       if (provider?.connectionStatus !== 'connected') {
         return null;
       }
 
       try {
         log('INFO', 'Daemon identity lost — reconnecting');
-        const connectResult = await client.call('accomplish-ai.connect');
+        const connectResult = await client.call('zmeel-ai.connect');
 
         // If connect returned usage (including exhausted state), use it directly
         if (connectResult.usage) {
@@ -202,23 +202,23 @@ export function registerAccomplishAiHandlers(handle: HandleFn): void {
       const live = await fetchLiveUsage();
       // If proxy hasn't connected yet (all zeros), fall back to cache
       if (live.totalCredits === 0) {
-        return (await client.call('provider.getAccomplishAiCredits')) ?? live;
+        return (await client.call('provider.getZmeelAiCredits')) ?? live;
       }
-      await client.call('provider.saveAccomplishAiCredits', { usage: live });
+      await client.call('provider.saveZmeelAiCredits', { usage: live });
       return live;
     } catch {
       // First failure — try reconnecting (daemon may have restarted)
       const retried = await reconnectAndRetry();
       if (retried) {
         if (retried.totalCredits > 0) {
-          await client.call('provider.saveAccomplishAiCredits', { usage: retried });
+          await client.call('provider.saveZmeelAiCredits', { usage: retried });
         }
         return retried;
       }
 
       // All attempts failed — return cached
       return (
-        (await client.call('provider.getAccomplishAiCredits')) ?? {
+        (await client.call('provider.getZmeelAiCredits')) ?? {
           spentCredits: 0,
           remainingCredits: 0,
           totalCredits: 0,
@@ -228,10 +228,10 @@ export function registerAccomplishAiHandlers(handle: HandleFn): void {
     }
   });
 
-  handle('accomplish-ai:get-status', async () => {
+  handle('zmeel-ai:get-status', async () => {
     const client = getDaemonClient();
     const settings = await client.call('provider.getSettings');
-    const provider = settings.connectedProviders['accomplish-ai'];
+    const provider = settings.connectedProviders['zmeel-ai'];
     return { connected: provider?.connectionStatus === 'connected' };
   });
 }

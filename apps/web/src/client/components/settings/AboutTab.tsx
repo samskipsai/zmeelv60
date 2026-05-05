@@ -13,18 +13,18 @@ export function AboutTab({ appVersion }: AboutTabProps) {
           <div>
             <div className="text-sm text-muted-foreground">{t('about.visitUs')}</div>
             <a
-              href="https://www.accomplish.ai"
+              href="https://www.zmeel.ai"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              www.accomplish.ai
+              www.zmeel.ai
             </a>
           </div>
           <div>
             <div className="text-sm text-muted-foreground">{t('about.haveQuestion')}</div>
-            <a href="mailto:support@accomplish.ai" className="text-primary hover:underline">
-              support@accomplish.ai
+            <a href="mailto:support@zmeel.ai" className="text-primary hover:underline">
+              support@zmeel.ai
             </a>
           </div>
           <div>

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useTaskStore } from '@/stores/taskStore';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { TaskLauncherContent } from './TaskLauncherContent';
-import { hasAnyReadyProvider } from '@accomplish_ai/agent-core/common';
+import { hasAnyReadyProvider } from '@zmeel/agent-core/common';
 
 export function TaskLauncher() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ export function TaskLauncher() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { isLauncherOpen, launcherInitialPrompt, closeLauncher, tasks, startTask } = useTaskStore();
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
   const [openedAt, setOpenedAt] = useState(Date.now);
 
   // Filter tasks by search query (title only)
@@ -63,7 +63,7 @@ export function TaskLauncher() {
         // "New task" selected
         if (searchQuery.trim()) {
           // Check if any provider is ready before starting task
-          const settings = await accomplish.getProviderSettings();
+          const settings = await zmeel.getProviderSettings();
           if (!hasAnyReadyProvider(settings)) {
             // No ready provider - navigate to home which will show settings
             closeLauncher();
@@ -90,7 +90,7 @@ export function TaskLauncher() {
         }
       }
     },
-    [searchQuery, filteredTasks, closeLauncher, navigate, startTask, accomplish],
+    [searchQuery, filteredTasks, closeLauncher, navigate, startTask, zmeel],
   );
 
   const handleKeyDown = useCallback(

@@ -1,8 +1,8 @@
 /**
- * AccomplishRuntime — adapter interface for the Accomplish AI free-tier gateway.
+ * ZmeelRuntime — adapter interface for the Zmeel AI free-tier gateway.
  *
  * OSS ships a noop implementation. The real implementation lives in the private
- * @accomplish/llm-gateway-client package and is injected at daemon startup via
+ * @zmeel/llm-gateway-client package and is injected at daemon startup via
  * dynamic import.
  *
  * All call sites (config-builder, daemon-routes, IPC handlers) depend on this
@@ -22,7 +22,7 @@ export interface StorageDeps {
 
 // ─── Connect result ──────────────────────────────────────────────────────────
 
-export interface AccomplishConnectResult {
+export interface ZmeelConnectResult {
   deviceFingerprint: string;
   /**
    * Full usage with preserved totals. When exhausted, the runtime MUST populate
@@ -39,9 +39,9 @@ export interface AccomplishConnectResult {
 
 // ─── Runtime interface ───────────────────────────────────────────────────────
 
-export interface AccomplishRuntime {
+export interface ZmeelRuntime {
   /** Connect to the gateway: load identity, bootstrap DPoP token. */
-  connect(deps: StorageDeps): Promise<AccomplishConnectResult>;
+  connect(deps: StorageDeps): Promise<ZmeelConnectResult>;
 
   /** Disconnect: clear in-memory token/identity state. */
   disconnect(): void;
@@ -61,9 +61,9 @@ export interface AccomplishRuntime {
 
 // ─── Noop runtime (OSS default — fails closed) ──────────────────────────────
 
-const UNAVAILABLE_ERROR = 'accomplish_runtime_unavailable';
+const UNAVAILABLE_ERROR = 'zmeel_runtime_unavailable';
 
-export const noopRuntime: AccomplishRuntime = {
+export const noopRuntime: ZmeelRuntime = {
   connect: async () => {
     throw new Error(UNAVAILABLE_ERROR);
   },

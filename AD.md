@@ -1,4 +1,4 @@
-# Architecture Description: Accomplish
+# Architecture Description: Zmeel
 
 **Version**: 1.0 | **Created**: 2026-03-26 | **Last Updated**: 2026-03-26
 **Architect**: AI (reverse-engineered from codebase) | **Status**: Draft
@@ -10,7 +10,7 @@
 
 ### 1.1 Purpose
 
-Accomplish is an open-source AI automation assistant that lives on the user's
+Zmeel is an open-source AI automation assistant that lives on the user's
 desktop. It enables users to delegate complex software engineering tasks to an
 AI agent that can browse the web, write code, run commands, and manage files —
 all orchestrated through a local-first desktop application with bring-your-own
@@ -44,7 +44,7 @@ API key support.
 | IPC      | Inter-Process Communication — Electron main ↔ renderer bridge      |
 | MCP      | Model Context Protocol — standardized tool interface for AI agents |
 | PTY      | Pseudo-Terminal — terminal emulation for spawning CLI processes    |
-| OpenCode | External CLI agent engine spawned by Accomplish to execute tasks   |
+| OpenCode | External CLI agent engine spawned by Zmeel to execute tasks   |
 
 ---
 
@@ -69,7 +69,7 @@ API key support.
 
 #### 3.1.1 System Scope
 
-Accomplish is a **desktop application** that acts as a bridge between users and
+Zmeel is a **desktop application** that acts as a bridge between users and
 AI agent capabilities. It runs entirely on the user's machine — no cloud
 backend, no remote server. The system connects outward to LLM provider APIs
 and local model servers, but all orchestration, storage, and credential
@@ -92,7 +92,7 @@ management happen locally.
 graph TD
     User["End User"]
 
-    System["Accomplish<br/>(Desktop App)"]
+    System["Zmeel<br/>(Desktop App)"]
 
     CloudLLM["Cloud LLM Providers<br/>(OpenAI, Anthropic, Google,<br/>AWS Bedrock, Azure, etc.)"]
     LocalLLM["Local Model Servers<br/>(Ollama, LM Studio, NIM)"]
@@ -137,7 +137,7 @@ graph TD
 
 | Element              | Responsibility                                                                            | Workspace                           | Key Files                                         |
 | -------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------- |
-| **Web UI**           | React frontend — task launcher, execution view, settings, history                         | `apps/web`                          | `stores/taskStore.ts`, `lib/accomplish.ts`        |
+| **Web UI**           | React frontend — task launcher, execution view, settings, history                         | `apps/web`                          | `stores/taskStore.ts`, `lib/zmeel.ts`        |
 | **Desktop Shell**    | Electron main process — IPC handlers, preload, tray, daemon bootstrap                     | `apps/desktop`                      | `ipc/handlers/`, `preload/index.ts`               |
 | **Agent Core**       | Business logic — storage, providers, encryption, task manager, OpenCode adapter           | `packages/agent-core`               | `factories/`, `internal/classes/`                 |
 | **Daemon** (in-dev)  | Background process — task execution, storage access, event streaming                      | `apps/daemon`                       | `task-service.ts`, `storage-service.ts`           |
@@ -154,7 +154,7 @@ graph TD
     end
 
     subgraph "Preload"
-        Bridge["contextBridge<br/>(accomplish API)"]
+        Bridge["contextBridge<br/>(zmeel API)"]
     end
 
     subgraph "Main Process"
@@ -174,7 +174,7 @@ graph TD
         OpenCode["OpenCode CLI<br/>(PTY process)"]
     end
 
-    WebUI -->|"window.accomplish.*"| Bridge
+    WebUI -->|"window.zmeel.*"| Bridge
     Bridge -->|"ipcRenderer.invoke"| IPC
     IPC --> DaemonClient
     DaemonClient --> TaskMgr
@@ -224,7 +224,7 @@ graph TD
 
 | Entity             | Storage                       | Owner            | Lifecycle                              | Access Pattern                                 |
 | ------------------ | ----------------------------- | ---------------- | -------------------------------------- | ---------------------------------------------- |
-| Tasks              | SQLite (`accomplish.db`)      | Storage Layer    | Create -> Execute -> Complete/Cancel   | Write-heavy during execution, read for history |
+| Tasks              | SQLite (`zmeel.db`)      | Storage Layer    | Create -> Execute -> Complete/Cancel   | Write-heavy during execution, read for history |
 | Task Messages      | SQLite                        | Storage Layer    | Append-only during task execution      | Write-heavy, read for replay                   |
 | API Keys           | Encrypted file (AES-256-GCM)  | Secure Storage   | Set by user, persisted across sessions | Read on task start, write on settings change   |
 | Provider Config    | SQLite                        | Storage Layer    | CRUD via settings UI                   | Read on task start                             |
@@ -301,18 +301,18 @@ erDiagram
 #### 3.5.1 Code Organization
 
 ```text
-accomplish/
+zmeel/
 ├── apps/
-│   ├── web/                        # @accomplish/web — Standalone React UI
+│   ├── web/                        # @zmeel/web — Standalone React UI
 │   │   ├── src/client/
 │   │   │   ├── components/         # UI components (shadcn/ui + custom)
 │   │   │   ├── stores/             # Zustand state management
 │   │   │   ├── pages/              # Route pages
 │   │   │   ├── hooks/              # Custom React hooks
-│   │   │   ├── lib/                # Utilities + accomplish.ts IPC wrapper
+│   │   │   ├── lib/                # Utilities + zmeel.ts IPC wrapper
 │   │   │   └── i18n/               # Internationalization
 │   │   └── __tests__/              # Unit + integration tests (Vitest, jsdom)
-│   ├── desktop/                    # @accomplish/desktop — Electron shell
+│   ├── desktop/                    # @zmeel/desktop — Electron shell
 │   │   ├── src/main/
 │   │   │   ├── ipc/handlers/       # IPC handler implementations
 │   │   │   ├── daemon/             # Daemon bootstrap + entry
@@ -321,10 +321,10 @@ accomplish/
 │   │   ├── src/preload/            # contextBridge (security boundary)
 │   │   ├── e2e/                    # Playwright E2E tests (Docker)
 │   │   └── __tests__/              # Unit + integration tests (Vitest, node)
-│   └── daemon/                     # @accomplish/daemon — Background process (in-dev)
+│   └── daemon/                     # @zmeel/daemon — Background process (in-dev)
 │       └── src/                    # Task/storage/permission services
 ├── packages/
-│   └── agent-core/                 # @accomplish_ai/agent-core — Core logic (ESM)
+│   └── agent-core/                 # @zmeel/agent-core — Core logic (ESM)
 │       └── src/
 │           ├── factories/          # Public API (createTaskManager, etc.)
 │           ├── internal/classes/   # Implementation (TaskManager, OpenCodeAdapter, etc.)
@@ -344,10 +344,10 @@ accomplish/
 
 ```mermaid
 graph LR
-    Web["@accomplish/web<br/>(React UI)"]
-    Desktop["@accomplish/desktop<br/>(Electron Shell)"]
-    Daemon["@accomplish/daemon<br/>(Background Process)"]
-    Core["@accomplish_ai/agent-core<br/>(Core Logic, ESM)"]
+    Web["@zmeel/web<br/>(React UI)"]
+    Desktop["@zmeel/desktop<br/>(Electron Shell)"]
+    Daemon["@zmeel/daemon<br/>(Background Process)"]
+    Core["@zmeel/agent-core<br/>(Core Logic, ESM)"]
 
     Web -->|"types only<br/>(browser-safe)"| Core
     Desktop -->|"full API<br/>(Node.js)"| Core
@@ -367,7 +367,7 @@ graph LR
 - `apps/web` imports only types and browser-safe code from agent-core (Node.js-only modules excluded via Vite externals)
 - `apps/desktop` has full access to agent-core (runs in Node.js)
 - No circular dependencies between workspaces
-- Path aliases (`@/*`, `@main/*`, `@accomplish_ai/agent-core`) enforce clean import boundaries
+- Path aliases (`@/*`, `@main/*`, `@zmeel/agent-core`) enforce clean import boundaries
 
 #### 3.5.3 Build & CI/CD
 
@@ -430,7 +430,7 @@ graph TB
         end
 
         subgraph "User Data Directory"
-            SQLiteDB["accomplish.db<br/>(SQLite — all persisted state:<br/>tasks, workspaces, workspace_meta,<br/>knowledge_notes, settings, etc.)"]
+            SQLiteDB["zmeel.db<br/>(SQLite — all persisted state:<br/>tasks, workspaces, workspace_meta,<br/>knowledge_notes, settings, etc.)"]
             EncryptedKeys["Encrypted API Keys<br/>(AES-256-GCM)"]
         end
 
@@ -488,7 +488,7 @@ bundled runtime is used on machines without system Node.js.
 
 #### 4.1.1 Authentication & Authorization
 
-- **No User Auth**: Accomplish is a local-first desktop app — no user accounts or login. The user who runs the app owns all data.
+- **No User Auth**: Zmeel is a local-first desktop app — no user accounts or login. The user who runs the app owns all data.
 - **Provider Auth**: API keys stored encrypted (AES-256-GCM). OAuth flows for GitHub Copilot and OpenAI (device code / browser redirect).
 - **Agent Permissions**: OpenCode CLI requests permission for dangerous operations (file writes, shell commands). User approves/denies via UI.
 - **IPC Security**: Electron `contextBridge` enforces a strict API boundary — renderer cannot access Node.js APIs directly (Constitution Principle III).
@@ -528,7 +528,7 @@ bundled runtime is used on machines without system Node.js.
 
 #### 4.2.2 Scalability Model
 
-Accomplish is a **single-user desktop application** — traditional horizontal/vertical
+Zmeel is a **single-user desktop application** — traditional horizontal/vertical
 scaling does not apply. Scaling concerns are:
 
 - **Task Concurrency**: Queue overflow when >10 tasks running (managed by TaskManager queue)

@@ -1,4 +1,4 @@
-# Accomplish — Dev Mode Process Architecture
+# Zmeel — Dev Mode Process Architecture
 
 ## What `pnpm dev` Spawns
 
@@ -55,8 +55,8 @@ flowchart TB
         preload_script --- renderer
     end
 
-    dev_cjs -- "spawn: pnpm -F @accomplish/web dev" --> vite_proc
-    dev_cjs -- "spawn (after :5173 ready): pnpm -F @accomplish/desktop dev" --> electron_proc
+    dev_cjs -- "spawn: pnpm -F @zmeel/web dev" --> vite_proc
+    dev_cjs -- "spawn (after :5173 ready): pnpm -F @zmeel/desktop dev" --> electron_proc
 
     vite_proc -- "startup(argv) spawns Electron
     after build completes" --> electron_proc
@@ -87,7 +87,7 @@ flowchart TB
     subgraph pty_proc["Process 3: OpenCode CLI (via PTY)"]
         cli["opencode run --format json
         --model openai/gpt-5.2
-        --agent accomplish
+        --agent zmeel
         Reads session from ~/.opencode/sessions/
         Communicates with AI provider via HTTPS"]
     end

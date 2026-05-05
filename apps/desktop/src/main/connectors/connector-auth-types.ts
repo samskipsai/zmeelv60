@@ -8,7 +8,7 @@
  * imports that still say `from './connector-auth-types'`.
  */
 
-export type { StoredAuthEntry } from '@accomplish_ai/agent-core/desktop-main';
+export type { StoredAuthEntry } from '@zmeel/agent-core/desktop-main';
 
 export interface ConnectorOAuthStatus {
   connected: boolean;

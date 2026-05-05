@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import type { Task, TaskStatus } from '@accomplish_ai/agent-core';
+import type { Task, TaskStatus } from '@zmeel/agent-core';
 
 // Create mock functions outside of mock factory
 const mockLoadTasks = vi.fn();
@@ -33,8 +33,8 @@ function createMockTask(
   };
 }
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   listTasks: mockListTasks.mockResolvedValue([]),
   onTaskStatusChange: mockOnTaskStatusChange.mockReturnValue(() => {}),
   onTaskUpdate: mockOnTaskUpdate.mockReturnValue(() => {}),
@@ -67,9 +67,9 @@ const mockAccomplish = {
   onThemeChange: undefined,
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 // Create a store state holder for testing
@@ -213,7 +213,7 @@ describe('Sidebar Integration', () => {
       );
 
       // Assert
-      const logo = screen.getByRole('img', { name: /accomplish/i });
+      const logo = screen.getByRole('img', { name: /zmeel/i });
       expect(logo).toBeInTheDocument();
     });
 

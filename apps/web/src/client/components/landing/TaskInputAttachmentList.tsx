@@ -1,5 +1,5 @@
 import { X, WarningCircle } from '@phosphor-icons/react';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 import { formatFileSize } from '@/lib/fileUtils';
 import { FileTypeIcon } from './FileTypeIcon';
 

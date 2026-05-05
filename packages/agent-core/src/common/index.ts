@@ -78,7 +78,7 @@ export type {
   AzureFoundryCredentials,
   OAuthCredentials,
   CopilotOAuthCredentials,
-  AccomplishAiCredentials,
+  ZmeelAiCredentials,
   CustomCredentials,
   NimCredentials,
   ProviderCredentials,

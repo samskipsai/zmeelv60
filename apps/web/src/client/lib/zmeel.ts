@@ -1,7 +1,7 @@
 /**
- * Accomplish API - Interface to the Electron main process
+ * Zmeel API - Interface to the Electron main process
  *
- * This module provides type-safe access to the accomplish API
+ * This module provides type-safe access to the zmeel API
  * exposed by the preload script via contextBridge.
  */
 
@@ -35,7 +35,7 @@ import type {
   BrowserFramePayload,
   BrowserStatusPayload,
   BrowserNavigatePayload,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import type {
   CloudBrowserConfig,
   MessagingConnectionStatus,
@@ -44,7 +44,7 @@ import type {
   GoogleAccountStatus,
   OAuthProviderId,
   ConnectorAuthStatus,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 interface GwsAPI {
   listAccounts(): Promise<GoogleAccount[]>;
@@ -63,7 +63,7 @@ interface GwsAPI {
 }
 
 // Define the API interface
-interface AccomplishAPI {
+interface ZmeelAPI {
   // App info
   getVersion(): Promise<string>;
   getPlatform(): Promise<string>;
@@ -648,24 +648,24 @@ interface AccomplishAPI {
   datadogGetServerUrl(): Promise<string | null>;
   datadogSetServerUrl(url: string): Promise<void>;
 
-  // Accomplish AI Free Tier
-  accomplishAiConnect(): Promise<{
+  // Zmeel AI Free Tier
+  zmeelAiConnect(): Promise<{
     deviceFingerprint: string;
     spentCredits: number;
     remainingCredits: number;
     totalCredits: number;
     resetsAt: string;
   }>;
-  accomplishAiEnsureReady(): Promise<{ deviceFingerprint: string }>;
-  accomplishAiDisconnect(): Promise<void>;
-  accomplishAiGetUsage(): Promise<{
+  zmeelAiEnsureReady(): Promise<{ deviceFingerprint: string }>;
+  zmeelAiDisconnect(): Promise<void>;
+  zmeelAiGetUsage(): Promise<{
     spentCredits: number;
     remainingCredits: number;
     totalCredits: number;
     resetsAt: string;
   }>;
-  accomplishAiGetStatus(): Promise<{ connected: boolean }>;
-  onAccomplishAiUsageUpdate(
+  zmeelAiGetStatus(): Promise<{ connected: boolean }>;
+  onZmeelAiUsageUpdate(
     callback: (usage: {
       spentCredits: number;
       remainingCredits: number;
@@ -785,7 +785,7 @@ interface AccomplishAPI {
   };
 }
 
-interface AccomplishShell {
+interface ZmeelShell {
   version: string;
   platform: string;
   isElectron: true;
@@ -794,66 +794,66 @@ interface AccomplishShell {
 // Extend Window interface
 declare global {
   interface Window {
-    accomplish?: AccomplishAPI;
-    accomplishShell?: AccomplishShell;
+    zmeel?: ZmeelAPI;
+    zmeelShell?: ZmeelShell;
   }
 }
 
 /**
- * Get the accomplish API
+ * Get the zmeel API
  * Throws if not running in Electron
  */
-export function getAccomplish() {
-  if (!window.accomplish) {
-    throw new Error('Accomplish API not available - not running in Electron');
+export function getZmeel() {
+  if (!window.zmeel) {
+    throw new Error('Zmeel API not available - not running in Electron');
   }
   return {
-    ...window.accomplish,
+    ...window.zmeel,
 
     validateBedrockCredentials: async (
       credentials: BedrockCredentials,
     ): Promise<{ valid: boolean; error?: string }> => {
-      return window.accomplish!.validateBedrockCredentials(JSON.stringify(credentials));
+      return window.zmeel!.validateBedrockCredentials(JSON.stringify(credentials));
     },
 
     saveBedrockCredentials: async (credentials: BedrockCredentials): Promise<ApiKeyConfig> => {
-      return window.accomplish!.saveBedrockCredentials(JSON.stringify(credentials));
+      return window.zmeel!.saveBedrockCredentials(JSON.stringify(credentials));
     },
 
     getBedrockCredentials: async (): Promise<BedrockCredentials | null> => {
-      return window.accomplish!.getBedrockCredentials();
+      return window.zmeel!.getBedrockCredentials();
     },
 
-    fetchBedrockModels: (credentials: string) => window.accomplish!.fetchBedrockModels(credentials),
+    fetchBedrockModels: (credentials: string) => window.zmeel!.fetchBedrockModels(credentials),
 
     validateVertexCredentials: async (
       credentials: VertexCredentials,
     ): Promise<{ valid: boolean; error?: string }> => {
-      return window.accomplish!.validateVertexCredentials(JSON.stringify(credentials));
+      return window.zmeel!.validateVertexCredentials(JSON.stringify(credentials));
     },
 
     saveVertexCredentials: async (credentials: VertexCredentials): Promise<ApiKeyConfig> => {
-      return window.accomplish!.saveVertexCredentials(JSON.stringify(credentials));
+      return window.zmeel!.saveVertexCredentials(JSON.stringify(credentials));
     },
 
     getVertexCredentials: async (): Promise<VertexCredentials | null> => {
-      return window.accomplish!.getVertexCredentials();
+      return window.zmeel!.getVertexCredentials();
     },
 
-    fetchVertexModels: (credentials: string) => window.accomplish!.fetchVertexModels(credentials),
+    fetchVertexModels: (credentials: string) => window.zmeel!.fetchVertexModels(credentials),
 
-    detectVertexProject: () => window.accomplish!.detectVertexProject(),
+    detectVertexProject: () => window.zmeel!.detectVertexProject(),
 
-    listVertexProjects: () => window.accomplish!.listVertexProjects(),
+    listVertexProjects: () => window.zmeel!.listVertexProjects(),
 
-    listHuggingFaceModels: () => window.accomplish!.listHuggingFaceModels(),
+    listHuggingFaceModels: () => window.zmeel!.listHuggingFaceModels(),
 
     downloadHuggingFaceModel: (modelId: string) =>
-      window.accomplish!.downloadHuggingFaceModel(modelId),
+      window.zmeel!.downloadHuggingFaceModel(modelId),
 
-    startHuggingFaceServer: (modelId: string) => window.accomplish!.startHuggingFaceServer(modelId),
+    startHuggingFaceServer: (modelId: string) => window.zmeel!.startHuggingFaceServer(modelId),
 
-    stopHuggingFaceServer: () => window.accomplish!.stopHuggingFaceServer(),
+    stopHuggingFaceServer: () => window.zmeel!.stopHuggingFaceServer(),
 
     onHuggingFaceDownloadProgress: (
       callback: (progress: {
@@ -862,49 +862,49 @@ export function getAccomplish() {
         progress: number;
         error?: string;
       }) => void,
-    ) => window.accomplish!.onHuggingFaceDownloadProgress(callback),
+    ) => window.zmeel!.onHuggingFaceDownloadProgress(callback),
 
     // Google Workspace flat helpers — delegate to the gws namespace
     gwsListAccounts: (): Promise<GoogleAccount[]> => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         return Promise.reject(new Error('GWS API not available'));
       }
-      return window.accomplish.gws.listAccounts();
+      return window.zmeel.gws.listAccounts();
     },
 
     gwsStartAuth: (label: string): Promise<{ state: string; authUrl: string }> => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         return Promise.reject(new Error('GWS API not available'));
       }
-      return window.accomplish.gws.startAuth(label);
+      return window.zmeel.gws.startAuth(label);
     },
 
     gwsCompleteAuth: (state: string, code: string): Promise<GoogleAccount> => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         return Promise.reject(new Error('GWS API not available'));
       }
-      return window.accomplish.gws.completeAuth(state, code);
+      return window.zmeel.gws.completeAuth(state, code);
     },
 
     gwsRemoveAccount: (id: string): Promise<void> => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         return Promise.reject(new Error('GWS API not available'));
       }
-      return window.accomplish.gws.removeAccount(id);
+      return window.zmeel.gws.removeAccount(id);
     },
 
     gwsUpdateLabel: (id: string, label: string): Promise<void> => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         return Promise.reject(new Error('GWS API not available'));
       }
-      return window.accomplish.gws.updateLabel(id, label);
+      return window.zmeel.gws.updateLabel(id, label);
     },
 
     gwsOnStatusChanged: (cb: (id: string, status: GoogleAccountStatus) => void): (() => void) => {
-      if (!window.accomplish?.gws) {
+      if (!window.zmeel?.gws) {
         throw new Error('GWS API not available');
       }
-      return window.accomplish.gws.onStatusChanged(cb);
+      return window.zmeel.gws.onStatusChanged(cb);
     },
   };
 }
@@ -913,30 +913,30 @@ export function getAccomplish() {
  * Check if running in Electron shell
  */
 export function isRunningInElectron(): boolean {
-  return window.accomplishShell?.isElectron === true;
+  return window.zmeelShell?.isElectron === true;
 }
 
 /**
  * Get shell version if available
  */
 export function getShellVersion(): string | null {
-  return window.accomplishShell?.version ?? null;
+  return window.zmeelShell?.version ?? null;
 }
 
 /**
  * Get shell platform if available
  */
 export function getShellPlatform(): string | null {
-  return window.accomplishShell?.platform ?? null;
+  return window.zmeelShell?.platform ?? null;
 }
 
 /**
- * React hook to use the accomplish API
+ * React hook to use the zmeel API
  */
-export function useAccomplish(): AccomplishAPI {
-  const api = window.accomplish;
+export function useZmeel(): ZmeelAPI {
+  const api = window.zmeel;
   if (!api) {
-    throw new Error('Accomplish API not available - not running in Electron');
+    throw new Error('Zmeel API not available - not running in Electron');
   }
   return api;
 }

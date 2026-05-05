@@ -22,7 +22,7 @@ vi.mock('electron', () => ({
     getPath: vi.fn(() => '/tmp/test-userdata'),
     getAppPath: vi.fn(() => '/tmp/test-app'),
     isPackaged: true, // skips the dev-app-update.yml fs write in initUpdater
-    name: 'Accomplish',
+    name: 'Zmeel',
   },
   dialog: { showMessageBox: vi.fn(() => Promise.resolve({ response: 1 })), showErrorBox: vi.fn() },
   BrowserWindow: vi.fn(),
@@ -81,15 +81,15 @@ const emptyConfig = {
   gaApiSecret: '',
   gaMeasurementId: '',
   sentryDsn: '',
-  accomplishGatewayUrl: '',
+  zmeelGatewayUrl: '',
   buildId: '',
-  accomplishUpdaterUrl: '',
+  zmeelUpdaterUrl: '',
 };
 
 vi.mock('../../../src/main/config/build-config', () => ({
   getBuildConfig: vi.fn(() => ({
     ...emptyConfig,
-    accomplishUpdaterUrl: 'https://d.accomplish.ai',
+    zmeelUpdaterUrl: 'https://d.zmeel.ai',
   })),
   isAutoUpdaterEnabled: vi.fn(() => true),
 }));
@@ -113,7 +113,7 @@ describe('updater', () => {
     const { getBuildConfig } = await import('../../../src/main/config/build-config');
     vi.mocked(getBuildConfig).mockReturnValue({
       ...emptyConfig,
-      accomplishUpdaterUrl: 'https://d.accomplish.ai',
+      zmeelUpdaterUrl: 'https://d.zmeel.ai',
     });
   });
 
@@ -122,23 +122,23 @@ describe('updater', () => {
       const { getBuildConfig } = await import('../../../src/main/config/build-config');
       vi.mocked(getBuildConfig).mockReturnValue({
         ...emptyConfig,
-        accomplishUpdaterUrl: 'https://d.accomplish.ai/test/',
+        zmeelUpdaterUrl: 'https://d.zmeel.ai/test/',
       });
       const { getFeedUrl } = await import('../../../src/main/updater/feed-config');
-      expect(getFeedUrl()).toBe('https://d.accomplish.ai/test');
+      expect(getFeedUrl()).toBe('https://d.zmeel.ai/test');
     });
 
     it('getFeedUrl trims multiple trailing slashes', async () => {
       const { getBuildConfig } = await import('../../../src/main/config/build-config');
       vi.mocked(getBuildConfig).mockReturnValue({
         ...emptyConfig,
-        accomplishUpdaterUrl: 'https://d.accomplish.ai/test///',
+        zmeelUpdaterUrl: 'https://d.zmeel.ai/test///',
       });
       const { getFeedUrl } = await import('../../../src/main/updater/feed-config');
-      expect(getFeedUrl()).toBe('https://d.accomplish.ai/test');
+      expect(getFeedUrl()).toBe('https://d.zmeel.ai/test');
     });
 
-    it('getManifestName pins the accomplish-release contract', async () => {
+    it('getManifestName pins the zmeel-release contract', async () => {
       const { getManifestName } = await import('../../../src/main/updater/feed-config');
       expect(getManifestName('win')).toBe('latest-win.yml');
       expect(getManifestName('linux', 'x64')).toBe('latest-linux.yml');
@@ -183,7 +183,7 @@ describe('updater', () => {
         await initUpdater(mockWindow);
         expect(mockAutoUpdater.setFeedURL).toHaveBeenCalledWith({
           provider: 'generic',
-          url: 'https://d.accomplish.ai',
+          url: 'https://d.zmeel.ai',
         });
         // Pin: no channel key in the arg.
         const arg = mockAutoUpdater.setFeedURL.mock.calls[0][0] as Record<string, unknown>;
@@ -370,7 +370,7 @@ describe('updater', () => {
           setTimeout(() => {
             res.emit(
               'data',
-              `version: 0.3.8\npath: https://downloads.accomplish.ai/downloads/0.3.8/windows/a.exe\n`,
+              `version: 0.3.8\npath: https://downloads.zmeel.ai/downloads/0.3.8/windows/a.exe\n`,
             );
             res.emit('end');
           }, 0);

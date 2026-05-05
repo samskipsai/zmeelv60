@@ -12,24 +12,24 @@ function getLegacyPaths(): LegacyPath[] {
   const isPackaged = app.isPackaged;
 
   return [
-    { path: path.join(appDataPath, 'Accomplish') },
-    { path: path.join(appDataPath, 'accomplish') },
+    { path: path.join(appDataPath, 'Zmeel') },
+    { path: path.join(appDataPath, 'zmeel') },
     {
-      path: path.join(appDataPath, 'Openwork'),
-      dbName: isPackaged ? 'openwork.db' : 'openwork-dev.db',
+      path: path.join(appDataPath, 'Zmeel'),
+      dbName: isPackaged ? 'zmeel.db' : 'zmeel-dev.db',
     },
     {
-      path: path.join(appDataPath, 'openwork'),
-      dbName: isPackaged ? 'openwork.db' : 'openwork-dev.db',
+      path: path.join(appDataPath, 'zmeel'),
+      dbName: isPackaged ? 'zmeel.db' : 'zmeel-dev.db',
     },
     {
-      path: path.join(appDataPath, '@accomplish', 'desktop-v2'),
-      dbName: isPackaged ? 'openwork.db' : 'openwork-dev.db',
+      path: path.join(appDataPath, '@zmeel', 'desktop-v2'),
+      dbName: isPackaged ? 'zmeel.db' : 'zmeel-dev.db',
     },
   ];
 }
 
-const NEW_DB_NAME = app.isPackaged ? 'accomplish.db' : 'accomplish-dev.db';
+const NEW_DB_NAME = app.isPackaged ? 'zmeel.db' : 'zmeel-dev.db';
 const SECURE_STORAGE_NAME = app.isPackaged ? 'secure-storage.json' : 'secure-storage-dev.json';
 
 function getFilesToMigrate(legacyDbName?: string): Array<{ src: string; dest: string }> {
@@ -52,7 +52,7 @@ export function migrateLegacyData(): boolean {
       return false;
     }
 
-    const legacyDbNames = ['openwork.db', 'openwork-dev.db'];
+    const legacyDbNames = ['zmeel.db', 'zmeel-dev.db'];
     for (const legacyDbName of legacyDbNames) {
       const currentLegacyDb = path.join(currentPath, legacyDbName);
       if (fs.existsSync(currentLegacyDb)) {

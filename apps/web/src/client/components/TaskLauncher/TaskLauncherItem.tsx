@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Task } from '@accomplish_ai/agent-core/common';
+import type { Task } from '@zmeel/agent-core/common';
 import { cn } from '@/lib/utils';
 import { SpinnerGap } from '@phosphor-icons/react';
 import { STATUS_COLORS, extractDomains } from '@/lib/task-utils';

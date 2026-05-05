@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as os from 'os';
 
 /**
- * Integration tests for @accomplish/core
+ * Integration tests for @zmeel/core
  *
  * These tests verify that multiple core components work together correctly.
  * Unlike unit tests that mock dependencies, integration tests use real

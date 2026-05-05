@@ -47,7 +47,7 @@ function resolveMcpCommand(
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `[OpenCode Config] Missing MCP dist entry: ${distPath}. ` +
-        'Run "pnpm -F @accomplish/desktop build:mcp-tools:dev" before launching.',
+        'Run "pnpm -F @zmeel/desktop build:mcp-tools:dev" before launching.',
     );
   }
   return [nodePath, distPath];
@@ -91,7 +91,7 @@ export function buildMcpServers(options: BuildMcpServersOptions): Record<string,
 
   // Auth env for daemon HTTP APIs — MCP tools send this as Authorization header
   const authEnv: Record<string, string> = authToken
-    ? { ACCOMPLISH_DAEMON_AUTH_TOKEN: authToken }
+    ? { ZMEEL_DAEMON_AUTH_TOKEN: authToken }
     : {};
 
   const mcpServers: Record<string, McpServerConfig> = {
@@ -127,7 +127,7 @@ export function buildMcpServers(options: BuildMcpServersOptions): Record<string,
       command: resolveMcpCommand(mcpToolsPath, 'whatsapp', 'dist/index.mjs', nodeExe),
       enabled: true,
       environment: {
-        ACCOMPLISH_WHATSAPP_API_PORT: String(whatsappApiPort),
+        ZMEEL_WHATSAPP_API_PORT: String(whatsappApiPort),
         ...authEnv,
       },
       timeout: 30000,

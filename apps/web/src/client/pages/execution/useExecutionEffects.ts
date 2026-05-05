@@ -7,7 +7,7 @@ type CoreState = ReturnType<typeof useExecutionCore>;
  * Side-effect hooks for the execution page.
  * Handles auth/pause cleanup, follow-up focus, and keyboard shortcuts.
  */
-export function useExecutionEffects(s: CoreState, accomplish: CoreState['accomplish']) {
+export function useExecutionEffects(s: CoreState, zmeel: CoreState['zmeel']) {
   useEffect(() => {
     s.setTaskActionError(null);
     s.setIsTaskActionRunning(false);
@@ -21,11 +21,11 @@ export function useExecutionEffects(s: CoreState, accomplish: CoreState['accompl
       action?.type === 'oauth-connect'
     ) {
       let stale = false;
-      accomplish
+      zmeel
         .getSlackMcpOauthStatus()
         .then((status) => {
           if (!stale && status.pendingAuthorization) {
-            void accomplish.logoutSlackMcp();
+            void zmeel.logoutSlackMcp();
           }
         })
         .catch(() => {
@@ -37,7 +37,7 @@ export function useExecutionEffects(s: CoreState, accomplish: CoreState['accompl
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- s.setTaskActionError/setIsTaskActionRunning are stable store actions
   }, [
-    accomplish,
+    zmeel,
     s.currentTask?.id,
     s.currentTask?.status,
     s.currentTask?.result && 'pauseReason' in s.currentTask.result

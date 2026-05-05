@@ -15,7 +15,7 @@ import {
   OAUTH_CALLBACK_PORT_PRIMARY,
   OAUTH_CALLBACK_PORT_FALLBACK,
 } from './constants.js';
-import type { GoogleAccountToken } from '@accomplish_ai/agent-core/common';
+import type { GoogleAccountToken } from '@zmeel/agent-core/common';
 import { getLogCollector } from '../logging/index.js';
 
 export interface GoogleAuthResult {
@@ -217,7 +217,7 @@ async function exchangeCodeForResult(
   // Milestone 5 review finding P2.3: Google omits the refresh token
   // whenever it believes the user already has one (e.g. a prior consent
   // that wasn't revoked, the account's third-party-access tile still
-  // listing Accomplish). Pre-M5 we silently accepted `refreshToken: ''`,
+  // listing Zmeel). Pre-M5 we silently accepted `refreshToken: ''`,
   // which meant `TokenManager.refreshToken` had nothing to send to the
   // token endpoint — the account would look connected until the first
   // expiry, then go permanently expired with no explanation. Post-M5

@@ -8,8 +8,8 @@ import {
   DEFAULT_PROVIDERS,
   PROVIDER_META,
   getModelDisplayName,
-} from '@accomplish_ai/agent-core/common';
-import type { ConnectedProvider, ProviderId } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
+import type { ConnectedProvider, ProviderId } from '@zmeel/agent-core/common';
 
 interface ProviderSubMenuProps {
   providerId: ProviderId;

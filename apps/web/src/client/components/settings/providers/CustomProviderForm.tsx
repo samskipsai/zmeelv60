@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import type { ConnectedProvider, CustomCredentials } from '@accomplish_ai/agent-core';
+import type { ConnectedProvider, CustomCredentials } from '@zmeel/agent-core';
 import { ProviderFormHeader } from '../shared';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { CustomProviderConnectedSection } from './CustomProviderConnectedSection';
 import { CustomProviderInputs } from './CustomProviderInputs';
 
@@ -59,11 +59,11 @@ export function CustomProviderForm({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const trimmedKey = apiKey.trim() || undefined;
 
       // Test connection to the endpoint
-      const result = await accomplish.testCustomConnection(baseUrl.trim(), trimmedKey);
+      const result = await zmeel.testCustomConnection(baseUrl.trim(), trimmedKey);
       if (!result.success) {
         setError(result.error || 'Connection failed');
         setConnecting(false);
@@ -72,10 +72,10 @@ export function CustomProviderForm({
 
       // Save or remove API key based on user input
       if (trimmedKey) {
-        await accomplish.addApiKey('custom', trimmedKey);
+        await zmeel.addApiKey('custom', trimmedKey);
       } else {
         // Remove any previously stored key when connecting without one
-        await accomplish.removeApiKey('custom');
+        await zmeel.removeApiKey('custom');
       }
 
       // Create the model with the custom/ prefix

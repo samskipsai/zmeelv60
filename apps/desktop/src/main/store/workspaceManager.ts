@@ -5,7 +5,7 @@
  * (plan: /Users/yanai/.claude/plans/squishy-exploring-hamster.md).
  *
  * Before 3d: this module imported `createDefaultWorkspace`, `listWorkspaces`,
- * etc. directly from `@accomplish_ai/agent-core`. Those functions open the
+ * etc. directly from `@zmeel/agent-core`. Those functions open the
  * main DB via `better-sqlite3`, so main held the second DB handle (alongside
  * the daemon's). Ported onto the daemon's `workspace.*` RPC surface.
  *
@@ -28,7 +28,7 @@ import type {
   WorkspaceCreateInput,
   WorkspaceDeleteResult,
   WorkspaceUpdateInput,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import { getDaemonClient } from '../daemon-bootstrap';
 import { getLogCollector } from '../logging';
 

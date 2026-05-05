@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { CheckCircle, Circle, SpinnerGap, XCircle } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
-import type { TodoItem } from '@accomplish_ai/agent-core/common';
+import type { TodoItem } from '@zmeel/agent-core/common';
 
 interface TodoSidebarProps {
   todos: TodoItem[];

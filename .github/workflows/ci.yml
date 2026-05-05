@@ -60,7 +60,7 @@ jobs:
           # paths — otherwise migration/import/delete coverage silently
           # reports green.
           REQUIRE_SQLITE_TESTS: '1'
-        run: pnpm -F @accomplish_ai/agent-core test
+        run: pnpm -F @zmeel/agent-core test
 
   # Run unit and integration tests in parallel
   unit-tests:
@@ -87,7 +87,7 @@ jobs:
         run: pnpm build
 
       - name: Run unit tests
-        run: pnpm -F @accomplish/desktop test:unit
+        run: pnpm -F @zmeel/desktop test:unit
 
       - name: Upload unit test results
         if: always()
@@ -121,7 +121,7 @@ jobs:
         run: pnpm build
 
       - name: Run integration tests
-        run: pnpm -F @accomplish/desktop test:integration
+        run: pnpm -F @zmeel/desktop test:integration
 
       - name: Upload integration test results
         if: always()
@@ -190,7 +190,7 @@ jobs:
         run: |
           docker load -i /tmp/e2e-image.tar
           # Re-tag to what run-e2e.sh will look for
-          LOADED_TAG="$(docker images 'accomplish-e2e' --format '{{.Repository}}:{{.Tag}}' | head -1)"
+          LOADED_TAG="$(docker images 'zmeel-e2e' --format '{{.Repository}}:{{.Tag}}' | head -1)"
           EXPECTED_TAG="$(bash apps/desktop/e2e/docker/run-e2e.sh --print-tag)"
           if [ "$LOADED_TAG" != "$EXPECTED_TAG" ] && [ -n "$LOADED_TAG" ]; then
             docker tag "$LOADED_TAG" "$EXPECTED_TAG"
@@ -203,9 +203,9 @@ jobs:
       - name: Save Docker image to cache
         if: steps.docker-cache.outputs.cache-hit != 'true'
         run: |
-          IMAGE="$(docker images 'accomplish-e2e' --format '{{.Repository}}:{{.Tag}}' | head -1)"
+          IMAGE="$(docker images 'zmeel-e2e' --format '{{.Repository}}:{{.Tag}}' | head -1)"
           if [ -z "$IMAGE" ]; then
-            echo "No accomplish-e2e image found to cache" >&2
+            echo "No zmeel-e2e image found to cache" >&2
             exit 1
           fi
           docker save "$IMAGE" -o /tmp/e2e-image.tar
@@ -259,7 +259,7 @@ jobs:
           pnpm dev:clean:check
 
       - name: Run unit tests
-        run: pnpm -F @accomplish/desktop test:unit
+        run: pnpm -F @zmeel/desktop test:unit
 
       - name: Run typecheck
         run: pnpm typecheck

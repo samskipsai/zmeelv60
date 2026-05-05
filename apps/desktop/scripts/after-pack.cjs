@@ -119,7 +119,7 @@ async function copyNodeBinary(context, platform, arch) {
   if (!fs.existsSync(sourceDir)) {
     const errorMsg =
       `[after-pack] ERROR: Node.js binary not found at ${sourceDir}\n` +
-      `Run "pnpm -F @accomplish/desktop download:nodejs" first to download the binaries.`;
+      `Run "pnpm -F @zmeel/desktop download:nodejs" first to download the binaries.`;
     console.error(errorMsg);
     throw new Error(errorMsg);
   }

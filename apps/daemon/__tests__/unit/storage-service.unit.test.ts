@@ -4,7 +4,7 @@
  * Original concern pinned by PR #947: daemon task runs silently dropped
  * workspace knowledge notes because the daemon never opened the sibling
  * `workspace-meta.db` file. That bug is retired by the v030 consolidation
- * (workspace tables now live in `accomplish.db`), so this test now asserts
+ * (workspace tables now live in `zmeel.db`), so this test now asserts
  * the post-consolidation contract instead:
  *
  *   1. `StorageService.initialize(dataDir)` calls `createStorage` with
@@ -20,7 +20,7 @@
  * Better-sqlite3's native binding can't be loaded in the daemon vitest
  * environment (NODE_MODULE_VERSION mismatch against Electron's bundled
  * Node), so we mock both `createStorage` and `deleteLegacyWorkspaceMetaFiles`
- * from `@accomplish_ai/agent-core` and assert the shape + call order. The
+ * from `@zmeel/agent-core` and assert the shape + call order. The
  * real helpers are covered by agent-core's integration suite.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -33,7 +33,7 @@ const storageInitializeSpy = vi.fn();
 const storageCloseSpy = vi.fn();
 const deleteLegacySpy = vi.fn();
 
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,
@@ -60,12 +60,12 @@ describe('StorageService bootstrap — consolidated workspace-meta', () => {
     storageInitializeSpy.mockClear();
     storageCloseSpy.mockClear();
     deleteLegacySpy.mockClear();
-    delete process.env.ACCOMPLISH_IS_PACKAGED;
+    delete process.env.ZMEEL_IS_PACKAGED;
     dataDir = join(tmpdir(), `storage-svc-${Date.now()}-${Math.random().toString(36).slice(2)}`);
   });
 
   afterEach(() => {
-    delete process.env.ACCOMPLISH_IS_PACKAGED;
+    delete process.env.ZMEEL_IS_PACKAGED;
     try {
       rmSync(dataDir, { recursive: true, force: true });
     } catch {
@@ -79,17 +79,17 @@ describe('StorageService bootstrap — consolidated workspace-meta', () => {
 
     expect(createStorageSpy).toHaveBeenCalledTimes(1);
     const opts = createStorageSpy.mock.calls[0][0] as Record<string, unknown>;
-    expect(opts.databasePath).toBe(join(dataDir, 'accomplish-dev.db'));
+    expect(opts.databasePath).toBe(join(dataDir, 'zmeel-dev.db'));
     expect(opts.legacyMetaDbPath).toBe(join(dataDir, 'workspace-meta-dev.db'));
   });
 
-  it('uses packaged file names when ACCOMPLISH_IS_PACKAGED=1', () => {
-    process.env.ACCOMPLISH_IS_PACKAGED = '1';
+  it('uses packaged file names when ZMEEL_IS_PACKAGED=1', () => {
+    process.env.ZMEEL_IS_PACKAGED = '1';
     const svc = new StorageService();
     svc.initialize(dataDir);
 
     const opts = createStorageSpy.mock.calls[0][0] as Record<string, unknown>;
-    expect(opts.databasePath).toBe(join(dataDir, 'accomplish.db'));
+    expect(opts.databasePath).toBe(join(dataDir, 'zmeel.db'));
     expect(opts.legacyMetaDbPath).toBe(join(dataDir, 'workspace-meta.db'));
   });
 

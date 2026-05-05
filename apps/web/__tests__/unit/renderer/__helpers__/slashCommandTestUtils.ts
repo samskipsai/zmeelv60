@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import type { Skill } from '@accomplish_ai/agent-core/common';
+import type { Skill } from '@zmeel/agent-core/common';
 
 /** Two visible mock skills for testing slash-command features. */
 export const mockSkills: Skill[] = [

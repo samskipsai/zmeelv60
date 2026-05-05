@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // Mock the agent-core module for HealthCheckResult type
-vi.mock('@accomplish_ai/agent-core', () => ({}));
+vi.mock('@zmeel/agent-core', () => ({}));
 
 import { HealthService } from '../../src/health.js';
 

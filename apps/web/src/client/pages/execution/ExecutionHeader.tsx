@@ -1,4 +1,4 @@
-import type { TaskStatus } from '@accomplish_ai/agent-core';
+import type { TaskStatus } from '@zmeel/agent-core';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';

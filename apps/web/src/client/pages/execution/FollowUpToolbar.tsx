@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ModelIndicator } from '../../components/ui/ModelIndicator';
 import { SpeechInputButton } from '../../components/ui/SpeechInputButton';
 import { PlusMenu } from '../../components/landing/PlusMenu';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 import type { useSpeechInput } from '../../hooks/useSpeechInput';
 
 interface FollowUpToolbarProps {

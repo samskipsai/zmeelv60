@@ -5,8 +5,8 @@ console.error('[dev-browser-mcp] Script starting...');
 console.error('[dev-browser-mcp] Node version:', process.version);
 console.error('[dev-browser-mcp] CWD:', process.cwd());
 console.error(
-  '[dev-browser-mcp] ACCOMPLISH_TASK_ID:',
-  process.env.ACCOMPLISH_TASK_ID || '(not set)',
+  '[dev-browser-mcp] ZMEEL_TASK_ID:',
+  process.env.ZMEEL_TASK_ID || '(not set)',
 );
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -85,7 +85,7 @@ async function checkInteractionMode(page: Page, pageName?: string): Promise<void
 }
 
 async function loadToolDebug(): Promise<void> {
-  const debugPath = process.env.ACCOMPLISH_TOOL_DEBUG_PATH;
+  const debugPath = process.env.ZMEEL_TOOL_DEBUG_PATH;
   if (debugPath) {
     console.error(`[dev-browser-mcp] Loading tool debug from: ${debugPath}`);
     try {
@@ -95,7 +95,7 @@ async function loadToolDebug(): Promise<void> {
       console.error('[dev-browser-mcp] Failed to load tool debug:', err);
     }
   } else {
-    console.error('[dev-browser-mcp] ACCOMPLISH_TOOL_DEBUG_PATH not set, tool debug disabled');
+    console.error('[dev-browser-mcp] ZMEEL_TOOL_DEBUG_PATH not set, tool debug disabled');
   }
 }
 await loadToolDebug();
@@ -517,7 +517,7 @@ async function startScreencast(pageName?: string): Promise<void> {
 
         lastFrameTime = now;
 
-        const taskId = process.env.ACCOMPLISH_TASK_ID || 'default';
+        const taskId = process.env.ZMEEL_TASK_ID || 'default';
         console.log(
           JSON.stringify({
             type: 'browser-frame',

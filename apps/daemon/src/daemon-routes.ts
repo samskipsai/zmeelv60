@@ -11,8 +11,8 @@ import {
   resumeSessionSchema,
   authOpenAiAwaitCompletionSchema,
   validate,
-} from '@accomplish_ai/agent-core';
-import type { AccomplishRuntime, StorageDeps } from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
+import type { ZmeelRuntime, StorageDeps } from '@zmeel/agent-core';
 import { z } from 'zod';
 import { homedir } from 'node:os';
 import type { TaskService } from './task-service.js';
@@ -32,7 +32,7 @@ import type {
   GwsAccountAddInput,
   GwsAccountStatusChangedPayload,
   SkillsChangedPayload,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 const taskIdSchema = z.object({ taskId: z.string().min(1) });
 // taskConfigSchema already includes modelId — no extension needed
@@ -69,7 +69,7 @@ export interface RouteServices {
   healthService: HealthService;
   storageService: StorageService;
   schedulerService: SchedulerService;
-  accomplishRuntime: AccomplishRuntime;
+  zmeelRuntime: ZmeelRuntime;
   whatsappService: WhatsAppDaemonService;
   /** OAuth manager (Phase 4a of the SDK cutover port). Owns transient
    *  `opencode serve` spawns + the SDK auth flow + plan detection. */
@@ -97,7 +97,7 @@ export function registerRpcMethods(services: RouteServices): void {
     taskService,
     healthService,
     schedulerService,
-    accomplishRuntime,
+    zmeelRuntime,
     whatsappService,
     openAiOauthManager,
     secretsService,
@@ -296,40 +296,40 @@ export function registerRpcMethods(services: RouteServices): void {
     }),
   );
 
-  // ── Accomplish AI Free Tier ─────────────────────────────────────────────
+  // ── Zmeel AI Free Tier ─────────────────────────────────────────────
   // StorageDeps constructed from daemon's own secure storage — no callbacks over RPC.
-  const accomplishStorageDeps: StorageDeps = {
+  const zmeelStorageDeps: StorageDeps = {
     readKey: (key) => storage.get(key),
     writeKey: (key, value) => storage.set(key, value),
     readGaClientId: () => null, // GA client ID not available in daemon
   };
 
   rpc.registerMethod(
-    'accomplish-ai.connect',
+    'zmeel-ai.connect',
     safeHandler(async () => {
-      const result = await accomplishRuntime.connect(accomplishStorageDeps);
+      const result = await zmeelRuntime.connect(zmeelStorageDeps);
       return { deviceFingerprint: result.deviceFingerprint, usage: result.usage };
     }),
   );
 
   rpc.registerMethod(
-    'accomplish-ai.get-usage',
+    'zmeel-ai.get-usage',
     safeHandler(async () => {
-      return accomplishRuntime.getUsage();
+      return zmeelRuntime.getUsage();
     }),
   );
 
   rpc.registerMethod(
-    'accomplish-ai.disconnect',
+    'zmeel-ai.disconnect',
     safeHandler(async () => {
-      accomplishRuntime.disconnect();
+      zmeelRuntime.disconnect();
       return Promise.resolve();
     }),
   );
 
   // Bridge proxy usage updates to daemon notifications → forwarded to renderer via IPC
-  accomplishRuntime.onUsageUpdate((usage) => {
-    rpc.notify('accomplish-ai.usage-update', usage);
+  zmeelRuntime.onUsageUpdate((usage) => {
+    rpc.notify('zmeel-ai.usage-update', usage);
   });
 
   // ── WhatsApp ─────────────────────────────────────────────────────────────
@@ -729,15 +729,15 @@ export function registerRpcMethods(services: RouteServices): void {
     safeHandler(() => Promise.resolve(settingsService.getProviderDebugMode())),
   );
   rpc.registerMethod(
-    'provider.getAccomplishAiCredits',
-    safeHandler(() => Promise.resolve(settingsService.getAccomplishAiCredits())),
+    'provider.getZmeelAiCredits',
+    safeHandler(() => Promise.resolve(settingsService.getZmeelAiCredits())),
   );
   rpc.registerMethod(
-    'provider.saveAccomplishAiCredits',
+    'provider.saveZmeelAiCredits',
     safeHandler((params) => {
       const v = validate(z.object({ usage: z.unknown() }), params);
-      settingsService.saveAccomplishAiCredits(
-        v.usage as Parameters<typeof settingsService.saveAccomplishAiCredits>[0],
+      settingsService.saveZmeelAiCredits(
+        v.usage as Parameters<typeof settingsService.saveZmeelAiCredits>[0],
       );
       return Promise.resolve();
     }),

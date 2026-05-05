@@ -9,7 +9,7 @@ export function isBlankPanelNavigationUrl(url: string): boolean {
   const hashIdx = lower.indexOf('#');
   if (hashIdx === -1) return false;
   const fragment = lower.slice(hashIdx + 1);
-  return lower.startsWith('about:blank#') && fragment === 'accomplish-browser-panel';
+  return lower.startsWith('about:blank#') && fragment === 'zmeel-browser-panel';
 }
 
 export function isReusableStartupPageUrl(url: string): boolean {

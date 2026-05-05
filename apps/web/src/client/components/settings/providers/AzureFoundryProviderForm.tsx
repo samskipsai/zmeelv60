@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider, AzureFoundryCredentials } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider, AzureFoundryCredentials } from '@zmeel/agent-core/common';
 import { ProviderFormHeader } from '../shared';
 import { AzureFoundryConnectedSection } from './AzureFoundryConnectedSection';
 import { AzureFoundryDisconnectedForm } from './AzureFoundryDisconnectedForm';
@@ -49,10 +49,10 @@ export function AzureFoundryProviderForm({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
       // Validate connection
-      const validation = await accomplish.testAzureFoundryConnection({
+      const validation = await zmeel.testAzureFoundryConnection({
         endpoint: endpoint.trim(),
         deploymentName: deploymentName.trim(),
         authType,
@@ -66,7 +66,7 @@ export function AzureFoundryProviderForm({
       }
 
       // Save credentials
-      await accomplish.saveAzureFoundryConfig({
+      await zmeel.saveAzureFoundryConfig({
         endpoint: endpoint.trim(),
         deploymentName: deploymentName.trim(),
         authType,

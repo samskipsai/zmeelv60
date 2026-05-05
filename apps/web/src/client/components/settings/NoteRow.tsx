@@ -1,6 +1,6 @@
 import { Trash2, Pencil, Check, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { KnowledgeNote, KnowledgeNoteType } from '@accomplish_ai/agent-core';
+import type { KnowledgeNote, KnowledgeNoteType } from '@zmeel/agent-core';
 
 const NOTE_TYPES: KnowledgeNoteType[] = ['context', 'instruction', 'reference'];
 const MAX_CONTENT_LENGTH = 500;

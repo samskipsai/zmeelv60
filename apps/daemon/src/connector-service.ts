@@ -28,13 +28,13 @@
  *      cover this surface — byte-identical to what desktop's legacy
  *      `connector-auth-entry.ts` helpers write today.
  */
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import type {
   ConnectorStatus,
   McpConnector,
   OAuthTokens,
   StoredAuthEntry,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 /**
  * Desktop-side prefix for built-in connector auth entries in the

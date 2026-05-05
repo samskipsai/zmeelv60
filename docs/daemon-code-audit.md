@@ -67,14 +67,14 @@ A `fork()`-ed Node.js child process that handles storage-only RPC methods. Compi
 A fully independent daemon process with:
 
 - Unix domain socket RPC server (`DaemonRpcServer`)
-- PID lock with stale detection (`~/.accomplish/daemon.pid`)
+- PID lock with stale detection (`~/.zmeel/daemon.pid`)
 - Full task execution (`task.start`, `task.stop`, `task.interrupt`)
 - Own PermissionService and ThoughtStreamService with HTTP servers
 - Crash recovery (marks stale `running` tasks as `failed` on boot)
 - Graceful shutdown with 30-second drain phase for active tasks
 - Health check endpoint
 
-**Nobody starts it.** The Electron app does not depend on `@accomplish/daemon`, does not import from it, and does not spawn it. It exists as an independent workspace package but has no integration point.
+**Nobody starts it.** The Electron app does not depend on `@zmeel/daemon`, does not import from it, and does not spawn it. It exists as an independent workspace package but has no integration point.
 
 | File                                                                  | Lines                       |
 | --------------------------------------------------------------------- | --------------------------- |

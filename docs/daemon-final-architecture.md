@@ -30,14 +30,14 @@ All launch modes MUST resolve to the **same storage root**. Socket and PID paths
 | Desktop-launched daemon             | `spawn(node, [daemon, '--data-dir', app.getPath('userData')])` |
 | Login-item daemon (macOS/Windows)   | LaunchAgent/startup entry passes `--data-dir <userData>`       |
 | Login-item daemon (Linux systemd)   | `ExecStart=... --data-dir <userData>`                          |
-| Manual/standalone daemon (dev only) | `--data-dir` optional; defaults to `~/.accomplish` for dev     |
+| Manual/standalone daemon (dev only) | `--data-dir` optional; defaults to `~/.zmeel` for dev     |
 
 **Identity files derived from dataDir:**
 
 | File           | macOS / Linux                   | Windows                                      |
 | -------------- | ------------------------------- | -------------------------------------------- |
-| Database       | `<dataDir>/accomplish.db`       | `<dataDir>\accomplish.db`                    |
-| Socket         | `<dataDir>/daemon.sock`         | `\\.\pipe\accomplish-daemon-<hash(dataDir)>` |
+| Database       | `<dataDir>/zmeel.db`       | `<dataDir>\zmeel.db`                    |
+| Socket         | `<dataDir>/daemon.sock`         | `\\.\pipe\zmeel-daemon-<hash(dataDir)>` |
 | PID lock       | `<dataDir>/daemon.pid`          | `<dataDir>\daemon.pid`                       |
 | Secure storage | `<dataDir>/secure-storage.json` | `<dataDir>\secure-storage.json`              |
 
@@ -254,7 +254,7 @@ sequenceDiagram
 
     User->>React: "Organize my Downloads"
     React->>React: set({ isLoading: true })
-    React->>Preload: accomplish.startTask({ prompt })
+    React->>Preload: zmeel.startTask({ prompt })
     Preload->>IPC: ipcRenderer.invoke('task:start', config)
 
     Note over IPC: assertTrustedWindow()<br/>validateTaskConfig()
@@ -427,7 +427,7 @@ sequenceDiagram
 
     User->>React: Types "Leave pictures as is"
     React->>React: Optimistic: add user message,<br/>set status → 'running'
-    React->>IPC: accomplish.resumeSession(<br/>'sess_abc123', prompt, 'tsk_001')
+    React->>IPC: zmeel.resumeSession(<br/>'sess_abc123', prompt, 'tsk_001')
     IPC->>DC: client.call('session.resume',<br/>{ sessionId, prompt,<br/>existingTaskId, attachments })
 
     DC->>RPC: JSON-RPC over socket
@@ -479,7 +479,7 @@ sequenceDiagram
         User->>Electron: window.close()
         Electron->>Electron: event.preventDefault()
         Electron->>React: window.hide()
-        Note over Tray: Tray icon still visible<br/>"Accomplish — 1 task running"
+        Note over Tray: Tray icon still visible<br/>"Zmeel — 1 task running"
         Note over Daemon: Daemon unaffected.<br/>Task keeps running.
 
         User->>Tray: Click tray icon
@@ -509,7 +509,7 @@ sequenceDiagram
         Electron->>Electron: app.quit()
     end
 
-    Note over User: Later... user reopens Accomplish
+    Note over User: Later... user reopens Zmeel
 
     User->>Electron: Launch app
     Electron->>DC: ensureDaemonRunning()
@@ -692,7 +692,7 @@ sequenceDiagram
             UI->>UI: Reset to "Keep daemon running"
         else User clicks Confirm
             Dialog2-->>UI: Confirmed
-            UI->>IPC: accomplish.setCloseBehavior('stop-daemon')
+            UI->>IPC: zmeel.setCloseBehavior('stop-daemon')
             IPC->>DB: UPDATE app_settings<br/>SET close_behavior='stop-daemon'
             UI->>UI: Show selection with ⚠ indicator
         end

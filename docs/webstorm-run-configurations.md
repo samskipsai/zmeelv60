@@ -13,7 +13,7 @@ Any other npm script can be added as a run config the same way — these are jus
 | Config name                                  | Workspace      | What it runs                                                             | When you'd use it                                                                                                             |
 | -------------------------------------------- | -------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
 | Electron Main (1. Start)                     | root           | `pnpm dev` with `ELECTRON_DEBUG=1`                                       | Everyday dev: Vite dev server + Electron main, hot reload on the UI                                                           |
-| Desktop: build:unpack                        | `apps/desktop` | Full pipeline → produces `apps/desktop/release/mac-arm64/Accomplish.app` | Fastest local packaged build for GUI smoke (chains `download:nodejs` → daemon build → `stage:daemon-deps` → electron-builder) |
+| Desktop: build:unpack                        | `apps/desktop` | Full pipeline → produces `apps/desktop/release/mac-arm64/Zmeel.app` | Fastest local packaged build for GUI smoke (chains `download:nodejs` → daemon build → `stage:daemon-deps` → electron-builder) |
 | Desktop: smoke:packaged-opencode (mac-arm64) | `apps/desktop` | Validate packaged `opencode --version` + `serve --port=0` ready-line     | After a `build:unpack`, to confirm the packaged `.app` is healthy                                                             |
 
 ## Setup — two paths
@@ -42,16 +42,16 @@ Any other npm script can be added as a run config the same way — these are jus
 For scripts that need CLI arguments (e.g. `smoke:packaged-opencode`), add them to the **Arguments** field with `--` as the separator:
 
 ```
--- --artifact-dir=release/mac-arm64/Accomplish.app --expected-version=1.14.18
+-- --artifact-dir=release/mac-arm64/Zmeel.app --expected-version=1.14.18
 ```
 
 ## Typical workflow
 
-1. Run **Desktop: build:unpack** — full chain, produces `apps/desktop/release/mac-arm64/Accomplish.app`
+1. Run **Desktop: build:unpack** — full chain, produces `apps/desktop/release/mac-arm64/Zmeel.app`
 2. In a terminal:
    ```bash
-   xattr -cr apps/desktop/release/mac-arm64/Accomplish.app
-   open apps/desktop/release/mac-arm64/Accomplish.app
+   xattr -cr apps/desktop/release/mac-arm64/Zmeel.app
+   open apps/desktop/release/mac-arm64/Zmeel.app
    ```
 3. Run **Desktop: smoke:packaged-opencode (mac-arm64)** to verify the packaged OpenCode + `opencode serve --port=0` both work
 
@@ -86,7 +86,7 @@ Pre-configured with arguments for the darwin-arm64 artifact. Duplicate and tweak
     <scripts>
       <script value="smoke:packaged-opencode" />
     </scripts>
-    <arguments value="-- --artifact-dir=release/mac-arm64/Accomplish.app --expected-version=1.14.18" />
+    <arguments value="-- --artifact-dir=release/mac-arm64/Zmeel.app --expected-version=1.14.18" />
     <node-interpreter value="project" />
     <package-manager value="pnpm" />
     <method v="2" />

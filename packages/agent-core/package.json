@@ -1,18 +1,18 @@
 {
-  "name": "@accomplish_ai/agent-core",
+  "name": "@zmeel/agent-core",
   "version": "0.4.0",
   "private": true,
-  "description": "Core logic for Accomplish - OpenCode adapter, storage, providers, MCP tools, and skills",
+  "description": "Core logic for Zmeel - OpenCode adapter, storage, providers, MCP tools, and skills",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/accomplish-ai/accomplish.git",
+    "url": "https://github.com/samskipsai/zmeelv60.git",
     "directory": "packages/agent-core"
   },
-  "homepage": "https://github.com/accomplish-ai/accomplish/tree/main/packages/agent-core#readme",
+  "homepage": "https://github.com/samskipsai/zmeelv60/tree/main/packages/agent-core#readme",
   "bugs": {
-    "url": "https://github.com/accomplish-ai/accomplish/issues"
+    "url": "https://github.com/samskipsai/zmeelv60/issues"
   },
   "keywords": [
     "automation",
@@ -44,9 +44,9 @@
       "default": "./dist/desktop-main.js"
     },
     "./runtime-types": {
-      "types": "./dist/accomplish-runtime-types.d.ts",
-      "import": "./dist/accomplish-runtime-types.js",
-      "default": "./dist/accomplish-runtime-types.js"
+      "types": "./dist/zmeel-runtime-types.d.ts",
+      "import": "./dist/zmeel-runtime-types.js",
+      "default": "./dist/zmeel-runtime-types.js"
     }
   },
   "files": [

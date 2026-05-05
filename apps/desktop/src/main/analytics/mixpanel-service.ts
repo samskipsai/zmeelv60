@@ -3,7 +3,7 @@
  *
  * No-ops gracefully when MIXPANEL_TOKEN is not configured (OSS builds).
  *
- * Ported from accomplish-commercial-fork with:
+ * Ported from zmeel-commercial-fork with:
  * - Hardcoded MIXPANEL_TOKEN removed — read from build config
  */
 

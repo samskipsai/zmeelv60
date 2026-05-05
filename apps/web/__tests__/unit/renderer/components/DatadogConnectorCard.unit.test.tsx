@@ -16,8 +16,8 @@ import settingsEn from '../../../../locales/en/settings.json';
 const mockGetServerUrl = vi.fn();
 const mockSetServerUrl = vi.fn();
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({
     datadogGetServerUrl: mockGetServerUrl,
     datadogSetServerUrl: mockSetServerUrl,
   }),

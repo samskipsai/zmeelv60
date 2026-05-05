@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import {
   getDefaultModelForProvider,
   type BedrockProviderCredentials,
   type ConnectedProvider,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 export interface UseBedrockProviderConnectReturn {
   authTab: 'apiKey' | 'accessKey' | 'profile';
@@ -52,7 +52,7 @@ export function useBedrockProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
       const credentialsMap = {
         apiKey: {
@@ -75,7 +75,7 @@ export function useBedrockProviderConnect({
       };
       const credentials = credentialsMap[authTab];
 
-      const validation = await accomplish.validateBedrockCredentials(credentials);
+      const validation = await zmeel.validateBedrockCredentials(credentials);
 
       if (!validation.valid) {
         setError(validation.error || t('bedrock.invalidCredentials'));
@@ -83,10 +83,10 @@ export function useBedrockProviderConnect({
         return;
       }
 
-      await accomplish.saveBedrockCredentials(credentials);
+      await zmeel.saveBedrockCredentials(credentials);
 
       const credentialsJson = JSON.stringify(credentials);
-      const modelsResult = await accomplish.fetchBedrockModels(credentialsJson);
+      const modelsResult = await zmeel.fetchBedrockModels(credentialsJson);
       if (!modelsResult.success) {
         setError(modelsResult.error || t('status.connectionFailed'));
         return;

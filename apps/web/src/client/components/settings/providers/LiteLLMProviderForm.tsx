@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import type { ConnectedProvider, LiteLLMCredentials } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider, LiteLLMCredentials } from '@zmeel/agent-core/common';
 import { ProviderFormHeader } from '../shared';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { LiteLLMDisconnectedForm, LiteLLMConnectedSection } from './LiteLLMFormSections';
 
 import litellmLogo from '/assets/ai-logos/litellm.svg';
@@ -36,10 +36,10 @@ export function LiteLLMProviderForm({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const trimmedKey = apiKey.trim() || undefined;
 
-      const result = await accomplish.testLiteLLMConnection(serverUrl, trimmedKey);
+      const result = await zmeel.testLiteLLMConnection(serverUrl, trimmedKey);
       if (!result.success) {
         setError(result.error || t('status.connectionFailed'));
         setConnecting(false);
@@ -47,9 +47,9 @@ export function LiteLLMProviderForm({
       }
 
       if (trimmedKey) {
-        await accomplish.addApiKey('litellm', trimmedKey);
+        await zmeel.addApiKey('litellm', trimmedKey);
       } else {
-        await accomplish.removeApiKey('litellm');
+        await zmeel.removeApiKey('litellm');
       }
 
       const models =

@@ -8,7 +8,7 @@ Call `complete_task` with:
 
 - `status`: "success", "blocked", or "partial"
 - `original_request_summary`: Restate what was asked (forces review)
-- `summary`: What you accomplished
+- `summary`: What you zmeeled
 - `remaining_work`: (if blocked/partial) What's left to do
 
 ## Statuses

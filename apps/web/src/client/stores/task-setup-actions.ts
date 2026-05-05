@@ -1,4 +1,4 @@
-import type { TodoItem } from '@accomplish_ai/agent-core/common';
+import type { TodoItem } from '@zmeel/agent-core/common';
 import type { TaskState } from './taskStore';
 
 type SetFn = (partial: Partial<TaskState> | ((state: TaskState) => Partial<TaskState>)) => void;

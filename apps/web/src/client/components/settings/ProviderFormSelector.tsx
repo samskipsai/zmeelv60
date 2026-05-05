@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core/common';
-import { PROVIDER_META } from '@accomplish_ai/agent-core/common';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core/common';
+import { PROVIDER_META } from '@zmeel/agent-core/common';
 import {
   ClassicProviderForm,
   BedrockProviderForm,
@@ -14,7 +14,7 @@ import {
   CustomProviderForm,
   NimProviderForm,
   CopilotProviderForm,
-  AccomplishAiProviderForm,
+  ZmeelAiProviderForm,
 } from './providers';
 import { ZaiProviderForm } from './providers/ZaiProviderForm';
 
@@ -66,10 +66,10 @@ export function ProviderFormSelector({
     );
   }
 
-  // Handle Accomplish AI separately (device fingerprint flow, no API key)
-  if (providerId === 'accomplish-ai') {
+  // Handle Zmeel AI separately (device fingerprint flow, no API key)
+  if (providerId === 'zmeel-ai') {
     return (
-      <AccomplishAiProviderForm
+      <ZmeelAiProviderForm
         connectedProvider={connectedProvider}
         onConnect={onConnect}
         onUpdateProvider={onUpdateProvider}

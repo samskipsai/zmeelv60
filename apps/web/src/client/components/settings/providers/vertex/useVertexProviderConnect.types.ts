@@ -1,4 +1,4 @@
-import type { ConnectedProvider } from '@accomplish_ai/agent-core';
+import type { ConnectedProvider } from '@zmeel/agent-core';
 
 export interface UseVertexProviderConnectReturn {
   authTab: 'serviceAccount' | 'adc';

@@ -2,7 +2,7 @@ import {
   STARTUP_STAGES,
   type TaskUpdateEvent,
   type TodoItem,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { createLogger } from '../lib/logger';
 import { hasTrackedTask } from './task-state-helpers';
 
@@ -18,11 +18,11 @@ interface SetupProgressEvent {
 
 /** Registers all global IPC subscriptions for the task store. Called once on module load. */
 export function registerTaskSubscriptions(getStore: () => import('./taskStore').TaskState) {
-  if (typeof window === 'undefined' || !window.accomplish) {
+  if (typeof window === 'undefined' || !window.zmeel) {
     return;
   }
 
-  window.accomplish.onTaskProgress((progress: unknown) => {
+  window.zmeel.onTaskProgress((progress: unknown) => {
     const event = progress as SetupProgressEvent;
     const state = getStore();
 
@@ -61,7 +61,7 @@ export function registerTaskSubscriptions(getStore: () => import('./taskStore').
     }
   });
 
-  window.accomplish.onTaskUpdate((event: unknown) => {
+  window.zmeel.onTaskUpdate((event: unknown) => {
     const updateEvent = event as TaskUpdateEvent;
     if (updateEvent.type === 'complete' || updateEvent.type === 'error') {
       const state = getStore();
@@ -76,25 +76,25 @@ export function registerTaskSubscriptions(getStore: () => import('./taskStore').
     }
   });
 
-  window.accomplish.onTaskSummary?.((data: { taskId: string; summary: string }) => {
+  window.zmeel.onTaskSummary?.((data: { taskId: string; summary: string }) => {
     const state = getStore();
     state.setTaskSummary(data.taskId, data.summary);
     // Refresh sidebar to show new task with its summary title
     void state.loadTasks();
   });
 
-  window.accomplish.onTodoUpdate?.((data: { taskId: string; todos: TodoItem[] }) => {
+  window.zmeel.onTodoUpdate?.((data: { taskId: string; todos: TodoItem[] }) => {
     const state = getStore();
     if (state.currentTask?.id === data.taskId) {
       state.setTodos(data.taskId, data.todos);
     }
   });
 
-  window.accomplish.onAuthError?.((data: { providerId: string; message: string }) => {
+  window.zmeel.onAuthError?.((data: { providerId: string; message: string }) => {
     getStore().setAuthError(data);
   });
 
-  window.accomplish.onDaemonReconnected(() => {
+  window.zmeel.onDaemonReconnected(() => {
     const state = getStore();
     void state.loadTasks();
     if (state.currentTask?.id) {
@@ -102,7 +102,7 @@ export function registerTaskSubscriptions(getStore: () => import('./taskStore').
     }
   });
 
-  window.accomplish.onWorkspaceChanged?.(async () => {
+  window.zmeel.onWorkspaceChanged?.(async () => {
     const state = getStore();
     state.reset();
     try {

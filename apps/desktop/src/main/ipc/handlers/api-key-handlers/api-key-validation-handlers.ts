@@ -3,12 +3,12 @@ import {
   validateApiKey,
   validateAzureFoundry,
   sanitizeString,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import {
   ALLOWED_API_KEY_PROVIDERS,
   STANDARD_VALIDATION_PROVIDERS,
-} from '@accomplish_ai/agent-core/desktop-main';
-import type { ZaiRegion } from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
+import type { ZaiRegion } from '@zmeel/agent-core/desktop-main';
 import { storeApiKey, getApiKey, deleteApiKey, hasAnyApiKey } from '../../../store/secureStorage';
 import { getDaemonClient } from '../../../daemon-bootstrap';
 import { getLogCollector } from '../../../logging';
@@ -125,7 +125,7 @@ export function registerApiKeyValidationHandlers(): void {
         }
 
         const result = await validateApiKey(
-          provider as import('@accomplish_ai/agent-core').ProviderType,
+          provider as import('@zmeel/agent-core').ProviderType,
           sanitizedKey,
           {
             timeout: API_KEY_VALIDATION_TIMEOUT_MS,

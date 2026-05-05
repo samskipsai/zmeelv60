@@ -48,7 +48,7 @@ const {
   mockExchangeCodeForTokens: vi.fn(),
 }));
 
-vi.mock('@accomplish_ai/agent-core/desktop-main', () => ({
+vi.mock('@zmeel/agent-core/desktop-main', () => ({
   discoverOAuthMetadata: mockDiscoverOAuthMetadata,
   registerOAuthClient: mockRegisterOAuthClient,
   generatePkceChallenge: mockGeneratePkceChallenge,
@@ -61,7 +61,7 @@ const { mockGetConnectorDefinition } = vi.hoisted(() => ({
   mockGetConnectorDefinition: vi.fn(),
 }));
 
-vi.mock('@accomplish_ai/agent-core/common', () => ({
+vi.mock('@zmeel/agent-core/common', () => ({
   getConnectorDefinition: mockGetConnectorDefinition,
   getConnectorDefinitions: vi.fn().mockReturnValue([]),
 }));

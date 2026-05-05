@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import type {
   ConnectedProvider,
   ZaiCredentials,
   ZaiRegion,
-} from '@accomplish_ai/agent-core/common';
-import { DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
+import { DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('ZaiProviderForm');
@@ -63,14 +63,14 @@ export function useZaiProviderConnect({
       return;
     }
 
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
     const storedRegion = storedCredentials?.region || 'international';
-    accomplish
+    zmeel
       .fetchProviderModels('zai', { zaiRegion: storedRegion })
       .then((result) => {
         if (result.success && result.models?.length) {
           setFetchedModels(result.models);
-          accomplish
+          zmeel
             .setConnectedProvider('zai', {
               ...connectedProvider!,
               availableModels: result.models,
@@ -92,8 +92,8 @@ export function useZaiProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
-      const validation = await accomplish.validateApiKeyForProvider('zai', apiKey.trim(), {
+      const zmeel = getZmeel();
+      const validation = await zmeel.validateApiKeyForProvider('zai', apiKey.trim(), {
         region,
       });
 
@@ -103,11 +103,11 @@ export function useZaiProviderConnect({
         return;
       }
 
-      await accomplish.addApiKey('zai', apiKey.trim());
+      await zmeel.addApiKey('zai', apiKey.trim());
 
       let dynamicModels: Array<{ id: string; name: string }> | undefined;
       if (providerConfig?.modelsEndpoint) {
-        const fetchResult = await accomplish.fetchProviderModels('zai', { zaiRegion: region });
+        const fetchResult = await zmeel.fetchProviderModels('zai', { zaiRegion: region });
         if (fetchResult.success && fetchResult.models) {
           dynamicModels = fetchResult.models;
         }

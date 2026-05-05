@@ -4,7 +4,7 @@ import { settingsVariants, settingsTransitions } from '@/lib/animations';
 import type {
   ConnectedProvider,
   BedrockProviderCredentials,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { ModelSelector, ConnectedControls } from '../shared';
 
 interface BedrockConnectedSectionProps {

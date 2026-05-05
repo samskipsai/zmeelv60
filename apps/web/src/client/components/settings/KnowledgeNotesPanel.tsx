@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { useKnowledgeNotes } from './useKnowledgeNotes';
 import { AddNoteForm } from './AddNoteForm';
 import { NoteRow } from './NoteRow';
@@ -16,7 +16,7 @@ interface KnowledgeNotesPanelProps {
 
 export function KnowledgeNotesPanel({ workspaceId }: KnowledgeNotesPanelProps) {
   const { t } = useTranslation('settings');
-  const accomplish = useMemo(() => getAccomplish(), []);
+  const zmeel = useMemo(() => getZmeel(), []);
   const {
     notes,
     error,
@@ -36,7 +36,7 @@ export function KnowledgeNotesPanel({ workspaceId }: KnowledgeNotesPanelProps) {
     handleEdit,
     handleDelete,
     startEdit,
-  } = useKnowledgeNotes(accomplish, workspaceId);
+  } = useKnowledgeNotes(zmeel, workspaceId);
 
   return (
     <div className="mt-4 rounded-lg border border-border bg-card p-4">

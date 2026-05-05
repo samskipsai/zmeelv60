@@ -80,11 +80,11 @@ specs/
 # Git worktrees
 .worktrees/
 
-# Bundled Node.js binaries (downloaded via `pnpm -F @accomplish/desktop download:nodejs`)
+# Bundled Node.js binaries (downloaded via `pnpm -F @zmeel/desktop download:nodejs`)
 apps/desktop/resources/nodejs/
 
 # Test local agent Chrome profile
-.accomplish-test-local-agent-chrome/
+.zmeel-test-local-agent-chrome/
 
 # MCP tools npm lockfiles (generated at runtime by postinstall.cjs, not committed)
 packages/agent-core/mcp-tools/*/package-lock.json

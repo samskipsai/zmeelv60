@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { normalizeLightdashUrl } from './normalize-url';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 
 interface UseLightdashServerUrl {
   serverUrl: string | null;
@@ -28,7 +28,7 @@ export function useLightdashServerUrl(): UseLightdashServerUrl {
   const [urlLoading, setUrlLoading] = useState(true);
 
   useEffect(() => {
-    getAccomplish()
+    getZmeel()
       .lightdashGetServerUrl()
       .then((url) => {
         setServerUrl(url);
@@ -67,7 +67,7 @@ export function useLightdashServerUrl(): UseLightdashServerUrl {
       setSaving(true);
       setUrlError(null);
       try {
-        await getAccomplish().lightdashSetServerUrl(normalized);
+        await getZmeel().lightdashSetServerUrl(normalized);
         setServerUrl(normalized);
         setUrlInput(normalized);
         setEditing(false);

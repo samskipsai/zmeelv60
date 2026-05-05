@@ -21,7 +21,7 @@ import { z } from 'zod';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const GOOGLE_FILE_PICKER_MARKER = '__ACCOMPLISH_GOOGLE_FILE_PICKER__';
+const GOOGLE_FILE_PICKER_MARKER = '__ZMEEL_GOOGLE_FILE_PICKER__';
 
 // ── Account manifest ──────────────────────────────────────────────────────────
 

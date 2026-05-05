@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import type {
   ConnectedProvider,
   OllamaCredentials,
   ToolSupportStatus,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import type { OllamaModel } from './ollama-types';
 
 export type { OllamaModel } from './ollama-types';
@@ -60,8 +60,8 @@ export function useOllamaProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
-      const result = await accomplish.testOllamaConnection(serverUrl);
+      const zmeel = getZmeel();
+      const result = await zmeel.testOllamaConnection(serverUrl);
 
       if (!result.success) {
         setError(result.error || t('status.connectionFailed'));
@@ -110,10 +110,10 @@ export function useOllamaProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const currentUrl =
         (baseProvider.credentials as OllamaCredentials)?.serverUrl || 'http://localhost:11434';
-      const result = await accomplish.testOllamaConnection(currentUrl);
+      const result = await zmeel.testOllamaConnection(currentUrl);
 
       if (requestId !== refreshRequestIdRef.current) {
         return;

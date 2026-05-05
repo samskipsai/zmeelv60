@@ -2,14 +2,14 @@
 
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Skill } from '@accomplish_ai/agent-core/common';
+import type { Skill } from '@zmeel/agent-core/common';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import accomplishFavicon from '/assets/accomplish-favicon.png';
+import zmeelFavicon from '/assets/zmeel-favicon.png';
 
 interface SkillCardProps {
   skill: Skill;
@@ -88,8 +88,8 @@ export const SkillCard = memo(function SkillCard({
           <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground">
             {skill.source === 'official' && (
               <>
-                <img src={accomplishFavicon} alt="" className="h-2.5 w-2.5" />
-                {t('skills.byAccomplish')}
+                <img src={zmeelFavicon} alt="" className="h-2.5 w-2.5" />
+                {t('skills.byZmeel')}
               </>
             )}
             {skill.source === 'community' && (

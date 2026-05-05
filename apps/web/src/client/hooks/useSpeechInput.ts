@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { getAccomplish } from '../lib/accomplish';
+import { getZmeel } from '../lib/zmeel';
 import { SpeechRecognitionError, UseSpeechInputOptions, UseSpeechInputState } from './speech-types';
 import { useSpeechRecorder } from './useSpeechRecorder';
 
@@ -25,7 +25,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
     maxDuration = 120000,
   } = options;
 
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
   const lastAudioDataRef = useRef<ArrayBuffer | null>(null);
   const isPushToTalkRef = useRef(false);
   const isStartingRef = useRef(false);
@@ -59,7 +59,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
     let mounted = true;
     configCheckIdRef.current++;
     const capturedId = configCheckIdRef.current;
-    getAccomplish()
+    getZmeel()
       .speechIsConfigured()
       .then((configured) => {
         if (mounted && capturedId === configCheckIdRef.current) {
@@ -84,7 +84,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
       // Revalidate in the background to confirm the server-side state
       configCheckIdRef.current++;
       const capturedId = configCheckIdRef.current;
-      getAccomplish()
+      getZmeel()
         .speechIsConfigured()
         .then((configured) => {
           if (mounted && capturedId === configCheckIdRef.current) {
@@ -134,7 +134,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
         return;
       }
       lastAudioDataRef.current = audioData;
-      const result = await accomplish.speechTranscribe(audioData, 'audio/webm');
+      const result = await zmeel.speechTranscribe(audioData, 'audio/webm');
       if (result.success) {
         setState((prev) => ({
           ...prev,
@@ -165,7 +165,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
       }));
       onError?.(speechError);
     }
-  }, [recorder, accomplish, onTranscriptionComplete, onError, formatErrorMessage]);
+  }, [recorder, zmeel, onTranscriptionComplete, onError, formatErrorMessage]);
 
   const startRecording = useCallback(async () => {
     if (recorder.isCapturing || state.isTranscribing) {
@@ -200,7 +200,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
     }
     try {
       setState((prev) => ({ ...prev, isTranscribing: true, error: null }));
-      const result = await accomplish.speechTranscribe(lastAudioDataRef.current, 'audio/webm');
+      const result = await zmeel.speechTranscribe(lastAudioDataRef.current, 'audio/webm');
       if (result.success) {
         setState((prev) => ({
           ...prev,
@@ -230,7 +230,7 @@ export function useSpeechInput(options: UseSpeechInputOptions = {}): UseSpeechIn
     state.isRecording,
     onTranscriptionComplete,
     onError,
-    accomplish,
+    zmeel,
     formatErrorMessage,
   ]);
 

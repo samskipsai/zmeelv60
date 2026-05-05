@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { ScheduledTask } from '@accomplish_ai/agent-core';
+import type { ScheduledTask } from '@zmeel/agent-core';
 import { SchedulerService } from '../../src/scheduler-service.js';
 
 // ---------------------------------------------------------------------------

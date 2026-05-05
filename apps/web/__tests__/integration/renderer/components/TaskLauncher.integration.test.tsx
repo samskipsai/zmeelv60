@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import type { Task, TaskStatus } from '@accomplish_ai/agent-core';
+import type { Task, TaskStatus } from '@zmeel/agent-core';
 
 // Create mock functions outside of mock factory
 const mockStartTask = vi.fn();
@@ -31,8 +31,8 @@ function createMockTask(
   };
 }
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   hasAnyApiKey: mockHasAnyApiKey,
   getSelectedModel: vi.fn().mockResolvedValue({ provider: 'anthropic', id: 'claude-3-opus' }),
   getOllamaConfig: vi.fn().mockResolvedValue(null),
@@ -59,9 +59,9 @@ const mockAccomplish = {
   saveBedrockCredentials: vi.fn().mockResolvedValue(undefined),
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 // Create a store state holder for testing
@@ -269,7 +269,7 @@ describe('TaskLauncher', () => {
       startTask: mockStartTask,
     };
     // Set up default provider settings with a ready provider
-    mockAccomplish.getProviderSettings.mockResolvedValue({
+    mockZmeel.getProviderSettings.mockResolvedValue({
       activeProviderId: 'anthropic',
       connectedProviders: {
         anthropic: {
@@ -806,7 +806,7 @@ describe('TaskLauncher', () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockAccomplish.getProviderSettings).toHaveBeenCalled();
+        expect(mockZmeel.getProviderSettings).toHaveBeenCalled();
         expect(mockCloseLauncher).toHaveBeenCalled();
         expect(mockStartTask).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -819,7 +819,7 @@ describe('TaskLauncher', () => {
     it('should navigate to home if no provider is ready when starting new task', async () => {
       // Arrange - No ready provider
       mockStoreState.isLauncherOpen = true;
-      mockAccomplish.getProviderSettings.mockResolvedValue({
+      mockZmeel.getProviderSettings.mockResolvedValue({
         activeProviderId: null,
         connectedProviders: {},
         debugMode: false,
@@ -842,7 +842,7 @@ describe('TaskLauncher', () => {
 
       // Assert
       await waitFor(() => {
-        expect(mockAccomplish.getProviderSettings).toHaveBeenCalled();
+        expect(mockZmeel.getProviderSettings).toHaveBeenCalled();
         expect(mockCloseLauncher).toHaveBeenCalled();
         expect(mockStartTask).not.toHaveBeenCalled();
       });

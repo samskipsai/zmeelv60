@@ -5,7 +5,7 @@ import * as os from 'os';
 
 /**
  * Consolidated-DB CRUD test. After v030, the workspaces / workspace_meta /
- * knowledge_notes tables live in `accomplish.db` and are accessed via the
+ * knowledge_notes tables live in `zmeel.db` and are accessed via the
  * shared `getDatabase()` singleton. This test walks the repositories against
  * a fresh v30 DB to prove the repoint from `getMetaDatabase` → `getDatabase`
  * is functionally correct and that no deep import into `workspace-meta-db`

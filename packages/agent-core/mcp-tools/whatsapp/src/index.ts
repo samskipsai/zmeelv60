@@ -7,15 +7,15 @@ import {
   type CallToolResult,
 } from '@modelcontextprotocol/sdk/types.js';
 
-const WHATSAPP_API_PORT = process.env.ACCOMPLISH_WHATSAPP_API_PORT;
+const WHATSAPP_API_PORT = process.env.ZMEEL_WHATSAPP_API_PORT;
 if (!WHATSAPP_API_PORT) {
   process.stderr.write(
-    'ACCOMPLISH_WHATSAPP_API_PORT is not set — WhatsApp MCP tool cannot start\n',
+    'ZMEEL_WHATSAPP_API_PORT is not set — WhatsApp MCP tool cannot start\n',
   );
   process.exit(1);
 }
 const WHATSAPP_API_BASE = `http://localhost:${WHATSAPP_API_PORT}`;
-const AUTH_TOKEN = process.env.ACCOMPLISH_DAEMON_AUTH_TOKEN;
+const AUTH_TOKEN = process.env.ZMEEL_DAEMON_AUTH_TOKEN;
 
 function getHeaders(): Record<string, string> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };

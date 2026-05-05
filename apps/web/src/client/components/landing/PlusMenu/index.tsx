@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus } from '@phosphor-icons/react';
-import type { Skill, McpConnector } from '@accomplish_ai/agent-core/common';
+import type { Skill, McpConnector } from '@zmeel/agent-core/common';
 import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { PlusMenuItems } from './PlusMenuItems';
 import { CreateSkillModal } from '@/components/skills/CreateSkillModal';
@@ -36,13 +36,13 @@ export function PlusMenu({
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    if (open && window.accomplish) {
-      window.accomplish
+    if (open && window.zmeel) {
+      window.zmeel
         .getEnabledSkills()
         .then((skills) => setSkills(skills.filter((s) => !s.isHidden)))
         .catch((err) => logger.error('Failed to load skills:', err));
 
-      window.accomplish
+      window.zmeel
         .getConnectors()
         .then(setConnectors)
         .catch((err) => logger.error('Failed to load connectors:', err));
@@ -50,13 +50,13 @@ export function PlusMenu({
   }, [open]);
 
   const handleRefresh = async () => {
-    const accomplish = window.accomplish;
-    if (!accomplish || isRefreshing) return;
+    const zmeel = window.zmeel;
+    if (!zmeel || isRefreshing) return;
     setIsRefreshing(true);
     try {
       const [, updatedSkills] = await Promise.all([
         new Promise((resolve) => setTimeout(resolve, 600)),
-        accomplish.resyncSkills().then(() => accomplish.getEnabledSkills()),
+        zmeel.resyncSkills().then(() => zmeel.getEnabledSkills()),
       ]);
       setSkills(updatedSkills.filter((s) => !s.isHidden));
     } catch (err) {
@@ -82,9 +82,9 @@ export function PlusMenu({
   };
 
   const handleToggleConnector = useCallback(async (id: string, enabled: boolean) => {
-    if (!window.accomplish) return;
+    if (!window.zmeel) return;
     try {
-      await window.accomplish.setConnectorEnabled(id, enabled);
+      await window.zmeel.setConnectorEnabled(id, enabled);
       setConnectors((prev) => prev.map((c) => (c.id === id ? { ...c, isEnabled: enabled } : c)));
     } catch (err) {
       logger.error('Failed to toggle connector:', err);
@@ -98,12 +98,12 @@ export function PlusMenu({
 
   const handleSelectFolder = useCallback(async () => {
     setOpen(false);
-    const accomplish = window.accomplish;
-    if (!accomplish?.pickFolder) {
+    const zmeel = window.zmeel;
+    if (!zmeel?.pickFolder) {
       return;
     }
     try {
-      const folderPath = await accomplish.pickFolder();
+      const folderPath = await zmeel.pickFolder();
       if (folderPath) {
         onSelectFolder?.(folderPath);
       }

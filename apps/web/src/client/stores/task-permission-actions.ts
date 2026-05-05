@@ -1,5 +1,5 @@
-import type { PermissionRequest, PermissionResponse } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '../lib/accomplish';
+import type { PermissionRequest, PermissionResponse } from '@zmeel/agent-core/common';
+import { getZmeel } from '../lib/zmeel';
 import type { TaskState } from './taskStore';
 import { hasTaskStateToken } from './task-state-helpers';
 
@@ -23,16 +23,16 @@ export function createTaskPermissionActions(set: SetFn, get: GetFn) {
     },
 
     respondToPermission: async (response: PermissionResponse) => {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const taskStateToken = get()._taskStateToken;
       // Save the requestId before the await to detect if a newer request arrived
       const requestId = response.requestId;
-      void accomplish.logEvent({
+      void zmeel.logEvent({
         level: 'info',
         message: 'UI permission response',
         context: { ...response },
       });
-      await accomplish.respondToPermission(response);
+      await zmeel.respondToPermission(response);
       if (!hasTaskStateToken(get(), taskStateToken)) {
         return;
       }

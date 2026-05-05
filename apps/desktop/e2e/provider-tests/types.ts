@@ -5,7 +5,7 @@
  * Secrets are loaded from environment variables or a local secrets.json file.
  */
 
-import type { ProviderId } from '@accomplish_ai/agent-core/common';
+import type { ProviderId } from '@zmeel/agent-core/common';
 
 // ===== Auth Method =====
 

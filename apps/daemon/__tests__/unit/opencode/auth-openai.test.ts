@@ -20,7 +20,7 @@ let connected = false;
 let mockExpires: number | undefined = undefined;
 let oauthPlanValue: 'free' | 'paid' = 'paid';
 
-vi.mock('@accomplish_ai/agent-core', () => ({
+vi.mock('@zmeel/agent-core', () => ({
   detectOpenAiOauthPlan: vi.fn(async () => oauthPlanValue),
   getOpenAiOauthAccessToken: vi.fn(() => (connected ? 'sk-fake-token' : null)),
   getOpenAiOauthStatus: vi.fn(() =>

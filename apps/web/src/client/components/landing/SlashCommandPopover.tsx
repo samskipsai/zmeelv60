@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Lightning } from '@phosphor-icons/react';
-import type { Skill } from '@accomplish_ai/agent-core';
+import type { Skill } from '@zmeel/agent-core';
 import { cn } from '@/lib/utils';
 import { getCaretPosition } from './caretPosition';
 

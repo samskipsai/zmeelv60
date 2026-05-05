@@ -9,11 +9,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 function getDataDir(): string {
   const homeDir = process.env.HOME || process.env.USERPROFILE || '';
   if (process.platform === 'darwin') {
-    return join(homeDir, 'Library', 'Application Support', 'Accomplish', 'dev-browser');
+    return join(homeDir, 'Library', 'Application Support', 'Zmeel', 'dev-browser');
   } else if (process.platform === 'win32') {
-    return join(process.env.APPDATA || homeDir, 'Accomplish', 'dev-browser');
+    return join(process.env.APPDATA || homeDir, 'Zmeel', 'dev-browser');
   } else {
-    return join(homeDir, '.accomplish', 'dev-browser');
+    return join(homeDir, '.zmeel', 'dev-browser');
   }
 }
 
@@ -25,22 +25,22 @@ console.log(`Creating data directory: ${dataDir}`);
 mkdirSync(tmpDir, { recursive: true });
 mkdirSync(profileDir, { recursive: true });
 
-const ACCOMPLISH_HTTP_PORT = parseInt(process.env.DEV_BROWSER_PORT || '9224', 10);
-const ACCOMPLISH_CDP_PORT = parseInt(process.env.DEV_BROWSER_CDP_PORT || '9225', 10);
+const ZMEEL_HTTP_PORT = parseInt(process.env.DEV_BROWSER_PORT || '9224', 10);
+const ZMEEL_CDP_PORT = parseInt(process.env.DEV_BROWSER_CDP_PORT || '9225', 10);
 
 if (
-  !Number.isFinite(ACCOMPLISH_HTTP_PORT) ||
-  ACCOMPLISH_HTTP_PORT < 1 ||
-  ACCOMPLISH_HTTP_PORT > 65535
+  !Number.isFinite(ZMEEL_HTTP_PORT) ||
+  ZMEEL_HTTP_PORT < 1 ||
+  ZMEEL_HTTP_PORT > 65535
 ) {
   throw new Error(
     `Invalid DEV_BROWSER_PORT: ${process.env.DEV_BROWSER_PORT}. Must be a number between 1 and 65535`,
   );
 }
 if (
-  !Number.isFinite(ACCOMPLISH_CDP_PORT) ||
-  ACCOMPLISH_CDP_PORT < 1 ||
-  ACCOMPLISH_CDP_PORT > 65535
+  !Number.isFinite(ZMEEL_CDP_PORT) ||
+  ZMEEL_CDP_PORT < 1 ||
+  ZMEEL_CDP_PORT > 65535
 ) {
   throw new Error(
     `Invalid DEV_BROWSER_CDP_PORT: ${process.env.DEV_BROWSER_CDP_PORT}. Must be a number between 1 and 65535`,
@@ -49,7 +49,7 @@ if (
 
 console.log('Checking for existing servers...');
 try {
-  const res = await fetch(`http://localhost:${ACCOMPLISH_HTTP_PORT}`, {
+  const res = await fetch(`http://localhost:${ZMEEL_HTTP_PORT}`, {
     signal: AbortSignal.timeout(1000),
   });
   if (res.ok) {
@@ -59,7 +59,7 @@ try {
       console.log('Found relay server running, killing to start launch server...');
       try {
         if (process.platform === 'win32') {
-          const output = execSync(`netstat -ano | findstr :${ACCOMPLISH_HTTP_PORT}`, {
+          const output = execSync(`netstat -ano | findstr :${ZMEEL_HTTP_PORT}`, {
             encoding: 'utf-8',
           });
           const match = output.match(/LISTENING\s+(\d+)/);
@@ -67,7 +67,7 @@ try {
             execSync(`taskkill /F /PID ${match[1]}`, { stdio: 'ignore' });
           }
         } else {
-          const pid = execSync(`lsof -ti:${ACCOMPLISH_HTTP_PORT}`, { encoding: 'utf-8' }).trim();
+          const pid = execSync(`lsof -ti:${ZMEEL_HTTP_PORT}`, { encoding: 'utf-8' }).trim();
           if (pid) {
             execSync(`kill -9 ${pid}`);
           }
@@ -77,7 +77,7 @@ try {
         // intentionally empty
       }
     } else {
-      console.log(`Launch server already running on port ${ACCOMPLISH_HTTP_PORT}`);
+      console.log(`Launch server already running on port ${ZMEEL_HTTP_PORT}`);
       process.exit(0);
     }
   }
@@ -87,22 +87,22 @@ try {
 
 try {
   if (process.platform === 'win32') {
-    const output = execSync(`netstat -ano | findstr :${ACCOMPLISH_CDP_PORT}`, {
+    const output = execSync(`netstat -ano | findstr :${ZMEEL_CDP_PORT}`, {
       encoding: 'utf-8',
     });
     const match = output.match(/LISTENING\s+(\d+)/);
     if (match) {
       const pid = match[1];
       console.log(
-        `Cleaning up stale Chrome process on CDP port ${ACCOMPLISH_CDP_PORT} (PID: ${pid})`,
+        `Cleaning up stale Chrome process on CDP port ${ZMEEL_CDP_PORT} (PID: ${pid})`,
       );
       execSync(`taskkill /F /PID ${pid}`, { stdio: 'ignore' });
     }
   } else {
-    const pid = execSync(`lsof -ti:${ACCOMPLISH_CDP_PORT}`, { encoding: 'utf-8' }).trim();
+    const pid = execSync(`lsof -ti:${ZMEEL_CDP_PORT}`, { encoding: 'utf-8' }).trim();
     if (pid) {
       console.log(
-        `Cleaning up stale Chrome process on CDP port ${ACCOMPLISH_CDP_PORT} (PID: ${pid})`,
+        `Cleaning up stale Chrome process on CDP port ${ZMEEL_CDP_PORT} (PID: ${pid})`,
       );
       execSync(`kill -9 ${pid}`);
     }
@@ -166,8 +166,8 @@ const headless = process.env.HEADLESS === 'true';
 async function startServer(retry = false): Promise<void> {
   try {
     const server = await serve({
-      port: ACCOMPLISH_HTTP_PORT,
-      cdpPort: ACCOMPLISH_CDP_PORT,
+      port: ZMEEL_HTTP_PORT,
+      cdpPort: ZMEEL_CDP_PORT,
       headless,
       profileDir,
       useSystemChrome: true,

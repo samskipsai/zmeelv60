@@ -10,7 +10,7 @@ import {
   type BrowserServerConfig,
   type TaskCallbacks,
   type StorageAPI,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import { type TaskConfigBuilderOptions, getBundledNodeBinPath } from './task-config-builder.js';
 
 export function getBrowserServerConfig(opts: TaskConfigBuilderOptions): BrowserServerConfig {

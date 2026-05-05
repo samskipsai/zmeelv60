@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Info } from '@phosphor-icons/react';
-import { useAccomplish } from '@/lib/accomplish';
+import { useZmeel } from '@/lib/zmeel';
 import { useWorkspaceStore } from '@/stores/workspaceStore';
-import type { ScheduledTask } from '@accomplish_ai/agent-core/common';
+import type { ScheduledTask } from '@zmeel/agent-core/common';
 import { ScheduleCard } from './ScheduleCard';
 import { AddScheduleDialog } from './AddScheduleDialog';
 
 export function SchedulerPanel() {
   const { t } = useTranslation('settings');
-  const accomplish = useAccomplish();
+  const zmeel = useZmeel();
   const { activeWorkspaceId } = useWorkspaceStore();
 
   const [schedules, setSchedules] = useState<ScheduledTask[]>([]);
@@ -19,19 +19,19 @@ export function SchedulerPanel() {
 
   const loadSchedules = useCallback(async () => {
     try {
-      const result = await accomplish.listSchedules(activeWorkspaceId ?? undefined);
+      const result = await zmeel.listSchedules(activeWorkspaceId ?? undefined);
       setSchedules(result);
     } catch {
       // Daemon may be unavailable
       setSchedules([]);
     }
-  }, [accomplish, activeWorkspaceId]);
+  }, [zmeel, activeWorkspaceId]);
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
-        const [, autoStart] = await Promise.all([loadSchedules(), accomplish.isAutoStartEnabled()]);
+        const [, autoStart] = await Promise.all([loadSchedules(), zmeel.isAutoStartEnabled()]);
         setAutoStartEnabled(autoStart);
       } catch {
         // ignore
@@ -40,21 +40,21 @@ export function SchedulerPanel() {
       }
     };
     load();
-  }, [loadSchedules, accomplish]);
+  }, [loadSchedules, zmeel]);
 
   const handleCreate = async (cron: string, prompt: string) => {
-    await accomplish.createSchedule(cron, prompt, activeWorkspaceId ?? undefined);
+    await zmeel.createSchedule(cron, prompt, activeWorkspaceId ?? undefined);
     await loadSchedules();
   };
 
   const handleToggleEnabled = async (id: string, enabled: boolean) => {
-    await accomplish.setScheduleEnabled(id, enabled);
+    await zmeel.setScheduleEnabled(id, enabled);
     // Re-fetch to get updated next_run_at (recomputed server-side on enable)
     await loadSchedules();
   };
 
   const handleDelete = async (id: string) => {
-    await accomplish.deleteSchedule(id);
+    await zmeel.deleteSchedule(id);
     setSchedules((prev) => prev.filter((s) => s.id !== id));
   };
 

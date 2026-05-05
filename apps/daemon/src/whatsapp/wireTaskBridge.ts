@@ -8,10 +8,10 @@
  */
 import type { WhatsAppService } from './WhatsAppService.js';
 import type { TaskService } from '../task-service.js';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
-import { FILE_PERMISSION_REQUEST_PREFIX, QUESTION_REQUEST_PREFIX } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
+import { FILE_PERMISSION_REQUEST_PREFIX, QUESTION_REQUEST_PREFIX } from '@zmeel/agent-core';
 import { TaskBridge, MAX_MESSAGE_LENGTH } from './taskBridge.js';
-import { createTaskId } from '@accomplish_ai/agent-core';
+import { createTaskId } from '@zmeel/agent-core';
 import { log } from '../logger.js';
 
 export { wireStatusListeners } from './whatsappStorageSync.js';

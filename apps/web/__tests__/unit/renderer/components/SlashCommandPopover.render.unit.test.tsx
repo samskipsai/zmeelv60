@@ -15,8 +15,8 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({}),
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({}),
 }));
 
 import { SlashCommandPopover } from '@/components/landing/SlashCommandPopover';

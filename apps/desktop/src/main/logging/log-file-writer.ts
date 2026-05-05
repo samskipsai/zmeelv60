@@ -2,15 +2,15 @@
  * Electron-specific LogFileWriter wrapper.
  *
  * This thin wrapper injects the Electron app's userData path into the
- * platform-agnostic LogFileWriter from @accomplish/core.
+ * platform-agnostic LogFileWriter from @zmeel/core.
  */
 
 import path from 'path';
 import { app } from 'electron';
-import { createLogWriter, type LogWriterAPI } from '@accomplish_ai/agent-core/desktop-main';
+import { createLogWriter, type LogWriterAPI } from '@zmeel/agent-core/desktop-main';
 
 // Re-export types from shared package for backward compatibility
-export type { LogLevel, LogSource, LogEntry } from '@accomplish_ai/agent-core/desktop-main';
+export type { LogLevel, LogSource, LogEntry } from '@zmeel/agent-core/desktop-main';
 
 let instance: LogWriterAPI | null = null;
 

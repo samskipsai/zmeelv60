@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { noopRuntime } from '../../../src/opencode/accomplish-runtime.js';
+import { noopRuntime } from '../../../src/opencode/zmeel-runtime.js';
 
 const dummyDeps = {
   readKey: () => null,
@@ -12,12 +12,12 @@ describe('noopRuntime', () => {
     expect(noopRuntime.isAvailable()).toBe(false);
   });
 
-  it('connect throws accomplish_runtime_unavailable', async () => {
-    await expect(noopRuntime.connect(dummyDeps)).rejects.toThrow('accomplish_runtime_unavailable');
+  it('connect throws zmeel_runtime_unavailable', async () => {
+    await expect(noopRuntime.connect(dummyDeps)).rejects.toThrow('zmeel_runtime_unavailable');
   });
 
-  it('getUsage throws accomplish_runtime_unavailable', async () => {
-    await expect(noopRuntime.getUsage()).rejects.toThrow('accomplish_runtime_unavailable');
+  it('getUsage throws zmeel_runtime_unavailable', async () => {
+    await expect(noopRuntime.getUsage()).rejects.toThrow('zmeel_runtime_unavailable');
   });
 
   it('disconnect does not throw', () => {

@@ -31,7 +31,7 @@ import { migration as v021 } from './v021-close-behavior.js';
 import { migration as v022 } from './v022-remove-run-in-background.js';
 import { migration as v023 } from './v023-scheduled-tasks.js';
 import { migration as v024 } from './v024-huggingface-local-config.js';
-import { migration as v025 } from './v024-accomplish-ai.js';
+import { migration as v025 } from './v024-zmeel-ai.js';
 import { migration as v026 } from './v026-language.js';
 import { migration as v027 } from './v027-reconcile-commercial-schema.js';
 import { migration as v028 } from './v028-google-accounts.js';
@@ -46,7 +46,7 @@ import { migration as v028 } from './v028-google-accounts.js';
 // (google-accounts) entirely and jump to v029. That leaves the
 // `google_accounts` table uncreated and the GWS feature crashes the first
 // time `AccountManager.listAccounts()` runs. Fix: delete the dev SQLite
-// (`rm "$ACCOMPLISH_USERDATA/accomplish-dev.db"`) so the next launch starts
+// (`rm "$ZMEEL_USERDATA/zmeel-dev.db"`) so the next launch starts
 // from migration 0 and applies both v028 and v029 in order. Fresh installs
 // and `main`-line upgrades are unaffected.
 import { migration as v029 } from './v029-opencode-sdk-message-fields.js';

@@ -18,7 +18,7 @@ import {
   type TaskManagerAPI,
   type TodoItem,
   type BrowserFramePayload,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 /**
  * Minimal RPC-server surface the source-based auto-deny policy depends on.

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAccomplish } from '@/lib/accomplish';
+import { useZmeel } from '@/lib/zmeel';
 import type {
   CloudBrowserConfig,
   CloudBrowserProvider,
   CloudBrowserProviderConfig,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { CloudBrowserProviderRow } from './CloudBrowserProviderRow';
 
 const PROVIDERS: {
@@ -49,10 +49,10 @@ export function CloudBrowsersPanel() {
   const [expandedProvider, setExpandedProvider] = useState<CloudBrowserProvider | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const accomplish = useAccomplish();
+  const zmeel = useZmeel();
 
   useEffect(() => {
-    accomplish
+    zmeel
       .getCloudBrowserConfig()
       .then((c) => {
         if (c) {
@@ -63,7 +63,7 @@ export function CloudBrowsersPanel() {
         const message = err instanceof Error ? err.message : 'Failed to load configuration';
         setSaveError(message);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- accomplish is a stable singleton
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- zmeel is a stable singleton
   }, []);
 
   const saveConfig = useCallback(
@@ -71,7 +71,7 @@ export function CloudBrowsersPanel() {
       setSaving(true);
       setSaveError(null);
       try {
-        await accomplish.setCloudBrowserConfig(newConfig);
+        await zmeel.setCloudBrowserConfig(newConfig);
         setConfig(newConfig);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to save configuration';
@@ -80,7 +80,7 @@ export function CloudBrowsersPanel() {
         setSaving(false);
       }
     },
-    [accomplish],
+    [zmeel],
   );
 
   const handleToggleActive = useCallback(

@@ -20,7 +20,7 @@
     "executing": "运行中...",
     "running": "处理中...",
     "handling": "处理中...",
-    "accomplishing": "完成中..."
+    "zmeeling": "完成中..."
   },
   "coldStartHint": "首次任务需要更长时间...",
   "agentWorking": "智能体工作中...",

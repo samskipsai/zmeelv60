@@ -30,7 +30,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           },
           summary: {
             type: 'string',
-            description: 'What you accomplished. Be specific about each part.',
+            description: 'What you zmeeled. Be specific about each part.',
           },
           remaining_work: {
             type: 'string',

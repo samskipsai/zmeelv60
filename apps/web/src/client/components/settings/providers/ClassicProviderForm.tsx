@@ -5,8 +5,8 @@ import type {
   ProviderId,
   ConnectedProvider,
   ApiKeyCredentials,
-} from '@accomplish_ai/agent-core/common';
-import { PROVIDER_META, DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
+import { PROVIDER_META, DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
 import { ConnectButton, ProviderFormHeader, FormError } from '../shared';
 import { PROVIDER_LOGOS, DARK_INVERT_PROVIDERS } from '@/lib/provider-logos';
 import { ProviderModelSelect } from './ProviderModelSelect';

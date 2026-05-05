@@ -27,9 +27,9 @@ const MANAGED_ENV_KEYS = [
   'GA_API_SECRET',
   'GA_MEASUREMENT_ID',
   'SENTRY_DSN',
-  'ACCOMPLISH_GATEWAY_URL',
-  'ACCOMPLISH_BUILD_ID',
-  'ACCOMPLISH_UPDATER_URL',
+  'ZMEEL_GATEWAY_URL',
+  'ZMEEL_BUILD_ID',
+  'ZMEEL_UPDATER_URL',
   'APP_ROOT',
 ] as const;
 
@@ -41,7 +41,7 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
 
   beforeEach(() => {
     // Fresh temp dir per test → acts as the APP_ROOT where build.env lives.
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'accomplish-build-config-'));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'zmeel-build-config-'));
     buildEnvPath = path.join(tempDir, 'build.env');
 
     // Snapshot + clear the env vars the loader looks at, so tests control both sources.
@@ -93,7 +93,7 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
       expect(cfg.sentryDsn).toBe('');
       expect(cfg.gaApiSecret).toBe('');
       expect(cfg.gaMeasurementId).toBe('');
-      expect(cfg.accomplishGatewayUrl).toBe('');
+      expect(cfg.zmeelGatewayUrl).toBe('');
       expect(cfg.buildEnvVersion).toBe('');
       expect(cfg.buildId).toBe('');
     });
@@ -132,9 +132,9 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
     });
 
     it('reads gateway URL from process.env (enables Free mode in dev)', async () => {
-      process.env.ACCOMPLISH_GATEWAY_URL = 'https://dev.gateway.example.com';
+      process.env.ZMEEL_GATEWAY_URL = 'https://dev.gateway.example.com';
       const cfg = await loadFresh();
-      expect(cfg.accomplishGatewayUrl).toBe('https://dev.gateway.example.com');
+      expect(cfg.zmeelGatewayUrl).toBe('https://dev.gateway.example.com');
       const { isFreeMode } = await import('@main/config/build-config');
       expect(isFreeMode()).toBe(true);
     });
@@ -155,7 +155,7 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
           'BUILD_ENV_VERSION=1',
           'MIXPANEL_TOKEN=ci-mixpanel',
           'SENTRY_DSN=https://ci.sentry.io/dsn',
-          'ACCOMPLISH_GATEWAY_URL=https://gateway.accomplish.ai',
+          'ZMEEL_GATEWAY_URL=https://gateway.zmeel.ai',
         ].join('\n'),
       );
 
@@ -163,7 +163,7 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
       expect(cfg.buildEnvVersion).toBe('1');
       expect(cfg.mixpanelToken).toBe('ci-mixpanel');
       expect(cfg.sentryDsn).toBe('https://ci.sentry.io/dsn');
-      expect(cfg.accomplishGatewayUrl).toBe('https://gateway.accomplish.ai');
+      expect(cfg.zmeelGatewayUrl).toBe('https://gateway.zmeel.ai');
     });
   });
 
@@ -204,76 +204,76 @@ describe('loadBuildConfig() — build.env and process.env resolution', () => {
   });
 
   describe('getBuildId() fallback chain', () => {
-    it('prefers build.env ACCOMPLISH_BUILD_ID when present', async () => {
-      fs.writeFileSync(buildEnvPath, 'ACCOMPLISH_BUILD_ID=ci-build-abc123\n');
+    it('prefers build.env ZMEEL_BUILD_ID when present', async () => {
+      fs.writeFileSync(buildEnvPath, 'ZMEEL_BUILD_ID=ci-build-abc123\n');
       await loadFresh();
       const { getBuildId } = await import('@main/config/build-config');
       expect(getBuildId()).toBe('ci-build-abc123');
     });
 
-    it('falls back to process.env ACCOMPLISH_BUILD_ID when build.env lacks it', async () => {
+    it('falls back to process.env ZMEEL_BUILD_ID when build.env lacks it', async () => {
       // build.env exists but has no BUILD_ID; env var should be picked up.
       fs.writeFileSync(buildEnvPath, 'MIXPANEL_TOKEN=anything\n');
-      process.env.ACCOMPLISH_BUILD_ID = 'env-build-xyz789';
+      process.env.ZMEEL_BUILD_ID = 'env-build-xyz789';
       await loadFresh();
       const { getBuildId } = await import('@main/config/build-config');
       expect(getBuildId()).toBe('env-build-xyz789');
     });
   });
 
-  describe('auto-updater gate (ACCOMPLISH_UPDATER_URL)', () => {
+  describe('auto-updater gate (ZMEEL_UPDATER_URL)', () => {
     it('default (neither source): isAutoUpdaterEnabled() returns false', async () => {
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('');
+      expect(cfg.zmeelUpdaterUrl).toBe('');
       const { isAutoUpdaterEnabled } = await import('@main/config/build-config');
       expect(isAutoUpdaterEnabled()).toBe(false);
     });
 
     it('dev mode + process.env set: isAutoUpdaterEnabled() returns true (dev opt-in)', async () => {
-      process.env.ACCOMPLISH_UPDATER_URL = 'https://d.accomplish.ai';
+      process.env.ZMEEL_UPDATER_URL = 'https://d.zmeel.ai';
       mockApp.isPackaged = false;
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('https://d.accomplish.ai');
+      expect(cfg.zmeelUpdaterUrl).toBe('https://d.zmeel.ai');
       const { isAutoUpdaterEnabled } = await import('@main/config/build-config');
       expect(isAutoUpdaterEnabled()).toBe(true);
     });
 
     it('packaged mode + only process.env set: isAutoUpdaterEnabled() returns false (security invariant)', async () => {
-      // Packaged OSS binaries must NOT honor a runtime ACCOMPLISH_UPDATER_URL env var —
+      // Packaged OSS binaries must NOT honor a runtime ZMEEL_UPDATER_URL env var —
       // the updater spawns an installer and a rogue URL would be RCE.
-      process.env.ACCOMPLISH_UPDATER_URL = 'https://evil.example.com';
+      process.env.ZMEEL_UPDATER_URL = 'https://evil.example.com';
       mockApp.isPackaged = true;
       (process as { resourcesPath?: string }).resourcesPath = tempDir;
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('');
+      expect(cfg.zmeelUpdaterUrl).toBe('');
       const { isAutoUpdaterEnabled } = await import('@main/config/build-config');
       expect(isAutoUpdaterEnabled()).toBe(false);
     });
 
     it('packaged mode + build.env set: isAutoUpdaterEnabled() returns true (Free CI build)', async () => {
-      fs.writeFileSync(buildEnvPath, 'ACCOMPLISH_UPDATER_URL=https://d.accomplish.ai\n');
+      fs.writeFileSync(buildEnvPath, 'ZMEEL_UPDATER_URL=https://d.zmeel.ai\n');
       mockApp.isPackaged = true;
       (process as { resourcesPath?: string }).resourcesPath = tempDir;
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('https://d.accomplish.ai');
+      expect(cfg.zmeelUpdaterUrl).toBe('https://d.zmeel.ai');
       const { isAutoUpdaterEnabled } = await import('@main/config/build-config');
       expect(isAutoUpdaterEnabled()).toBe(true);
     });
 
     it('both sources set (dev): build.env takes precedence', async () => {
-      fs.writeFileSync(buildEnvPath, 'ACCOMPLISH_UPDATER_URL=https://from-build-env.example.com\n');
-      process.env.ACCOMPLISH_UPDATER_URL = 'https://from-process-env.example.com';
+      fs.writeFileSync(buildEnvPath, 'ZMEEL_UPDATER_URL=https://from-build-env.example.com\n');
+      process.env.ZMEEL_UPDATER_URL = 'https://from-process-env.example.com';
       mockApp.isPackaged = false;
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('https://from-build-env.example.com');
+      expect(cfg.zmeelUpdaterUrl).toBe('https://from-build-env.example.com');
     });
 
     it('empty build.env value (dev): falls back to process.env', async () => {
-      fs.writeFileSync(buildEnvPath, 'ACCOMPLISH_UPDATER_URL=\n');
-      process.env.ACCOMPLISH_UPDATER_URL = 'https://env-wins.example.com';
+      fs.writeFileSync(buildEnvPath, 'ZMEEL_UPDATER_URL=\n');
+      process.env.ZMEEL_UPDATER_URL = 'https://env-wins.example.com';
       mockApp.isPackaged = false;
       const cfg = await loadFresh();
-      expect(cfg.accomplishUpdaterUrl).toBe('https://env-wins.example.com');
+      expect(cfg.zmeelUpdaterUrl).toBe('https://env-wins.example.com');
     });
   });
 });

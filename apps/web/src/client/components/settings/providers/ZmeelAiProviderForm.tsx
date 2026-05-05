@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider, CreditUsage } from '@accomplish_ai/agent-core/common';
-import { DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider, CreditUsage } from '@zmeel/agent-core/common';
+import { DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
 import { ProviderFormHeader } from '../shared';
 import { PROVIDER_LOGOS } from '@/lib/provider-logos';
 import { getCreditStatusColor } from '@/hooks/useCreditsState';
@@ -11,15 +11,15 @@ import { settingsVariants, settingsTransitions } from '@/lib/animations';
 
 // ─── Static config (module-level, derived once from constants) ────────────────
 
-const ACCOMPLISH_CONFIG = DEFAULT_PROVIDERS.find((p) => p.id === 'accomplish-ai');
-if (!ACCOMPLISH_CONFIG || ACCOMPLISH_CONFIG.models.length === 0) {
-  throw new Error('Accomplish provider configuration is missing required models');
+const ZMEEL_CONFIG = DEFAULT_PROVIDERS.find((p) => p.id === 'zmeel-ai');
+if (!ZMEEL_CONFIG || ZMEEL_CONFIG.models.length === 0) {
+  throw new Error('Zmeel provider configuration is missing required models');
 }
-const STATIC_MODELS = ACCOMPLISH_CONFIG.models.map((m) => ({
+const STATIC_MODELS = ZMEEL_CONFIG.models.map((m) => ({
   id: m.fullId,
   name: m.displayName,
 }));
-const ACCOMPLISH_LOGO = PROVIDER_LOGOS['accomplish-ai'];
+const ZMEEL_LOGO = PROVIDER_LOGOS['zmeel-ai'];
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
@@ -56,11 +56,11 @@ function ConnectionRetryNotice() {
         </span>
         <div className="space-y-0.5">
           <p className="text-xs font-medium text-foreground/80">
-            {t('providers.accomplishAi.connectionIssue', 'Having trouble connecting')}
+            {t('providers.zmeelAi.connectionIssue', 'Having trouble connecting')}
           </p>
           <p className="text-[11px] leading-snug text-muted-foreground">
             {t(
-              'providers.accomplishAi.retryingInBackground',
+              'providers.zmeelAi.retryingInBackground',
               'Retrying in the background — this will resolve when your connection is restored.',
             )}
           </p>
@@ -88,12 +88,12 @@ function UsageRetryNotice() {
         </span>
         <div className="space-y-0.5">
           <p className="text-xs font-medium text-foreground/80">
-            {t('providers.accomplishAi.usageIssue', 'Unable to refresh credits')}
+            {t('providers.zmeelAi.usageIssue', 'Unable to refresh credits')}
           </p>
           <p className="text-[11px] leading-snug text-muted-foreground">
             {t(
-              'providers.accomplishAi.usageRetryingInBackground',
-              'Retrying in the background. Sending with Accomplish should still work.',
+              'providers.zmeelAi.usageRetryingInBackground',
+              'Retrying in the background. Sending with Zmeel should still work.',
             )}
           </p>
         </div>
@@ -148,9 +148,9 @@ function UsagePanel({ usage }: { usage: CreditUsage }) {
       {isExhausted ? (
         <p className="text-xs text-destructive">
           {resetsDate
-            ? t('providers.accomplishAi.exhaustedMessage', { date: resetsDate })
+            ? t('providers.zmeelAi.exhaustedMessage', { date: resetsDate })
             : t(
-                'providers.accomplishAi.exhaustedMessageSoon',
+                'providers.zmeelAi.exhaustedMessageSoon',
                 'Credits exhausted. They will reset soon.',
               )}
         </p>
@@ -165,7 +165,7 @@ function UsagePanel({ usage }: { usage: CreditUsage }) {
 
 // ─── Main form ────────────────────────────────────────────────────────────────
 
-interface AccomplishAiProviderFormProps {
+interface ZmeelAiProviderFormProps {
   connectedProvider?: ConnectedProvider;
   onConnect: (provider: ConnectedProvider) => void;
   onUpdateProvider?: (provider: ConnectedProvider) => void;
@@ -174,12 +174,12 @@ interface AccomplishAiProviderFormProps {
   showModelError: boolean;
 }
 
-export function AccomplishAiProviderForm({
+export function ZmeelAiProviderForm({
   connectedProvider,
   onConnect,
   onUpdateProvider,
   onDisconnect,
-}: AccomplishAiProviderFormProps) {
+}: ZmeelAiProviderFormProps) {
   const { t } = useTranslation('settings');
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const [usageError, setUsageError] = useState<string | null>(null);
@@ -221,20 +221,20 @@ export function AccomplishAiProviderForm({
 
     const tryConnect = async () => {
       try {
-        const accomplish = getAccomplish();
-        const data = await accomplish.accomplishAiEnsureReady();
+        const zmeel = getZmeel();
+        const data = await zmeel.zmeelAiEnsureReady();
         if (cancelled) return;
         if (!data.deviceFingerprint) {
-          throw new Error('Missing deviceFingerprint in accomplish-ai ready response');
+          throw new Error('Missing deviceFingerprint in zmeel-ai ready response');
         }
         setConnectionError(null);
 
         // Use onUpdateProvider (not onConnect) to refresh renderer state
-        // without promoting accomplish-ai to the active provider.
+        // without promoting zmeel-ai to the active provider.
         const connected: ConnectedProvider = {
-          providerId: 'accomplish-ai',
+          providerId: 'zmeel-ai',
           connectionStatus: 'connected',
-          credentials: { type: 'accomplish-ai', deviceFingerprint: data.deviceFingerprint },
+          credentials: { type: 'zmeel-ai', deviceFingerprint: data.deviceFingerprint },
           lastConnectedAt: new Date().toISOString(),
           availableModels: STATIC_MODELS,
           selectedModelId: STATIC_MODELS[0].id,
@@ -272,8 +272,8 @@ export function AccomplishAiProviderForm({
     if (connectedProvider?.connectionStatus !== 'connected') return;
     let cancelled = false;
     setUsageLoading(true);
-    getAccomplish()
-      .accomplishAiGetUsage()
+    getZmeel()
+      .zmeelAiGetUsage()
       .then((data) => {
         if (!cancelled) {
           setUsage(data);
@@ -296,7 +296,7 @@ export function AccomplishAiProviderForm({
   // Subscribe to live usage updates
   useEffect(() => {
     if (connectedProvider?.connectionStatus !== 'connected') return;
-    const unsubscribe = getAccomplish().onAccomplishAiUsageUpdate?.((liveUsage) => {
+    const unsubscribe = getZmeel().onZmeelAiUsageUpdate?.((liveUsage) => {
       setUsage(liveUsage);
     });
     return () => {
@@ -310,7 +310,7 @@ export function AccomplishAiProviderForm({
 
     const poll = async () => {
       try {
-        const data = await getAccomplish().accomplishAiGetUsage();
+        const data = await getZmeel().zmeelAiGetUsage();
         setUsage(data);
         setUsageLoading(false);
         setUsageError(null);
@@ -328,13 +328,13 @@ export function AccomplishAiProviderForm({
       className="rounded-xl border border-border bg-card p-5"
       data-testid="provider-settings-panel"
     >
-      <ProviderFormHeader logoSrc={ACCOMPLISH_LOGO} providerName="Accomplish" />
+      <ProviderFormHeader logoSrc={ZMEEL_LOGO} providerName="Zmeel" />
 
       <div className="space-y-3">
         <p className="text-sm text-muted-foreground whitespace-pre-line">
           {t(
-            'providers.accomplishAi.description',
-            'Use the built-in model powered by Accomplish - no API key required.\nIncludes 200 free credits per month to get you started.',
+            'providers.zmeelAi.description',
+            'Use the built-in model powered by Zmeel - no API key required.\nIncludes 200 free credits per month to get you started.',
           )}
         </p>
 
@@ -363,7 +363,7 @@ export function AccomplishAiProviderForm({
           <button
             onClick={async () => {
               try {
-                await getAccomplish().accomplishAiDisconnect();
+                await getZmeel().zmeelAiDisconnect();
               } catch {
                 // best-effort
               }
@@ -371,7 +371,7 @@ export function AccomplishAiProviderForm({
             }}
             className="mt-2 text-xs text-muted-foreground hover:text-destructive transition-colors"
           >
-            {t('providers.accomplishAi.disconnect', 'Disconnect')}
+            {t('providers.zmeelAi.disconnect', 'Disconnect')}
           </button>
         )}
       </div>

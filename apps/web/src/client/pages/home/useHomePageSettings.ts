@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
-import { hasAnyReadyProvider } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import { hasAnyReadyProvider } from '@zmeel/agent-core/common';
 import { createLogger } from '@/lib/logger';
 import type { SettingsTabId } from '@/components/layout/settings-tabs';
 
@@ -33,7 +33,7 @@ export function useHomePageSettings({
   const [settingsInitialTab, setSettingsInitialTab] = useState<SettingsTab>('providers');
   const [resumeAfterSettingsSave, setResumeAfterSettingsSave] = useState(false);
 
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
 
   const handleSettingsDialogChange = useCallback((open: boolean) => {
     setShowSettingsDialog(open);
@@ -64,7 +64,7 @@ export function useHomePageSettings({
       return;
     }
     try {
-      const settings = await accomplish.getProviderSettings();
+      const settings = await zmeel.getProviderSettings();
       if (!hasAnyReadyProvider(settings)) {
         setSettingsInitialTab('providers');
         setShowSettingsDialog(true);
@@ -76,7 +76,7 @@ export function useHomePageSettings({
     } catch (err) {
       logger.error('Failed to resume task after settings save:', err);
     }
-  }, [resumeAfterSettingsSave, accomplish, onResume]);
+  }, [resumeAfterSettingsSave, zmeel, onResume]);
 
   return {
     showSettingsDialog,

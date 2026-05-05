@@ -1,8 +1,8 @@
 {
-  "name": "@accomplish/daemon",
+  "name": "@zmeel/daemon",
   "version": "0.1.0",
   "private": true,
-  "description": "Accomplish background daemon process",
+  "description": "Zmeel background daemon process",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup && node scripts/write-dist-package-type.cjs",
@@ -16,7 +16,7 @@
     "clean": "node -e \"import('fs').then(fs=>fs.rmSync('dist',{recursive:true,force:true}))\""
   },
   "dependencies": {
-    "@accomplish_ai/agent-core": "workspace:*",
+    "@zmeel/agent-core": "workspace:*",
     "@opencode-ai/sdk": "1.14.18",
     "@whiskeysockets/baileys": "7.0.0-rc.9",
     "better-sqlite3": "^12.6.2",

@@ -1,37 +1,37 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { OpenCodeAdapter } from '../../../../src/internal/classes/OpenCodeAdapter.js';
-import { ACCOMPLISH_AGENT_NAME } from '../../../../src/opencode/config-generator.js';
+import { ZMEEL_AGENT_NAME } from '../../../../src/opencode/config-generator.js';
 
 /**
  * REGRESSION: the adapter used to pass `{ title }` to `session.create`
  * and nothing agent-related to `session.prompt`. The generated
- * `opencode.json` defines a custom `accomplish` agent containing the
- * entire Accomplish system prompt (skills, connectors, workspace
+ * `opencode.json` defines a custom `zmeel` agent containing the
+ * entire Zmeel system prompt (skills, connectors, workspace
  * instructions, knowledge notes, etc.) and sets `default_agent:
- * 'accomplish'` at the config root. That default_agent IS honored by
- * the CLI path, which was invoked as `opencode --agent accomplish` —
+ * 'zmeel'` at the config root. That default_agent IS honored by
+ * the CLI path, which was invoked as `opencode --agent zmeel` —
  * but the SDK path (OpenCode SDK cutover port) has no implicit agent
- * selection. Without explicit `agent: ACCOMPLISH_AGENT_NAME` on each
+ * selection. Without explicit `agent: ZMEEL_AGENT_NAME` on each
  * `session.prompt`, OpenCode runs the session under its built-in
- * default agent and silently ignores the accomplish prompt.
+ * default agent and silently ignores the zmeel prompt.
  *
  * User-visible symptom: workspace `instruction`-type knowledge notes
  * are correctly written into the generated opencode.json (verified by
  * inspecting the file) but the model's replies show none of those
- * instructions being followed. The entire ~18KB Accomplish system
+ * instructions being followed. The entire ~18KB Zmeel system
  * prompt — including the mandatory `<workspace-instructions>` block
  * prepended to the top — never reaches the model because the session
- * isn't configured to use the accomplish agent.
+ * isn't configured to use the zmeel agent.
  *
- * Fix: pass `agent: ACCOMPLISH_AGENT_NAME` on BOTH session.prompt call
+ * Fix: pass `agent: ZMEEL_AGENT_NAME` on BOTH session.prompt call
  * sites (initial prompt + continuation nudge). Per the current
  * `@opencode-ai/sdk` type defs, `SessionPromptData.body` accepts
  * `agent?: string`; `SessionCreateData.body` does not have an agent
  * field so create stays agent-less.
  *
  * These tests pin the fix at the narrow seam:
- *   - Initial startTask → session.prompt carries `agent: 'accomplish'`.
- *   - Continuation prompt → also carries `agent: 'accomplish'`.
+ *   - Initial startTask → session.prompt carries `agent: 'zmeel'`.
+ *   - Continuation prompt → also carries `agent: 'zmeel'`.
  * If a future SDK upgrade or refactor silently drops the field, these
  * tests fail loudly before the PR lands.
  */
@@ -128,7 +128,7 @@ describe('OpenCodeAdapter agent selection on session.prompt', () => {
     ]);
   }
 
-  it('initial session.prompt carries agent: ACCOMPLISH_AGENT_NAME', async () => {
+  it('initial session.prompt carries agent: ZMEEL_AGENT_NAME', async () => {
     const adapter = new OpenCodeAdapter(
       { platform: 'darwin', isPackaged: false, tempPath: '/tmp' },
       'tsk_agent_fresh',
@@ -138,12 +138,12 @@ describe('OpenCodeAdapter agent selection on session.prompt', () => {
 
     expect(fake.promptCalls.length).toBe(1);
     const call = fake.promptCalls[0];
-    expect(call.agent).toBe(ACCOMPLISH_AGENT_NAME);
-    expect(call.agent).toBe('accomplish'); // double-check the constant value
+    expect(call.agent).toBe(ZMEEL_AGENT_NAME);
+    expect(call.agent).toBe('zmeel'); // double-check the constant value
     expect(call.text).toBe('tell me about yourself');
   });
 
-  it('resume (config.sessionId) session.prompt also carries agent: ACCOMPLISH_AGENT_NAME', async () => {
+  it('resume (config.sessionId) session.prompt also carries agent: ZMEEL_AGENT_NAME', async () => {
     const adapter = new OpenCodeAdapter(
       { platform: 'darwin', isPackaged: false, tempPath: '/tmp' },
       'tsk_agent_resume',
@@ -156,14 +156,14 @@ describe('OpenCodeAdapter agent selection on session.prompt', () => {
     );
 
     expect(fake.promptCalls.length).toBe(1);
-    expect(fake.promptCalls[0].agent).toBe(ACCOMPLISH_AGENT_NAME);
+    expect(fake.promptCalls[0].agent).toBe(ZMEEL_AGENT_NAME);
     expect(fake.promptCalls[0].sessionID).toBe('existing_session');
   });
 
   // ──────────────────────────────────────────────────────────────────────
   // Runtime per-turn `system` injection for workspace instructions.
   //
-  // The agent-level `agent.accomplish.prompt` is not enough: the OpenAI/
+  // The agent-level `agent.zmeel.prompt` is not enough: the OpenAI/
   // Codex provider path inside OpenCode injects its own `options.instructions`
   // channel that crowds out the agent-level prompt, so mandatory user rules
   // (e.g. "always add Haiku suffix") never reach the model. Fix: `onBeforeStart`
@@ -209,7 +209,7 @@ describe('OpenCodeAdapter agent selection on session.prompt', () => {
         isPackaged: false,
         tempPath: '/tmp',
         // onBeforeStart returns a legacy plain-env shape, no workspaceInstructions.
-        onBeforeStart: async () => ({ ACCOMPLISH_SOME_VAR: '1' }) as NodeJS.ProcessEnv,
+        onBeforeStart: async () => ({ ZMEEL_SOME_VAR: '1' }) as NodeJS.ProcessEnv,
       },
       'tsk_no_instr',
     );

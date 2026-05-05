@@ -40,7 +40,7 @@ export class DaemonServer {
     this.registerMethod('daemon.ping', () => ({
       status: 'ok' as const,
       uptime: Date.now() - this.startTime,
-      buildId: process.env.ACCOMPLISH_BUILD_ID,
+      buildId: process.env.ZMEEL_BUILD_ID,
     }));
 
     this.transport.onMessage((msg) => {

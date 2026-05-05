@@ -24,7 +24,7 @@ import type {
   OAuthTokens,
   OAuthClientRegistration,
   ConnectorAuthStoreConfig,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import type { StoredAuthEntry, ConnectorOAuthStatus } from './connector-auth-types';
 import { readEntry, writeEntry, deleteEntry, resolveServerUrl } from './connector-auth-entry';
 

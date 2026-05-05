@@ -10,8 +10,8 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import Header from '@/components/layout/Header';
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({
     getTheme: vi.fn().mockResolvedValue('system'),
     setTheme: vi.fn().mockResolvedValue(undefined),
     onThemeChange: undefined,
@@ -42,7 +42,7 @@ describe('Header Integration', () => {
       );
 
       // Assert
-      const brandLink = screen.getByRole('link', { name: /accomplish/i });
+      const brandLink = screen.getByRole('link', { name: /zmeel/i });
       expect(brandLink).toBeInTheDocument();
       expect(brandLink).toHaveAttribute('href', '/');
     });
@@ -56,7 +56,7 @@ describe('Header Integration', () => {
       );
 
       // Assert
-      expect(screen.getByText('Accomplish')).toBeInTheDocument();
+      expect(screen.getByText('Zmeel')).toBeInTheDocument();
     });
   });
 
@@ -226,7 +226,7 @@ describe('Header Integration', () => {
       );
 
       // Assert
-      const brandLink = screen.getByRole('link', { name: /accomplish/i });
+      const brandLink = screen.getByRole('link', { name: /zmeel/i });
       expect(brandLink.className).toContain('no-drag');
     });
 
@@ -252,7 +252,7 @@ describe('Header Integration', () => {
       );
 
       // Assert
-      const brandLink = screen.getByRole('link', { name: /accomplish/i });
+      const brandLink = screen.getByRole('link', { name: /zmeel/i });
       const svg = brandLink.querySelector('svg');
       expect(svg).toBeInTheDocument();
     });

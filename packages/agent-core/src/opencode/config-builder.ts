@@ -25,8 +25,8 @@ import {
   buildOpenAICompatibleConfigs,
   buildCopilotConfig,
 } from './config-providers-compat.js';
-import { buildAccomplishAiConfig } from './config-providers-accomplish.js';
-import type { StorageDeps, AccomplishRuntime } from './accomplish-runtime.js';
+import { buildZmeelAiConfig } from './config-providers-zmeel.js';
+import type { StorageDeps, ZmeelRuntime } from './zmeel-runtime.js';
 
 /**
  * Paths required for config generation (Electron-specific resolution stays in desktop)
@@ -64,14 +64,14 @@ export interface BuildProviderConfigsOptions {
    */
   providerSettings?: ProviderSettings;
   /**
-   * Accomplish AI runtime adapter (noop in OSS, real impl in commercial).
+   * Zmeel AI runtime adapter (noop in OSS, real impl in commercial).
    */
-  accomplishRuntime?: AccomplishRuntime;
+  zmeelRuntime?: ZmeelRuntime;
   /**
-   * Accomplish AI identity storage deps (injected from daemon secure storage).
-   * Required for the Accomplish AI free-tier proxy to load/create Ed25519 keypairs.
+   * Zmeel AI identity storage deps (injected from daemon secure storage).
+   * Required for the Zmeel AI free-tier proxy to load/create Ed25519 keypairs.
    */
-  accomplishStorageDeps?: StorageDeps;
+  zmeelStorageDeps?: StorageDeps;
 }
 
 /**
@@ -81,7 +81,7 @@ export interface BuildProviderConfigsOptions {
 export async function buildProviderConfigs(
   options: BuildProviderConfigsOptions,
 ): Promise<ProviderConfigResult> {
-  const { getApiKey, azureFoundryToken, accomplishRuntime, accomplishStorageDeps } = options;
+  const { getApiKey, azureFoundryToken, zmeelRuntime, zmeelStorageDeps } = options;
   const providerSettings = options.providerSettings ?? getProviderSettings();
   const connectedIds = getConnectedProviderIds();
   const activeModel = getActiveProviderModel();
@@ -90,8 +90,8 @@ export async function buildProviderConfigs(
     getApiKey,
     azureFoundryToken,
     activeModel,
-    accomplishRuntime,
-    accomplishStorageDeps,
+    zmeelRuntime,
+    zmeelStorageDeps,
   };
 
   const baseProviders = [
@@ -110,11 +110,11 @@ export async function buildProviderConfigs(
   ];
   let enabledProviders = baseProviders;
   if (connectedIds.length > 0) {
-    // Filter out accomplish-ai from upfront mapping — it's added via enableToAdd
+    // Filter out zmeel-ai from upfront mapping — it's added via enableToAdd
     // only when the builder successfully starts the proxy. Without this, a failed
-    // proxy start would leave accomplish-ai in enabledProviders with no config definition.
+    // proxy start would leave zmeel-ai in enabledProviders with no config definition.
     const mappedProviders = connectedIds
-      .filter((id) => id !== 'accomplish-ai')
+      .filter((id) => id !== 'zmeel-ai')
       .map((id) => PROVIDER_ID_TO_OPENCODE[id]);
     enabledProviders = [...new Set([...baseProviders, ...mappedProviders])];
   } else {
@@ -141,7 +141,7 @@ export async function buildProviderConfigs(
     buildCustomConfig(ctx),
     buildOpenAICompatibleConfigs(ctx),
     buildCopilotConfig(ctx),
-    buildAccomplishAiConfig(ctx),
+    buildZmeelAiConfig(ctx),
   ]);
 
   const providerConfigs: ProviderConfig[] = [];

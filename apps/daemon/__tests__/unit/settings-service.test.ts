@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import { SettingsService, SETTINGS_CHANGED } from '../../src/settings-service.js';
 import type { SettingsChangePayload } from '../../src/settings-service.js';
 
@@ -52,8 +52,8 @@ function makeStorageStub(): StorageAPI {
     updateProviderModel: vi.fn(),
     setProviderDebugMode: vi.fn(),
     getProviderDebugMode: vi.fn(() => false),
-    getAccomplishAiCredits: vi.fn(() => null),
-    saveAccomplishAiCredits: vi.fn(),
+    getZmeelAiCredits: vi.fn(() => null),
+    saveZmeelAiCredits: vi.fn(),
   } as unknown as StorageAPI;
 }
 
@@ -159,7 +159,7 @@ describe('SettingsService', () => {
     service.removeConnectedProvider('anthropic' as never);
     service.updateProviderModel('anthropic' as never, 'claude-opus-4.7');
     service.setProviderDebugMode(true);
-    service.saveAccomplishAiCredits({} as never);
+    service.saveZmeelAiCredits({} as never);
 
     expect(changes.every((c) => c.key === 'providerSettings')).toBe(true);
     expect(changes).toHaveLength(6);
@@ -180,7 +180,7 @@ describe('SettingsService', () => {
 
     service.getProviderSettings();
     service.getProviderDebugMode();
-    service.getAccomplishAiCredits();
+    service.getZmeelAiCredits();
     service.getHuggingFaceLocalConfig();
     service.getAll();
 

@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ProviderId, ConnectedProvider } from '@accomplish_ai/agent-core/common';
-import { PROVIDER_META, isProviderReady } from '@accomplish_ai/agent-core/common';
+import type { ProviderId, ConnectedProvider } from '@zmeel/agent-core/common';
+import { PROVIDER_META, isProviderReady } from '@zmeel/agent-core/common';
 import { AnimatePresence, motion } from 'framer-motion';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
 import { PROVIDER_LOGOS, DARK_INVERT_PROVIDERS } from '@/lib/provider-logos';

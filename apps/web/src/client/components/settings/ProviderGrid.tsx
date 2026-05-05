@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import type { ProviderId, ProviderSettings } from '@accomplish_ai/agent-core/common';
-import { PROVIDER_META } from '@accomplish_ai/agent-core/common';
+import type { ProviderId, ProviderSettings } from '@zmeel/agent-core/common';
+import { PROVIDER_META } from '@zmeel/agent-core/common';
 import { ProviderCard } from './ProviderCard';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 
 // Provider order matching Figma design (4 columns per row)
 const PROVIDER_ORDER: ProviderId[] = [
-  'accomplish-ai',
+  'zmeel-ai',
   'openai',
   'anthropic',
   'google',
@@ -53,10 +53,10 @@ export function ProviderGrid({
   const [search, setSearch] = useState('');
   const [hasFreeMode, setHasFreeMode] = useState<boolean | null>(null);
 
-  // Check build capabilities on mount to determine if accomplish-ai should be shown
+  // Check build capabilities on mount to determine if zmeel-ai should be shown
   useEffect(() => {
     let cancelled = false;
-    getAccomplish()
+    getZmeel()
       .getBuildCapabilities()
       .then((caps) => {
         if (!cancelled) setHasFreeMode(caps.hasFreeMode);
@@ -72,9 +72,9 @@ export function ProviderGrid({
   const filteredProviders = useMemo(() => {
     let providers = PROVIDER_ORDER;
 
-    // Hide accomplish-ai when the build does not support free mode
+    // Hide zmeel-ai when the build does not support free mode
     if (hasFreeMode === false) {
-      providers = providers.filter((id) => id !== 'accomplish-ai');
+      providers = providers.filter((id) => id !== 'zmeel-ai');
     }
 
     if (!search.trim()) return providers;

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { oauthStatusTextClass, oauthStatusDotClass, getOAuthStatusKey } from './oauth-status';
-import type { ConnectorAuthStatus } from '@accomplish_ai/agent-core/common';
+import type { ConnectorAuthStatus } from '@zmeel/agent-core/common';
 
 interface OAuthConnectorCardProps {
   /** Path to the connector's icon, e.g. /assets/icons/integrations/jira.svg */

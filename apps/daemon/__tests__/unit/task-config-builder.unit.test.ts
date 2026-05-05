@@ -59,7 +59,7 @@ const dbStub = {
   }),
 };
 
-vi.mock('@accomplish_ai/agent-core/storage/database', () => ({
+vi.mock('@zmeel/agent-core/storage/database', () => ({
   getDatabase: vi.fn(() => dbStub),
 }));
 
@@ -68,7 +68,7 @@ vi.mock('@accomplish_ai/agent-core/storage/database', () => ({
 // both `getFormattedKnowledgeNotes` (the new structured API that splits
 // instructions from context) and `getKnowledgeNotesForPrompt` (the legacy
 // single-string API kept for backward compatibility).
-vi.mock('@accomplish_ai/agent-core/storage/repositories/knowledgeNotes', () => ({
+vi.mock('@zmeel/agent-core/storage/repositories/knowledgeNotes', () => ({
   getFormattedKnowledgeNotes: vi.fn(() => ({
     instructions: knowledgeInstructionsText ?? '',
     context: knowledgeContextText ?? '',
@@ -81,7 +81,7 @@ vi.mock('@accomplish_ai/agent-core/storage/repositories/knowledgeNotes', () => (
   }),
 }));
 
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,
@@ -105,10 +105,10 @@ vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
 // Provider-settings / storage-repository barrel reads getDatabase() at call
 // time — the real one requires an initialised native SQLite module which is
 // absent in this test environment. Stub only the methods `buildProviderConfigs`
-// pulls in via that barrel. The vitest alias maps `@accomplish_ai/agent-core`
+// pulls in via that barrel. The vitest alias maps `@zmeel/agent-core`
 // to agent-core's src/, so the relative path resolves the same way as from
 // `src/opencode/config-builder.ts`.
-vi.mock('@accomplish_ai/agent-core/storage/repositories/index', async () => {
+vi.mock('@zmeel/agent-core/storage/repositories/index', async () => {
   return {
     getProviderSettings: vi.fn(() => ({
       activeProviderId: null,

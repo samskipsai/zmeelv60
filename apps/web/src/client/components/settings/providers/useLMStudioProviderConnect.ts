@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import type {
   ConnectedProvider,
   LMStudioCredentials,
   ToolSupportStatus,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 export interface LMStudioModel {
   id: string;
@@ -55,8 +55,8 @@ export function useLMStudioProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
-      const result = await accomplish.testLMStudioConnection(serverUrl);
+      const zmeel = getZmeel();
+      const result = await zmeel.testLMStudioConnection(serverUrl);
 
       if (!result.success) {
         setError(result.error || t('status.connectionFailed'));
@@ -101,10 +101,10 @@ export function useLMStudioProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const currentUrl =
         (baseProvider.credentials as LMStudioCredentials)?.serverUrl || 'http://localhost:1234';
-      const result = await accomplish.testLMStudioConnection(currentUrl);
+      const result = await zmeel.testLMStudioConnection(currentUrl);
 
       if (!result.success) {
         setError(result.error || t('status.connectionFailed'));

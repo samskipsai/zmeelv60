@@ -1,7 +1,7 @@
 /**
  * Analytics IPC handlers — bridges renderer analytics calls to main process event helpers.
  *
- * The renderer calls window.accomplish.analytics.trackXxx(...) which invokes
+ * The renderer calls window.zmeel.analytics.trackXxx(...) which invokes
  * ipcRenderer.invoke('analytics:xxx', ...) → handled here → calls event helpers.
  */
 

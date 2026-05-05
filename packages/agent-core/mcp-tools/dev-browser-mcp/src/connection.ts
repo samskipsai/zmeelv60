@@ -36,7 +36,7 @@ const _cdpSessionCache = new WeakMap<Page, Promise<CDPSession>>();
 // Pure function: builds config from environment, no side effects
 function buildConfigFromEnv(): ConnectionConfig {
   const cdpEndpoint = process.env.CDP_ENDPOINT;
-  const taskId = process.env.ACCOMPLISH_TASK_ID || 'default';
+  const taskId = process.env.ZMEEL_TASK_ID || 'default';
 
   if (cdpEndpoint) {
     const headers: Record<string, string> = {};

@@ -1,7 +1,7 @@
 /**
  * tracking-context.ts — Common tracking fields shared between GA4 and Mixpanel.
  *
- * Ported from accomplish-commercial-fork with enterprise code removed:
+ * Ported from zmeel-commercial-fork with enterprise code removed:
  * - __APP_TIER__ replaced with getAppTier() from build-config
  * - org_id and user_role hardcoded to defaults (no enterprise identity)
  */

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import { SecretsService } from '../../src/secrets-service.js';
 
 /**

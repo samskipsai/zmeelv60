@@ -13,8 +13,8 @@ import {
   OAuthProviderId,
   getConnectorDefinitions,
   isOAuthProviderId,
-} from '@accomplish_ai/agent-core/common';
-import type { ConnectorAuthStatus } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
+import type { ConnectorAuthStatus } from '@zmeel/agent-core/common';
 import { getConnectorAuthStore } from '../../connectors/connector-auth-registry';
 import { connectBuiltInConnector } from '../../connectors/connector-token-resolver';
 import {

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
-import type { ConnectedProvider } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider } from '@zmeel/agent-core/common';
 import { ConnectButton, ProviderFormHeader, FormError } from '../../shared';
 import { VertexServiceAccountTab } from './VertexServiceAccountTab';
 import { VertexAdcTab } from './VertexAdcTab';

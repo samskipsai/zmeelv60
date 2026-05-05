@@ -5,8 +5,8 @@ import {
   validateLMStudioConfig,
   testCustomConnection,
   sanitizeString,
-} from '@accomplish_ai/agent-core/desktop-main';
-import type { LMStudioConfig } from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
+import type { LMStudioConfig } from '@zmeel/agent-core/desktop-main';
 import type { IpcHandler } from '../../types';
 import { getDaemonClient } from '../../../daemon-bootstrap';
 

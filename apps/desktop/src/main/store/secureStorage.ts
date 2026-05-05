@@ -34,7 +34,7 @@
  * analytics launch-event enrichment) until after the bootstrap await.
  */
 import { getDaemonClient } from '../daemon/daemon-lifecycle';
-import type { ApiKeyProvider } from '@accomplish_ai/agent-core/desktop-main';
+import type { ApiKeyProvider } from '@zmeel/agent-core/desktop-main';
 
 export type { ApiKeyProvider };
 

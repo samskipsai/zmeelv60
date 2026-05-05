@@ -8,7 +8,7 @@
 import fs from 'fs';
 import path from 'path';
 import { app } from 'electron';
-import type { HuggingFaceLocalModelInfo } from '@accomplish_ai/agent-core/common';
+import type { HuggingFaceLocalModelInfo } from '@zmeel/agent-core/common';
 
 export type { DownloadProgress, ProgressCallback } from './model-downloader';
 export { downloadModel, cancelDownload } from './model-downloader';

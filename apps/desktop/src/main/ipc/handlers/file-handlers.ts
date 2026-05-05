@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import { BrowserWindow, dialog, shell, app } from 'electron';
 import type { IpcMainInvokeEvent } from 'electron';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/desktop-main';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/desktop-main';
 import { handle, assertTrustedWindow, MAX_ATTACHMENT_FILE_SIZE } from './utils';
 import { getLogCollector } from '../../logging';
 
@@ -144,7 +144,7 @@ export function registerFileHandlers(): void {
 
   handle('shell:open-external', async (_event: IpcMainInvokeEvent, url: string) => {
     try {
-      const { validateHttpUrl } = await import('@accomplish_ai/agent-core');
+      const { validateHttpUrl } = await import('@zmeel/agent-core');
       validateHttpUrl(url, 'External URL');
       await shell.openExternal(url);
     } catch (error) {

@@ -20,7 +20,7 @@ function buildContextMenu(mainWindow: BrowserWindow | null): Menu {
 
   return Menu.buildFromTemplate([
     {
-      label: 'Show Accomplish',
+      label: 'Show Zmeel',
       click: () => {
         if (mainWindow && !mainWindow.isDestroyed()) {
           mainWindow.show();
@@ -64,7 +64,7 @@ export function createTray(mainWindow: BrowserWindow | null): Tray {
       : icon.resize({ width: 16, height: 16 });
 
   tray = new Tray(trayIcon);
-  tray.setToolTip('Accomplish');
+  tray.setToolTip('Zmeel');
   tray.setContextMenu(buildContextMenu(mainWindow));
 
   tray.on('click', () => {
@@ -85,7 +85,7 @@ export function updateTaskCount(count: number, mainWindow: BrowserWindow | null)
   activeTaskCount = count;
   if (tray && !tray.isDestroyed()) {
     tray.setContextMenu(buildContextMenu(mainWindow));
-    const tooltip = count > 0 ? `Accomplish — ${count} task(s) running` : 'Accomplish';
+    const tooltip = count > 0 ? `Zmeel — ${count} task(s) running` : 'Zmeel';
     tray.setToolTip(tooltip);
   }
 }

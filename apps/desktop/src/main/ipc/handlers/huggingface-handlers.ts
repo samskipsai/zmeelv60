@@ -7,7 +7,7 @@
 import type { IpcMainInvokeEvent } from 'electron';
 import { handle } from './utils';
 import { getDaemonClient } from '../../daemon-bootstrap';
-import type { HuggingFaceLocalConfig } from '@accomplish_ai/agent-core/desktop-main';
+import type { HuggingFaceLocalConfig } from '@zmeel/agent-core/desktop-main';
 import {
   startHuggingFaceServer,
   stopHuggingFaceServer,

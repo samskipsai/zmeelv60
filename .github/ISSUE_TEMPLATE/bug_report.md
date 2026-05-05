@@ -27,7 +27,7 @@ What actually happened.
 ## Environment
 
 - OS: [e.g., macOS 14.0]
-- Accomplish Version: [e.g., 0.1.0]
+- Zmeel Version: [e.g., 0.1.0]
 
 ## Screenshots
 

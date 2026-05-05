@@ -1,14 +1,14 @@
 #!/bin/bash
 # Run desktop app with STAGING UI + STAGING API
-# UI: lite-staging.accomplish.ai | API: lite-staging.accomplish.ai
+# UI: lite-staging.zmeel.ai | API: lite-staging.zmeel.ai
 # This builds an unpacked app and runs it (no hot reload)
 
 set -e
 
 echo "Building unpacked app for staging..."
-pnpm -F @accomplish/desktop build:unpack
+pnpm -F @zmeel/desktop build:unpack
 
 echo "Launching app with staging configuration..."
-ACCOMPLISH_UI_URL=https://lite-staging.accomplish.ai \
-ACCOMPLISH_API_URL=https://lite-staging.accomplish.ai \
-open apps/desktop/release/mac-arm64/Accomplish.app
+ZMEEL_UI_URL=https://lite-staging.zmeel.ai \
+ZMEEL_API_URL=https://lite-staging.zmeel.ai \
+open apps/desktop/release/mac-arm64/Zmeel.app

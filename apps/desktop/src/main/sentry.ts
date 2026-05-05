@@ -4,7 +4,7 @@
  * No-ops gracefully when SENTRY_DSN is not configured (OSS builds).
  * Attaches device fingerprint as user ID and scrubs sensitive data.
  *
- * Ported from accomplish-commercial-fork with enterprise code removed:
+ * Ported from zmeel-commercial-fork with enterprise code removed:
  * - No __APP_TIER__ compile-time constant (uses getAppTier() from build-config)
  * - No gateway correlation (Phase 2 — will be added when gateway proxy is ported)
  */

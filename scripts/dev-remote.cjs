@@ -13,19 +13,19 @@ const url = positionalArgs[0];
 if (!url) {
   console.error('Usage: pnpm dev:remote <url>');
   console.error(
-    'Example: pnpm dev:remote https://accomplish-app-preview-42.accomplish.workers.dev',
+    'Example: pnpm dev:remote https://zmeel-app-preview-42.zmeel.workers.dev',
   );
   process.exit(1);
 }
 
 const env = {
   ...process.env,
-  ACCOMPLISH_ROUTER_URL: url,
+  ZMEEL_ROUTER_URL: url,
 };
 
 console.log('[dev:remote] Launching Electron → ' + url);
 
-const electronArgs = ['-F', '@accomplish/desktop', 'dev:remote'];
+const electronArgs = ['-F', '@zmeel/desktop', 'dev:remote'];
 if (isCheck) {
   electronArgs.push('--', '--check');
 }

@@ -4,7 +4,7 @@ import { settingsVariants, settingsTransitions } from '@/lib/animations';
 import type {
   ConnectedProvider,
   VertexProviderCredentials,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import { ModelSelector, ConnectedControls } from '../../shared';
 
 interface VertexConnectedSectionProps {

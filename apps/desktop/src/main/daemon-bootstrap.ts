@@ -7,7 +7,7 @@
  */
 
 import type { BrowserWindow } from 'electron';
-import type { DaemonClient } from '@accomplish_ai/agent-core/desktop-main';
+import type { DaemonClient } from '@zmeel/agent-core/desktop-main';
 import { trackTaskComplete, trackTaskError, classifyErrorCategory } from './analytics/events';
 
 /** Per-task context for analytics — populated on task.start notification, consumed on complete/error. */
@@ -15,7 +15,7 @@ const taskContextMap = new Map<
   string,
   { startTime: number; sessionId: string; taskType: string }
 >();
-import { createSocketTransport } from '@accomplish_ai/agent-core/desktop-main';
+import { createSocketTransport } from '@zmeel/agent-core/desktop-main';
 import {
   ensureDaemonRunning,
   onReconnect,
@@ -263,20 +263,20 @@ function registerNotificationHandlers(
   });
 
   // Connector auth-error (e.g., GitHub/Notion token expired). Renderer
-  // subscribes via `accomplish.onAuthError` in preload.
+  // subscribes via `zmeel.onAuthError` in preload.
   client.onNotification('auth.error', (data) => {
     forward('auth:error', data);
   });
 
   // Browser preview frames from `dev-browser-mcp` tool output. Renderer
-  // subscribes via `accomplish.onBrowserFrame` in preload.
+  // subscribes via `zmeel.onBrowserFrame` in preload.
   client.onNotification('browser.frame', (data) => {
     forward('browser:frame', data);
   });
 
-  // Accomplish AI credit usage updates (proxy → daemon → Electron → renderer)
-  client.onNotification('accomplish-ai.usage-update', (data) => {
-    forward('accomplish-ai:usage-updated', data);
+  // Zmeel AI credit usage updates (proxy → daemon → Electron → renderer)
+  client.onNotification('zmeel-ai.usage-update', (data) => {
+    forward('zmeel-ai:usage-updated', data);
   });
 
   // WhatsApp events

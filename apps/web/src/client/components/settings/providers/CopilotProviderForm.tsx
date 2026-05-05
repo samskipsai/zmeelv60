@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
-import type { ConnectedProvider } from '@accomplish_ai/agent-core';
-import { COPILOT_MODELS } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider } from '@zmeel/agent-core';
+import { COPILOT_MODELS } from '@zmeel/agent-core/common';
 import { ModelSelector, ConnectedControls, ProviderFormHeader, FormError } from '../shared';
 import { PROVIDER_LOGOS } from '@/lib/provider-logos';
 import { useCopilotConnection } from './useCopilotConnection';

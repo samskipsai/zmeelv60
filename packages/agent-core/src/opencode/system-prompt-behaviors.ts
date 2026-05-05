@@ -1,5 +1,5 @@
 /**
- * Behavior block string constants for the Accomplish agent system prompt.
+ * Behavior block string constants for the Zmeel agent system prompt.
  * Imported by system-prompt-sections.ts and ultimately system-prompt.ts.
  */
 
@@ -47,7 +47,7 @@ This includes greetings, short knowledge questions, meta-questions about capabil
 
 start_task requires:
 - original_request: Echo the user's request exactly as stated
-- goal: What you aim to accomplish
+- goal: What you aim to zmeel
 - steps: Array of planned actions to achieve the goal
 - verification: Array of how you will verify the task is complete
 - skills: Array of relevant skill names from <available-skills> (or empty [] if none apply)

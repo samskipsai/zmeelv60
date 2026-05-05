@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ToolSupportStatus } from '@accomplish_ai/agent-core';
+import type { ToolSupportStatus } from '@zmeel/agent-core';
 import { ModelSelector, ToolSupportBadge, AlertCallout } from '../shared';
 import type { OllamaModel } from './ollama-types';
 

@@ -9,7 +9,7 @@
  * - sanitizeString (text validation/sanitization)
  * - extractScreenshots (base64 image extraction)
  * - sanitizeToolOutput (output cleaning)
- * - ID generation patterns (from @accomplish/shared)
+ * - ID generation patterns (from @zmeel/shared)
  */
 
 import { describe, it, expect, vi } from 'vitest';
@@ -23,7 +23,7 @@ vi.mock('undici', () => ({
   getGlobalDispatcher: vi.fn(),
 }));
 
-import { createTaskId, createMessageId } from '@accomplish_ai/agent-core';
+import { createTaskId, createMessageId } from '@zmeel/agent-core';
 
 const MAX_TEXT_LENGTH = 8000;
 

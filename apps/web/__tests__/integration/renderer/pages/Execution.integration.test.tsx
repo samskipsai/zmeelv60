@@ -8,8 +8,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router';
-import type { Task, TaskStatus, TaskMessage, PermissionRequest } from '@accomplish_ai/agent-core';
-import { OAuthProviderId, PROMPT_DEFAULT_MAX_LENGTH } from '@accomplish_ai/agent-core/common';
+import type { Task, TaskStatus, TaskMessage, PermissionRequest } from '@zmeel/agent-core';
+import { OAuthProviderId, PROMPT_DEFAULT_MAX_LENGTH } from '@zmeel/agent-core/common';
 
 // Create mock functions
 const mockLoadTaskById = vi.fn();
@@ -60,8 +60,8 @@ function createMockMessage(
   };
 }
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   onTaskUpdate: mockOnTaskUpdate.mockReturnValue(() => {}),
   onTaskUpdateBatch: mockOnTaskUpdateBatch.mockReturnValue(() => {}),
   onPermissionRequest: mockOnPermissionRequest.mockReturnValue(() => {}),
@@ -118,9 +118,9 @@ const mockAccomplish = {
   onThemeChange: undefined,
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 // Mock store state holder
@@ -222,8 +222,8 @@ vi.mock('@/components/ui/streaming-text', () => ({
   }) => <>{children(text)}</>,
 }));
 
-// Mock Accomplish icon
-vi.mock('/assets/accomplish-icon.png', () => ({ default: 'accomplish-icon.png' }));
+// Mock Zmeel icon
+vi.mock('/assets/zmeel-icon.png', () => ({ default: 'zmeel-icon.png' }));
 
 // Import after mocks
 import ExecutionPage from '@/pages/Execution';
@@ -263,7 +263,7 @@ describe('Execution Page Integration', () => {
     ]);
     mockGetConnectors.mockResolvedValue([]);
     mockResyncSkills.mockResolvedValue(undefined);
-    (window as Window & { accomplish: typeof mockAccomplish }).accomplish = mockAccomplish;
+    (window as Window & { zmeel: typeof mockZmeel }).zmeel = mockZmeel;
     // Reset store state
     mockStoreState = {
       currentTask: null,
@@ -436,7 +436,7 @@ describe('Execution Page Integration', () => {
       renderWithRouter('task-123');
 
       expect(
-        screen.getByText(/^(Doing|Executing|Running|Handling it|Accomplishing)\.\.\.$/),
+        screen.getByText(/^(Doing|Executing|Running|Handling it|Zmeeling)\.\.\.$/),
       ).toBeInTheDocument();
     });
 
@@ -1180,7 +1180,7 @@ describe('Execution Page Integration', () => {
         },
       };
       mockStoreState.currentTask = task;
-      mockAccomplish.getSlackMcpOauthStatus
+      mockZmeel.getSlackMcpOauthStatus
         .mockResolvedValueOnce({ connected: false, pendingAuthorization: false })
         .mockResolvedValueOnce({ connected: true, pendingAuthorization: false });
 
@@ -1189,7 +1189,7 @@ describe('Execution Page Integration', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Authenticate Slack' }));
 
       await waitFor(() => {
-        expect(mockAccomplish.loginSlackMcp).toHaveBeenCalled();
+        expect(mockZmeel.loginSlackMcp).toHaveBeenCalled();
       });
       expect(mockSendFollowUp).toHaveBeenCalledWith('Slack is connected.', []);
     });

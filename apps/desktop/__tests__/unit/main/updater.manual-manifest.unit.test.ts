@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { EventEmitter } from 'events';
 
 vi.mock('electron', () => ({
-  app: { getVersion: vi.fn(() => '0.3.8'), isPackaged: true, name: 'Accomplish' },
+  app: { getVersion: vi.fn(() => '0.3.8'), isPackaged: true, name: 'Zmeel' },
   dialog: { showMessageBox: vi.fn(() => Promise.resolve({ response: 2 })), showErrorBox: vi.fn() },
   shell: { openExternal: vi.fn() },
   clipboard: { writeText: vi.fn() },
@@ -39,15 +39,15 @@ const emptyConfig = {
   gaApiSecret: '',
   gaMeasurementId: '',
   sentryDsn: '',
-  accomplishGatewayUrl: '',
+  zmeelGatewayUrl: '',
   buildId: '',
-  accomplishUpdaterUrl: '',
+  zmeelUpdaterUrl: '',
 };
 
 vi.mock('../../../src/main/config/build-config', () => ({
   getBuildConfig: vi.fn(() => ({
     ...emptyConfig,
-    accomplishUpdaterUrl: 'https://d.accomplish.ai',
+    zmeelUpdaterUrl: 'https://d.zmeel.ai',
   })),
   isAutoUpdaterEnabled: vi.fn(() => true),
 }));
@@ -79,14 +79,14 @@ describe('manual-manifest', () => {
     const { getBuildConfig } = await import('../../../src/main/config/build-config');
     vi.mocked(getBuildConfig).mockReturnValue({
       ...emptyConfig,
-      accomplishUpdaterUrl: 'https://d.accomplish.ai',
+      zmeelUpdaterUrl: 'https://d.zmeel.ai',
     });
     // Default manifest — version 1.0.0 is newer than mocked app 0.3.8.
     mockHttpsGet.mockImplementation((_url: string, cb: (res: unknown) => void) => {
       cb(
         mockHttpResponse(
           200,
-          `version: 1.0.0\npath: https://downloads.accomplish.ai/downloads/1.0.0/windows/Accomplish-1.0.0.exe\nsha512: abc\nreleaseDate: '2026-01-01'\n`,
+          `version: 1.0.0\npath: https://downloads.zmeel.ai/downloads/1.0.0/windows/Zmeel-1.0.0.exe\nsha512: abc\nreleaseDate: '2026-01-01'\n`,
         ),
       );
       return { on: vi.fn() };
@@ -98,53 +98,53 @@ describe('manual-manifest', () => {
       let fetched = '';
       mockHttpsGet.mockImplementation((url: string, cb: (res: unknown) => void) => {
         fetched = url;
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.exe\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.exe\n`));
         return { on: vi.fn() };
       });
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(true, 'win');
-      expect(fetched).toBe('https://d.accomplish.ai/latest-win.yml');
+      expect(fetched).toBe('https://d.zmeel.ai/latest-win.yml');
     });
 
     it('Linux x64 fetches latest-linux.yml', async () => {
       let fetched = '';
       mockHttpsGet.mockImplementation((url: string, cb: (res: unknown) => void) => {
         fetched = url;
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.deb\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.deb\n`));
         return { on: vi.fn() };
       });
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(true, 'linux', 'x64');
-      expect(fetched).toBe('https://d.accomplish.ai/latest-linux.yml');
+      expect(fetched).toBe('https://d.zmeel.ai/latest-linux.yml');
     });
 
     it('Linux arm64 fetches latest-linux-arm64.yml', async () => {
       let fetched = '';
       mockHttpsGet.mockImplementation((url: string, cb: (res: unknown) => void) => {
         fetched = url;
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.deb\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.deb\n`));
         return { on: vi.fn() };
       });
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(true, 'linux', 'arm64');
-      expect(fetched).toBe('https://d.accomplish.ai/latest-linux-arm64.yml');
+      expect(fetched).toBe('https://d.zmeel.ai/latest-linux-arm64.yml');
     });
 
     it('trailing slash in URL does not produce a double-slash', async () => {
       const { getBuildConfig } = await import('../../../src/main/config/build-config');
       vi.mocked(getBuildConfig).mockReturnValue({
         ...emptyConfig,
-        accomplishUpdaterUrl: 'https://d.accomplish.ai/test/',
+        zmeelUpdaterUrl: 'https://d.zmeel.ai/test/',
       });
       let fetched = '';
       mockHttpsGet.mockImplementation((url: string, cb: (res: unknown) => void) => {
         fetched = url;
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.exe\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.exe\n`));
         return { on: vi.fn() };
       });
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(true, 'win');
-      expect(fetched).toBe('https://d.accomplish.ai/test/latest-win.yml');
+      expect(fetched).toBe('https://d.zmeel.ai/test/latest-win.yml');
     });
   });
 
@@ -180,7 +180,7 @@ describe('manual-manifest', () => {
 
     it('YAML missing version: tracked as invalid_manifest', async () => {
       mockHttpsGet.mockImplementation((_url: string, cb: (res: unknown) => void) => {
-        cb(mockHttpResponse(200, `path: https://downloads.accomplish.ai/a.exe\nsha512: abc\n`));
+        cb(mockHttpResponse(200, `path: https://downloads.zmeel.ai/a.exe\nsha512: abc\n`));
         return { on: vi.fn() };
       });
       const analytics = await import('../../../src/main/analytics/events');
@@ -200,7 +200,7 @@ describe('manual-manifest', () => {
         cb(
           mockHttpResponse(
             200,
-            `version: "not-a-version"\npath: https://downloads.accomplish.ai/a.exe\n`,
+            `version: "not-a-version"\npath: https://downloads.zmeel.ai/a.exe\n`,
           ),
         );
         return { on: vi.fn() };
@@ -227,7 +227,7 @@ describe('manual-manifest', () => {
         cb(
           mockHttpResponse(
             200,
-            `version: "garbage"\npath: https://downloads.accomplish.ai/a.exe\n`,
+            `version: "garbage"\npath: https://downloads.zmeel.ai/a.exe\n`,
           ),
         );
         return { on: vi.fn() };
@@ -310,12 +310,12 @@ describe('manual-manifest', () => {
       expect(shell.openExternal).not.toHaveBeenCalled();
     });
 
-    it('accepts same-apex subdomain (downloads.accomplish.ai vs feed d.accomplish.ai)', async () => {
+    it('accepts same-apex subdomain (downloads.zmeel.ai vs feed d.zmeel.ai)', async () => {
       mockHttpsGet.mockImplementation((_url: string, cb: (res: unknown) => void) => {
         cb(
           mockHttpResponse(
             200,
-            `version: 9.9.9\npath: https://downloads.accomplish.ai/downloads/9.9.9/windows/a.exe\n`,
+            `version: 9.9.9\npath: https://downloads.zmeel.ai/downloads/9.9.9/windows/a.exe\n`,
           ),
         );
         return { on: vi.fn() };
@@ -354,7 +354,7 @@ describe('manual-manifest', () => {
 
     it('same version: shows No Updates dialog when not silent', async () => {
       mockHttpsGet.mockImplementation((_url: string, cb: (res: unknown) => void) => {
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.exe\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.exe\n`));
         return { on: vi.fn() };
       });
       const { dialog } = await import('electron');
@@ -367,7 +367,7 @@ describe('manual-manifest', () => {
 
     it('same version silent: no dialog', async () => {
       mockHttpsGet.mockImplementation((_url: string, cb: (res: unknown) => void) => {
-        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.accomplish.ai/a.exe\n`));
+        cb(mockHttpResponse(200, `version: 0.3.8\npath: https://downloads.zmeel.ai/a.exe\n`));
         return { on: vi.fn() };
       });
       const { dialog } = await import('electron');
@@ -408,7 +408,7 @@ describe('manual-manifest', () => {
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(false, 'win');
       expect(shell.openExternal).toHaveBeenCalledWith(
-        'https://downloads.accomplish.ai/downloads/1.0.0/windows/Accomplish-1.0.0.exe',
+        'https://downloads.zmeel.ai/downloads/1.0.0/windows/Zmeel-1.0.0.exe',
       );
     });
 
@@ -420,7 +420,7 @@ describe('manual-manifest', () => {
       const { checkForUpdatesManual } = await import('../../../src/main/updater/manual-manifest');
       await checkForUpdatesManual(false, 'win');
       expect(clipboard.writeText).toHaveBeenCalledWith(
-        'https://downloads.accomplish.ai/downloads/1.0.0/windows/Accomplish-1.0.0.exe',
+        'https://downloads.zmeel.ai/downloads/1.0.0/windows/Zmeel-1.0.0.exe',
       );
     });
   });

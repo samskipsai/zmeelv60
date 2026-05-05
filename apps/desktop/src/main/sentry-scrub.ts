@@ -4,7 +4,7 @@
  * Redacts API keys, Bearer tokens, JWK private key fields, DPoP nonces,
  * and downgrades expected operational errors to warnings.
  *
- * Ported from accomplish-commercial-fork (clean utility — no secrets, no enterprise code).
+ * Ported from zmeel-commercial-fork (clean utility — no secrets, no enterprise code).
  */
 
 import type { Breadcrumb, ErrorEvent } from '@sentry/electron/main';

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createLogger } from '../lib/logger';
-import type { GoogleAccount, GoogleAccountStatus } from '@accomplish_ai/agent-core/common';
+import type { GoogleAccount, GoogleAccountStatus } from '@zmeel/agent-core/common';
 
 const logger = createLogger('GoogleAccountStore');
 
@@ -38,7 +38,7 @@ export const useGoogleAccountStore = create<GoogleAccountStore>((set) => ({
     const token = Symbol();
     set({ loading: true, _requestToken: token });
     try {
-      const accounts = await window.accomplish?.gws?.listAccounts();
+      const accounts = await window.zmeel?.gws?.listAccounts();
       if (!accounts) {
         set((state) => (state._requestToken === token ? { loading: false, accounts: [] } : {}));
         return;
@@ -52,7 +52,7 @@ export const useGoogleAccountStore = create<GoogleAccountStore>((set) => ({
 
   removeAccount: async (id: string) => {
     try {
-      await window.accomplish?.gws?.removeAccount(id);
+      await window.zmeel?.gws?.removeAccount(id);
       set((state) => ({
         accounts: state.accounts.filter((a) => a.googleAccountId !== id),
       }));
@@ -64,7 +64,7 @@ export const useGoogleAccountStore = create<GoogleAccountStore>((set) => ({
 
   updateLabel: async (id: string, label: string) => {
     try {
-      await window.accomplish?.gws?.updateLabel(id, label);
+      await window.zmeel?.gws?.updateLabel(id, label);
       set((state) => ({
         accounts: state.accounts.map((a) => (a.googleAccountId === id ? { ...a, label } : a)),
       }));
@@ -100,7 +100,7 @@ export function initGoogleAccountListener(): () => void {
     _gwsAuthErrorUnsubscribe();
   }
 
-  const unsubscribeStatus = window.accomplish?.gws?.onStatusChanged((id, status) => {
+  const unsubscribeStatus = window.zmeel?.gws?.onStatusChanged((id, status) => {
     useGoogleAccountStore.getState().handleStatusChange(id, status as GoogleAccountStatus);
   });
 
@@ -108,7 +108,7 @@ export function initGoogleAccountListener(): () => void {
   // OAuth auth-error channel so missing-refresh-token and similar
   // daemon-side rejections reach the user instead of silently timing
   // out the 30s `GoogleAccountsSection` poll.
-  const unsubscribeAuthError = window.accomplish?.gws?.onAuthError(({ message }) => {
+  const unsubscribeAuthError = window.zmeel?.gws?.onAuthError(({ message }) => {
     logger.warn('Google account auth error:', message);
     useGoogleAccountStore.getState().setAuthError(message);
   });

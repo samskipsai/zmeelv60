@@ -29,7 +29,7 @@ function t(key: string): string {
   return typeof value === 'string' ? value : key;
 }
 
-const mockAccomplish = {
+const mockZmeel = {
   getConnectors: vi.fn().mockResolvedValue([]),
   getSlackMcpOauthStatus: vi
     .fn()
@@ -51,8 +51,8 @@ const mockAccomplish = {
   getGoogleAccounts: vi.fn().mockResolvedValue([]),
 };
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 vi.mock('react-i18next', () => ({
@@ -84,13 +84,13 @@ import { IntegrationsPanel } from '@/components/settings/integrations';
 describe('IntegrationsPanel — 3-tab layout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAccomplish.getConnectors.mockResolvedValue([]);
-    mockAccomplish.getSlackMcpOauthStatus.mockResolvedValue({
+    mockZmeel.getConnectors.mockResolvedValue([]);
+    mockZmeel.getSlackMcpOauthStatus.mockResolvedValue({
       connected: false,
       pendingAuthorization: false,
     });
-    mockAccomplish.getBuiltInConnectorAuthStatus.mockResolvedValue([]);
-    mockAccomplish.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
+    mockZmeel.getBuiltInConnectorAuthStatus.mockResolvedValue([]);
+    mockZmeel.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
   });
 
   afterEach(cleanup);
@@ -169,10 +169,10 @@ describe('IntegrationsPanel — 3-tab layout', () => {
 
   describe('shared error zone', () => {
     it('shows error zone after a failed built-in authentication', async () => {
-      mockAccomplish.getBuiltInConnectorAuthStatus.mockResolvedValue([
+      mockZmeel.getBuiltInConnectorAuthStatus.mockResolvedValue([
         { providerId: 'jira', connected: false, pendingAuthorization: false },
       ]);
-      mockAccomplish.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
+      mockZmeel.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
 
       render(<IntegrationsPanel />);
 
@@ -191,7 +191,7 @@ describe('IntegrationsPanel — 3-tab layout', () => {
     });
 
     it('error zone contains a dismiss button', async () => {
-      mockAccomplish.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
+      mockZmeel.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
 
       render(<IntegrationsPanel />);
 
@@ -207,7 +207,7 @@ describe('IntegrationsPanel — 3-tab layout', () => {
     });
 
     it('dismiss button clears the error zone', async () => {
-      mockAccomplish.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
+      mockZmeel.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
 
       render(<IntegrationsPanel />);
 
@@ -227,7 +227,7 @@ describe('IntegrationsPanel — 3-tab layout', () => {
     });
 
     it('error zone persists when switching tabs', async () => {
-      mockAccomplish.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
+      mockZmeel.loginBuiltInConnector.mockRejectedValue(new Error('Auth failed'));
 
       render(<IntegrationsPanel />);
 

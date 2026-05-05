@@ -2,7 +2,7 @@
  * Native sandbox provider — OS-level FS/network restriction.
  *
  * macOS: wraps spawn command with sandbox-exec and a generated profile.
- * Windows: injects ACCOMPLISH_SANDBOX_* env vars consumed by file-permission MCP;
+ * Windows: injects ZMEEL_SANDBOX_* env vars consumed by file-permission MCP;
  *          network restriction via env-var flags (no admin elevation required).
  * Linux: injects env vars; optionally wraps with firejail if available.
  */
@@ -53,22 +53,22 @@ export class NativeSandboxProvider implements SandboxProvider {
 
   private buildSandboxEnvironment(config: SandboxConfig): Record<string, string> {
     const env: Record<string, string> = {
-      ACCOMPLISH_SANDBOX_ENABLED: '1',
-      ACCOMPLISH_SANDBOX_MODE: 'native',
+      ZMEEL_SANDBOX_ENABLED: '1',
+      ZMEEL_SANDBOX_MODE: 'native',
     };
 
     if (config.allowedPaths.length > 0) {
-      env['ACCOMPLISH_SANDBOX_ALLOWED_PATHS'] = config.allowedPaths.join(
+      env['ZMEEL_SANDBOX_ALLOWED_PATHS'] = config.allowedPaths.join(
         this.platform === 'win32' ? ';' : ':',
       );
     }
 
     if (config.networkRestricted) {
-      env['ACCOMPLISH_SANDBOX_NETWORK_RESTRICTED'] = '1';
+      env['ZMEEL_SANDBOX_NETWORK_RESTRICTED'] = '1';
     }
 
     if (config.allowedHosts.length > 0) {
-      env['ACCOMPLISH_SANDBOX_ALLOWED_HOSTS'] = config.allowedHosts.join(',');
+      env['ZMEEL_SANDBOX_ALLOWED_HOSTS'] = config.allowedHosts.join(',');
     }
 
     return env;

@@ -14,7 +14,7 @@ describe('connection', () => {
     delete process.env.CDP_ENDPOINT;
     delete process.env.CDP_SECRET;
     delete process.env.DEV_BROWSER_PORT;
-    delete process.env.ACCOMPLISH_TASK_ID;
+    delete process.env.ZMEEL_TASK_ID;
   });
 
   describe('configureFromEnv', () => {
@@ -44,13 +44,13 @@ describe('connection', () => {
       expect(cfg.devBrowserUrl).toBe('http://localhost:5555');
     });
 
-    it('uses ACCOMPLISH_TASK_ID for task isolation', () => {
-      process.env.ACCOMPLISH_TASK_ID = 'task-abc';
+    it('uses ZMEEL_TASK_ID for task isolation', () => {
+      process.env.ZMEEL_TASK_ID = 'task-abc';
       const cfg = configureFromEnv();
       expect(cfg.taskId).toBe('task-abc');
     });
 
-    it('defaults taskId to "default" when ACCOMPLISH_TASK_ID is not set', () => {
+    it('defaults taskId to "default" when ZMEEL_TASK_ID is not set', () => {
       const cfg = configureFromEnv();
       expect(cfg.taskId).toBe('default');
     });
@@ -94,7 +94,7 @@ describe('connection', () => {
     });
 
     it('uses configureFromEnv taskId', () => {
-      process.env.ACCOMPLISH_TASK_ID = 'env-task';
+      process.env.ZMEEL_TASK_ID = 'env-task';
       configureFromEnv();
       expect(getFullPageName('page1')).toBe('env-task-page1');
     });

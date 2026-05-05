@@ -23,7 +23,7 @@ export type ProviderId =
   | 'nim'
   | 'custom'
   | 'copilot'
-  | 'accomplish-ai';
+  | 'zmeel-ai';
 
 export type ProviderCategory =
   | 'classic'
@@ -33,7 +33,7 @@ export type ProviderCategory =
   | 'local'
   | 'proxy'
   | 'hybrid'
-  | 'accomplish';
+  | 'zmeel';
 
 export interface ProviderMeta {
   id: ProviderId;
@@ -218,12 +218,12 @@ export const PROVIDER_META: Record<ProviderId, ProviderMeta> = {
     logoKey: 'github-copilot',
     helpUrl: 'https://github.com/settings/copilot',
   },
-  'accomplish-ai': {
-    id: 'accomplish-ai',
-    name: 'Accomplish AI',
-    category: 'accomplish',
+  'zmeel-ai': {
+    id: 'zmeel-ai',
+    name: 'Zmeel AI',
+    category: 'zmeel',
     label: 'Free Tier',
-    logoKey: 'accomplish',
+    logoKey: 'zmeel',
   },
 };
 
@@ -317,8 +317,8 @@ export interface CopilotOAuthCredentials {
   type: 'copilot-oauth';
 }
 
-export interface AccomplishAiCredentials {
-  type: 'accomplish-ai';
+export interface ZmeelAiCredentials {
+  type: 'zmeel-ai';
   deviceFingerprint: string;
 }
 
@@ -335,7 +335,7 @@ export type ProviderCredentials =
   | OAuthCredentials
   | HuggingFaceLocalCredentials
   | CopilotOAuthCredentials
-  | AccomplishAiCredentials
+  | ZmeelAiCredentials
   | CustomCredentials
   | NimCredentials;
 
@@ -397,7 +397,7 @@ export const DEFAULT_MODELS: Partial<Record<ProviderId, string>> = {
   venice: 'venice/llama-3.3-70b',
   nim: 'nim/meta/llama-3.1-70b-instruct',
   copilot: 'copilot/gpt-4o',
-  'accomplish-ai': 'accomplish-ai/accomplish-free',
+  'zmeel-ai': 'samskipsai/zmeelv60-free',
 };
 
 export function getDefaultModelForProvider(providerId: ProviderId): string | null {
@@ -434,7 +434,7 @@ export const PROVIDER_ID_TO_OPENCODE: Record<ProviderId, string> = {
   nim: 'nim',
   custom: 'custom',
   copilot: 'github-copilot',
-  'accomplish-ai': 'accomplish-ai',
+  'zmeel-ai': 'zmeel-ai',
 };
 
 // -----------------------------------------------------------------------------

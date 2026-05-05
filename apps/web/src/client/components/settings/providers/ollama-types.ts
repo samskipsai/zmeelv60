@@ -1,4 +1,4 @@
-import type { ToolSupportStatus } from '@accomplish_ai/agent-core';
+import type { ToolSupportStatus } from '@zmeel/agent-core';
 
 export interface OllamaModel {
   id: string;

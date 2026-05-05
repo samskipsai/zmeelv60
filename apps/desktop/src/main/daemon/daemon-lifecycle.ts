@@ -6,7 +6,7 @@
  * shutdownDaemon() only closes the client — it does NOT kill the daemon process.
  */
 
-import { DaemonClient } from '@accomplish_ai/agent-core/desktop-main';
+import { DaemonClient } from '@zmeel/agent-core/desktop-main';
 import { getLogCollector } from '../logging';
 
 let client: DaemonClient | null = null;

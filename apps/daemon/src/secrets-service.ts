@@ -15,7 +15,7 @@
  * callers should use the typed methods so we keep a clean contract and can
  * reason about which keys live in the encrypted file.
  */
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 
 export class SecretsService {
   constructor(private readonly storage: StorageAPI) {}

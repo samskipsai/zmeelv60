@@ -17,7 +17,7 @@
  * All three accessors are now async. `ConnectorAuthStore` (the thin class
  * built on top) was converted to async in the same pass.
  */
-import type { ConnectorAuthStoreConfig } from '@accomplish_ai/agent-core/common';
+import type { ConnectorAuthStoreConfig } from '@zmeel/agent-core/common';
 import { getDaemonClient } from '../daemon-bootstrap';
 import type { StoredAuthEntry } from './connector-auth-types';
 

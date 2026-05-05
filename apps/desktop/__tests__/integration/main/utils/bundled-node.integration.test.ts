@@ -90,7 +90,7 @@ describe('Bundled Node.js Utilities', () => {
     mockApp.isPackaged = true;
     Object.defineProperty(process, 'platform', { value: 'win32' });
     Object.defineProperty(process, 'arch', { value: 'x64' });
-    const resourcesPath = 'C:\\Program Files\\Accomplish\\resources';
+    const resourcesPath = 'C:\\Program Files\\Zmeel\\resources';
     processWithResources.resourcesPath = resourcesPath;
     const nodePath = path.join(resourcesPath, 'nodejs', 'win32-x64', 'node.exe');
 

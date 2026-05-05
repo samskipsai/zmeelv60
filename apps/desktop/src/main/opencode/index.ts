@@ -11,7 +11,7 @@
 // Re-export agent-core types still used by callers in the main process.
 // Sourced from `/desktop-main` to keep this file fully off the root barrel —
 // even type-only imports from root are avoided here so the M1 invariant
-// (no runtime evaluation of root `@accomplish_ai/agent-core` from main) is
+// (no runtime evaluation of root `@zmeel/agent-core` from main) is
 // held statically as well as dynamically. `OpenCodeCliNotFoundError` used
 // to be re-exported here but has no consumer in `apps/desktop` (only
 // `packages/agent-core/src/internal/classes/TaskManager.ts` throws it, and
@@ -23,7 +23,7 @@ export type {
   TaskCallbacks,
   TaskProgressEvent,
   TaskManagerAPI,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 
 export { cleanupVertexServiceAccountKey } from './vertex-cleanup';
 export { stopDevBrowserServer } from './dev-browser-shutdown';

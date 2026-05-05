@@ -16,10 +16,10 @@ import {
   getEnabledSkills,
   type StorageAPI,
   type CliResolverConfig,
-  type AccomplishRuntime,
+  type ZmeelRuntime,
   type OnBeforeStartContext,
-} from '@accomplish_ai/agent-core';
-import { getDatabase } from '@accomplish_ai/agent-core/storage/database';
+} from '@zmeel/agent-core';
+import { getDatabase } from '@zmeel/agent-core/storage/database';
 
 export interface TaskConfigBuilderOptions {
   userDataPath: string;
@@ -27,7 +27,7 @@ export interface TaskConfigBuilderOptions {
   isPackaged: boolean;
   resourcesPath: string;
   appPath: string;
-  accomplishRuntime?: AccomplishRuntime;
+  zmeelRuntime?: ZmeelRuntime;
 }
 
 // Phase 4b of the OpenCode SDK cutover port removed the dead `getCliCommand`,
@@ -128,7 +128,7 @@ export async function onBeforeStart(
   /**
    * `instruction`-type workspace knowledge notes pre-formatted as a
    * bullet list. Returned here (in addition to being baked into
-   * `agent.accomplish.prompt` in the generated config file) so the
+   * `agent.zmeel.prompt` in the generated config file) so the
    * adapter can inject them as a compact runtime `system` block on
    * every `session.prompt` call. See `OpenCodeAdapter.buildWorkspaceInstructionRuntimeBlock`
    * for the rationale — provider-native instruction channels (OpenAI/
@@ -142,7 +142,7 @@ export async function onBeforeStart(
   const apiKeys = await storage.getAllApiKeys();
   await syncApiKeysToOpenCodeAuth(authPath, apiKeys);
 
-  const whatsappApiPort = getPort('ACCOMPLISH_WHATSAPP_API_PORT');
+  const whatsappApiPort = getPort('ZMEEL_WHATSAPP_API_PORT');
 
   const skills = getEnabledSkills();
 
@@ -165,12 +165,12 @@ export async function onBeforeStart(
     bundledNodeBinPath: getBundledNodeBinPath(opts),
     getApiKey: (provider) => storage.getApiKey(provider),
     whatsappApiPort,
-    authToken: process.env.ACCOMPLISH_DAEMON_AUTH_TOKEN,
+    authToken: process.env.ZMEEL_DAEMON_AUTH_TOKEN,
     skills,
     workspaceId: ctx.workspaceId,
     configFileName: buildConfigFileName(ctx.taskId),
-    accomplishRuntime: opts.accomplishRuntime,
-    accomplishStorageDeps: {
+    zmeelRuntime: opts.zmeelRuntime,
+    zmeelStorageDeps: {
       readKey: (key) => storage.get(key),
       writeKey: (key, value) => storage.set(key, value),
       readGaClientId: () => null, // GA client ID not available in daemon — fingerprint fallback used

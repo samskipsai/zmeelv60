@@ -6,7 +6,7 @@ export class FutureSchemaError extends Error {
     public readonly appVersion: number,
   ) {
     super(
-      `Database schema v${storedVersion} is newer than app supports (v${appVersion}). Please update Accomplish.`,
+      `Database schema v${storedVersion} is newer than app supports (v${appVersion}). Please update Zmeel.`,
     );
   }
 }

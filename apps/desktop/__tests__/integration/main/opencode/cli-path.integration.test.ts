@@ -31,8 +31,8 @@ vi.mock('child_process', () => ({
   execSync: mockExecSync,
 }));
 
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@accomplish_ai/agent-core')>();
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@zmeel/agent-core')>();
   return {
     ...actual,
     getSelectedModel: vi.fn(() => null),
@@ -107,7 +107,7 @@ describe('OpenCode CLI Path Module', () => {
 
     it('resolves bundled CLI from packaged resources', async () => {
       mockApp.isPackaged = true;
-      const resourcesPath = '/Applications/Accomplish.app/Contents/Resources';
+      const resourcesPath = '/Applications/Zmeel.app/Contents/Resources';
       (process as NodeJS.Process & { resourcesPath: string }).resourcesPath = resourcesPath;
       let packageName: string;
       if (process.platform === 'win32') {

@@ -1,4 +1,4 @@
-# Functional Viewpoint — Accomplish Architecture
+# Functional Viewpoint — Zmeel Architecture
 
 > **Status:** Current — reflects the post-SDK-cutover architecture (commercial PR #720, landed in OSS as PR #938, commit `3620532d`). This is the single functional-domain document: prior per-flow files (`task-flow-phases.md`, `task-flow-slides.md`, `completion-enforcer-flows.md`) and the PTY-era structural doc have been collapsed into this one. Git history has the removed files if you need the old versions.
 
@@ -39,7 +39,7 @@ Start here. This diagram shows the four major building blocks, their single-sent
 graph TB
   USER(["👤 User"])
 
-  subgraph ELECTRON["Accomplish Desktop App (apps/desktop)"]
+  subgraph ELECTRON["Zmeel Desktop (apps/desktop)"]
     direction TB
 
     subgraph UI["React UI (apps/web)"]
@@ -127,7 +127,7 @@ graph TB
 
 1. **Electron is a thin shell.** All task execution happens in the daemon. Electron forwards IPC to/from the daemon via a socket-backed `DaemonClient` and adds native capabilities (tray, dialogs, OAuth popups) the daemon can't perform.
 2. **One `opencode serve` per task.** `OpenCodeServerManager` lazily spawns a child process when a task starts, keeps it alive for 60s after the task completes for possible follow-up / resume reuse, and tears down the whole process tree on daemon shutdown.
-3. **Accomplish never calls LLMs directly.** Each per-task `opencode serve` orchestrates the LLM conversation and tool execution. Accomplish's role is configuration, gating, completion enforcement, persistence, and UI.
+3. **Zmeel never calls LLMs directly.** Each per-task `opencode serve` orchestrates the LLM conversation and tool execution. Zmeel's role is configuration, gating, completion enforcement, persistence, and UI.
 
 ---
 
@@ -441,7 +441,7 @@ graph TB
   end
 
   subgraph BRIDGE["Preload Bridge"]
-    CB["contextBridge<br/><i>window.accomplish</i>"]
+    CB["contextBridge<br/><i>window.zmeel</i>"]
   end
 
   subgraph MAIN["Electron Main Process"]
@@ -615,15 +615,15 @@ graph TB
 
 ### 5.1 Whose HTTP server is this, anyway?
 
-**It is OpenCode's own HTTP server, not one Accomplish wrote.**
+**It is OpenCode's own HTTP server, not one Zmeel wrote.**
 
-`opencode` (the [opencode-ai npm package](https://www.npmjs.com/package/opencode-ai)) ships a `serve` subcommand that boots a local HTTP + Server-Sent-Events server inside the opencode runtime. That server exposes the v2 API — sessions, prompts, events, permissions, questions, tool-part streams — which is exactly what [`@opencode-ai/sdk/v2`](https://www.npmjs.com/package/@opencode-ai/sdk) is built to talk to. Accomplish's daemon does not implement any of this protocol; it only:
+`opencode` (the [opencode-ai npm package](https://www.npmjs.com/package/opencode-ai)) ships a `serve` subcommand that boots a local HTTP + Server-Sent-Events server inside the opencode runtime. That server exposes the v2 API — sessions, prompts, events, permissions, questions, tool-part streams — which is exactly what [`@opencode-ai/sdk/v2`](https://www.npmjs.com/package/@opencode-ai/sdk) is built to talk to. Zmeel's daemon does not implement any of this protocol; it only:
 
 1. Spawns `opencode serve --hostname=127.0.0.1 --port=0` as a child process (random ephemeral port).
 2. Greps its stdout for the ready line (`opencode server listening on http://127.0.0.1:NNNN`).
 3. Hands that URL to `createOpencodeClient({ baseUrl })` inside `OpenCodeAdapter`.
 
-So the HTTP server exists because the supported programmatic contract with OpenCode **is** HTTP + SSE. In the PTY era, Accomplish drove opencode through the `opencode run` CLI and parsed its stdout. That form offered no structured event model, no permission primitives, and was sensitive to terminal control codes. `opencode serve` + SDK is the opencode team's recommended integration path; moving to it was the whole point of the cutover.
+So the HTTP server exists because the supported programmatic contract with OpenCode **is** HTTP + SSE. In the PTY era, Zmeel drove opencode through the `opencode run` CLI and parsed its stdout. That form offered no structured event model, no permission primitives, and was sensitive to terminal control codes. `opencode serve` + SDK is the opencode team's recommended integration path; moving to it was the whole point of the cutover.
 
 The one remaining auxiliary HTTP endpoint on the daemon (`:9230` WhatsApp send) is **orthogonal** — it's a plain MCP tool callback server that OpenCode's `whatsapp-send` MCP client POSTs to. It is not part of the SDK transport.
 
@@ -638,7 +638,7 @@ Long answer, per design pressure:
 | **Per-task configuration**         | Every task would run with the same `opencode.json` — provider, enabled skills, enabled connectors, system-prompt suffix. Reconfiguring requires a restart, which means a shared server can't adapt to the current task. | Each task picks its own provider, skill set, MCP list. Config lives in the spawned child. |
 | **Event-stream scoping**           | `event.subscribe()` is **server-wide**, not session-scoped. Sharing means the adapter must demux every event (`permission.asked`, `message.part.updated`) by `sessionID` and risks cross-task leakage on a bug.         | Every adapter has its own dedicated SSE stream. Zero demux, zero leakage.                 |
 | **Crash blast radius**             | A provider / plugin / OOM bug inside `opencode serve` takes down every concurrent task.                                                                                                                                 | One task crashes; the others keep their own runtimes and finish.                          |
-| **Port hygiene and multi-profile** | Static port collides with co-running Accomplish profiles, other apps, or a crashed daemon.                                                                                                                              | `--port=0` gets a fresh ephemeral port per child.                                         |
+| **Port hygiene and multi-profile** | Static port collides with co-running Zmeel profiles, other apps, or a crashed daemon.                                                                                                                              | `--port=0` gets a fresh ephemeral port per child.                                         |
 | **Graceful shutdown & reclaim**    | Killing a shared server to reclaim memory or reset state affects every active task.                                                                                                                                     | One runtime's teardown is a private event.                                                |
 
 **Does a follow-up spawn a fresh server?** Not if it arrives quickly. `OpenCodeServerManager` holds the runtime in its map keyed by `taskId` and sets a 60-second cleanup timer on terminal events (`complete` / `error` / `cancelled`). Three cases:
@@ -653,7 +653,7 @@ Long answer, per design pressure:
 - **The common cost is hidden.** Interactive follow-ups (the hot path) hit the 60-second warm window and spawn nothing. Only cold starts and first-in-session runs pay the ~1–2s spawn cost, and the user already expects latency on those.
 - **It mirrors the SDK's intended deployment shape.** OpenCode's own documentation treats `opencode serve` as session-local. Pooling it across unrelated sessions would be going against the grain.
 
-The downside is memory. Ten concurrent tasks mean ten `opencode serve` processes and ten plugin-subprocess groups. For Accomplish's current `maxConcurrentTasks=10` and typical usage (1–2 tasks at a time) this has not been a problem, but if the workload ever shifts toward very high concurrency, a session-multiplexed variant would be the right refactor to revisit. For today, per-task is the correct call.
+The downside is memory. Ten concurrent tasks mean ten `opencode serve` processes and ten plugin-subprocess groups. For Zmeel's current `maxConcurrentTasks=10` and typical usage (1–2 tasks at a time) this has not been a problem, but if the workload ever shifts toward very high concurrency, a session-multiplexed variant would be the right refactor to revisit. For today, per-task is the correct call.
 
 ### 5.3 Lifecycle invariants
 
@@ -761,7 +761,7 @@ How skills and MCP connectors are managed, stored, and injected into the per-tas
 graph TB
   subgraph SOURCES["Skill Sources"]
     BUNDLED["Bundled Skills<br/><i>resources/skills/</i>"]
-    USER_DIR["User Skills<br/><i>~/.../Accomplish/skills/</i>"]
+    USER_DIR["User Skills<br/><i>~/.../Zmeel/skills/</i>"]
     GITHUB["GitHub URL<br/><i>raw.githubusercontent.com</i>"]
     LOCAL_FILE["Local .md File"]
   end
@@ -894,37 +894,37 @@ graph LR
 
 ---
 
-## 9. Free-tier Gateway Integration (`@accomplish/llm-gateway-client`)
+## 9. Free-tier Gateway Integration (`@zmeel/llm-gateway-client`)
 
-Accomplish ships in two flavours: the **OSS build** (open-source, bring-your-own provider keys) and the **Free build** (adds an Accomplish-operated LLM gateway with metered credits). The Free build is produced by a separate CI repo that fuses this repo with a private sibling package, `@accomplish/llm-gateway-client`. The OSS codebase — this repo — treats that private package as an **optional runtime dependency**: absent in OSS builds, present in Free builds, and wired in via a single interface with a null-object fallback.
+Zmeel ships in two flavours: the **OSS build** (open-source, bring-your-own provider keys) and the **Free build** (adds an Zmeel-operated LLM gateway with metered credits). The Free build is produced by a separate CI repo that fuses this repo with a private sibling package, `@zmeel/llm-gateway-client`. The OSS codebase — this repo — treats that private package as an **optional runtime dependency**: absent in OSS builds, present in Free builds, and wired in via a single interface with a null-object fallback.
 
 ```mermaid
 graph TB
   subgraph BUILD["Build-time boundary"]
     direction TB
     CI_OSS["OSS build<br/><i>only this repo</i>"]
-    CI_FREE["Free build (private CI)<br/><i>this repo + llm-gateway-client<br/>+ accomplish-release</i>"]
-    BUILD_ENV["build.env<br/><i>ACCOMPLISH_GATEWAY_URL=...</i>"]
+    CI_FREE["Free build (private CI)<br/><i>this repo + llm-gateway-client<br/>+ zmeel-release</i>"]
+    BUILD_ENV["build.env<br/><i>ZMEEL_GATEWAY_URL=...</i>"]
   end
 
   subgraph RUNTIME["Runtime boundary (daemon process)"]
     direction TB
     BOOT["daemon/index.ts bootstrap"]
-    DYN["Dynamic import<br/><i>await import('@accomplish/llm-gateway-client')</i>"]
+    DYN["Dynamic import<br/><i>await import('@zmeel/llm-gateway-client')</i>"]
     NOOP["noopRuntime<br/><i>fail-closed fallback<br/>isAvailable()=false</i>"]
-    REAL["createRuntime()<br/><i>real AccomplishRuntime impl</i>"]
+    REAL["createRuntime()<br/><i>real ZmeelRuntime impl</i>"]
     TAG["setProxyTaskId(taskId &#124; undefined)<br/><i>hot-path callback</i>"]
   end
 
-  subgraph USE["Consumers of AccomplishRuntime"]
+  subgraph USE["Consumers of ZmeelRuntime"]
     direction TB
-    CG["ConfigGenerator<br/><i>buildAccomplishAiConfig(ctx)</i>"]
-    RPC["Daemon RPC methods<br/><i>accomplish-ai.connect<br/>.get-usage · .disconnect<br/>.usage-update notify</i>"]
+    CG["ConfigGenerator<br/><i>buildZmeelAiConfig(ctx)</i>"]
+    RPC["Daemon RPC methods<br/><i>zmeel-ai.connect<br/>.get-usage · .disconnect<br/>.usage-update notify</i>"]
     ADAPT["OpenCodeAdapter.setProxyTaskId<br/><i>start → tag · teardown → clear</i>"]
   end
 
   subgraph EXT["External"]
-    GW["Accomplish LLM Gateway<br/><i>HTTPS proxy to AI providers<br/>per-task credit accounting</i>"]
+    GW["Zmeel LLM Gateway<br/><i>HTTPS proxy to AI providers<br/>per-task credit accounting</i>"]
     AI["AI Provider APIs<br/><i>Anthropic · OpenAI · Google · …</i>"]
   end
 
@@ -961,28 +961,28 @@ graph TB
 
 ### 9.1 Package boundary — named in exactly four places
 
-The private package's name appears on **only four lines** of OSS source. Everything else depends on the `AccomplishRuntime` _interface_ owned by agent-core.
+The private package's name appears on **only four lines** of OSS source. Everything else depends on the `ZmeelRuntime` _interface_ owned by agent-core.
 
 | Location                                                                               | What it does                                                                                                                                                                                                     |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [apps/daemon/tsup.config.ts](apps/daemon/tsup.config.ts)                               | Marks the package `external` so the bundler doesn't attempt resolution at build time.                                                                                                                            |
-| [apps/daemon/src/types/gateway-client.d.ts](apps/daemon/src/types/gateway-client.d.ts) | Ambient `declare module` so TypeScript can type `import('@accomplish/llm-gateway-client')` when the package is absent.                                                                                           |
+| [apps/daemon/src/types/gateway-client.d.ts](apps/daemon/src/types/gateway-client.d.ts) | Ambient `declare module` so TypeScript can type `import('@zmeel/llm-gateway-client')` when the package is absent.                                                                                           |
 | [apps/daemon/src/index.ts](apps/daemon/src/index.ts)                                   | Two dynamic loads inside `main()`: `await import(...)` → `createRuntime()`, then a separate `require(...)` → `setProxyTaskId`. Both fail-closed to OSS behaviour on `ERR_MODULE_NOT_FOUND` / `MODULE_NOT_FOUND`. |
 
-### 9.2 The interface — `AccomplishRuntime` + `noopRuntime`
+### 9.2 The interface — `ZmeelRuntime` + `noopRuntime`
 
-Defined in [`packages/agent-core/src/opencode/accomplish-runtime.ts`](packages/agent-core/src/opencode/accomplish-runtime.ts) and re-exported from [`agent-core`](packages/agent-core/src/index.ts):
+Defined in [`packages/agent-core/src/opencode/zmeel-runtime.ts`](packages/agent-core/src/opencode/zmeel-runtime.ts) and re-exported from [`agent-core`](packages/agent-core/src/index.ts):
 
 | Method                             | When called                                                                                                               |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `connect(storageDeps)`             | `accomplish-ai.connect` RPC — user clicks "Use Accomplish AI" in Settings                                                 |
-| `disconnect()`                     | `accomplish-ai.disconnect` RPC — user logs out                                                                            |
-| `getUsage()`                       | `accomplish-ai.get-usage` RPC — Settings reads live credit balance                                                        |
+| `connect(storageDeps)`             | `zmeel-ai.connect` RPC — user clicks "Use Zmeel AI" in Settings                                                 |
+| `disconnect()`                     | `zmeel-ai.disconnect` RPC — user logs out                                                                            |
+| `getUsage()`                       | `zmeel-ai.get-usage` RPC — Settings reads live credit balance                                                        |
 | `onUsageUpdate(listener)`          | Daemon startup — subscribes to push updates from response headers                                                         |
-| `buildProviderConfig(storageDeps)` | Per-task startup — `buildAccomplishAiConfig` asks for the opencode provider config to route LLM calls through the gateway |
+| `buildProviderConfig(storageDeps)` | Per-task startup — `buildZmeelAiConfig` asks for the opencode provider config to route LLM calls through the gateway |
 | `isAvailable()`                    | Everywhere — null-object predicate, `false` in OSS, `true` in Free                                                        |
 
-`noopRuntime` is a fail-closed implementation shipped with agent-core. `isAvailable()` returns `false`, the async methods throw `accomplish_runtime_unavailable`, `buildProviderConfig()` returns empty. Call sites never need `if (runtime) { ... }` branches — they rely on `isAvailable()` or let the null-object's empty return silently drop the integration.
+`noopRuntime` is a fail-closed implementation shipped with agent-core. `isAvailable()` returns `false`, the async methods throw `zmeel_runtime_unavailable`, `buildProviderConfig()` returns empty. Call sites never need `if (runtime) { ... }` branches — they rely on `isAvailable()` or let the null-object's empty return silently drop the integration.
 
 ### 9.3 The hot-path callback — `setProxyTaskId` in the adapter
 
@@ -991,34 +991,34 @@ Defined in [`packages/agent-core/src/opencode/accomplish-runtime.ts`](packages/a
 - [OpenCodeAdapter.ts:374](packages/agent-core/src/internal/classes/OpenCodeAdapter.ts#L374) — `this.options.setProxyTaskId?.(taskId)` on `startTask`
 - [OpenCodeAdapter.ts:1332](packages/agent-core/src/internal/classes/OpenCodeAdapter.ts#L1332) — `this.options.setProxyTaskId?.(undefined)` on `teardown`
 
-**Why in the adapter?** The gateway receives the actual LLM request bodies (via an env-injected HTTPS proxy that `opencode serve` uses for provider calls). It needs to attribute each request to a task ID for credit accounting, per-task rate limiting, and abuse detection. The adapter is the smallest scope with a 1:1 correspondence to a task lifecycle: it gets the taskId at session creation and knows the exact moment the session tears down. Any higher layer (TaskManager, TaskService) would force propagating the ID through more hops or through `AsyncLocalStorage`; any lower layer (inside opencode) doesn't know Accomplish's task concept.
+**Why in the adapter?** The gateway receives the actual LLM request bodies (via an env-injected HTTPS proxy that `opencode serve` uses for provider calls). It needs to attribute each request to a task ID for credit accounting, per-task rate limiting, and abuse detection. The adapter is the smallest scope with a 1:1 correspondence to a task lifecycle: it gets the taskId at session creation and knows the exact moment the session tears down. Any higher layer (TaskManager, TaskService) would force propagating the ID through more hops or through `AsyncLocalStorage`; any lower layer (inside opencode) doesn't know Zmeel's task concept.
 
 In OSS, `setProxyTaskId` is `undefined` and the optional-chain `?.` short-circuits — zero cost.
 
-### 9.4 Env-var propagation — `ACCOMPLISH_GATEWAY_URL`
+### 9.4 Env-var propagation — `ZMEEL_GATEWAY_URL`
 
 The daemon doesn't read this variable itself; the private runtime does, when it wakes up. The OSS code only has to propagate it correctly:
 
 ```
 build.env (Free CI) or build.env.template (local Free dev)
     ↓
-getBuildConfig().accomplishGatewayUrl         [apps/desktop/.../build-config.ts:95]
+getBuildConfig().zmeelGatewayUrl         [apps/desktop/.../build-config.ts:95]
     ↓
-daemonEnv.ACCOMPLISH_GATEWAY_URL = bc.accomplishGatewayUrl
+daemonEnv.ZMEEL_GATEWAY_URL = bc.zmeelGatewayUrl
     ↓ (spawned daemon inherits env)          [apps/desktop/.../daemon-connector.ts:201]
-process.env.ACCOMPLISH_GATEWAY_URL            (read by llm-gateway-client at createRuntime())
+process.env.ZMEEL_GATEWAY_URL            (read by llm-gateway-client at createRuntime())
 ```
 
 ### 9.5 "Free dev" local workflow
 
 For contributors who have access to the private package and want to run the Free variant under `pnpm dev`:
 
-1. Clone `llm-gateway-client` as a sibling folder to `accomplish/`.
-2. `pnpm -F @accomplish/daemon add @accomplish/llm-gateway-client@file:/Users/…/dev/accomplish/llm-gateway-client`
-3. Set `ACCOMPLISH_GATEWAY_URL=<dev-gateway>` in `build.env` (or inline on the `pnpm dev` command).
+1. Clone `llm-gateway-client` as a sibling folder to `zmeel/`.
+2. `pnpm -F @zmeel/daemon add @zmeel/llm-gateway-client@file:/Users/…/dev/zmeel/llm-gateway-client`
+3. Set `ZMEEL_GATEWAY_URL=<dev-gateway>` in `build.env` (or inline on the `pnpm dev` command).
 4. `pnpm dev` — the daemon's dynamic `import()` now resolves the local package; all four consumer paths light up.
 
-Reverting to OSS mode is `pnpm -F @accomplish/daemon remove @accomplish/llm-gateway-client` + restart. No other code changes required — that's the whole point of the null-object pattern.
+Reverting to OSS mode is `pnpm -F @zmeel/daemon remove @zmeel/llm-gateway-client` + restart. No other code changes required — that's the whole point of the null-object pattern.
 
 ---
 
@@ -1115,7 +1115,7 @@ The live safeguard is in `handleCompleteTaskDetection`: if the agent calls `comp
 | **WhatsAppDaemonService**          | apps/daemon  | Baileys socket, inbound message → `taskService.startTask(source='whatsapp')`                                        | `connect()`, `disconnect()`                                                                                       |
 | **SchedulerService**               | apps/daemon  | Cron-driven `startTask(source='scheduler')`                                                                         | `createSchedule()`, `listSchedules()`, `deleteSchedule()`, `setEnabled()`                                         |
 | **OpenAiOauthManager**             | apps/daemon  | ChatGPT OAuth flow driven through a transient `opencode serve`                                                      | `startLogin()`, `awaitCompletion()`, `status()`, `getAccessToken()`                                               |
-| **AccomplishRuntime (interface)**  | agent-core   | Null-object (`noopRuntime`) in OSS; real impl loaded from private `@accomplish/llm-gateway-client` in Free (see §9) | `connect()`, `disconnect()`, `getUsage()`, `onUsageUpdate()`, `buildProviderConfig()`, `isAvailable()`            |
+| **ZmeelRuntime (interface)**  | agent-core   | Null-object (`noopRuntime`) in OSS; real impl loaded from private `@zmeel/llm-gateway-client` in Free (see §9) | `connect()`, `disconnect()`, `getUsage()`, `onUsageUpdate()`, `buildProviderConfig()`, `isAvailable()`            |
 | **SkillsManager**                  | agent-core   | Skill CRUD, filesystem scan, GitHub import                                                                          | `resync()`, `addSkill()`, `getEnabledSkills()`                                                                    |
 | **MCP OAuth**                      | agent-core   | OAuth 2.0 discovery, PKCE, token lifecycle for connectors                                                           | `discoverOAuthMetadata()`, `exchangeCodeForTokens()`                                                              |
 | **BrowserService**                 | agent-core   | Playwright Chromium install, dev-browser MCP server spawn                                                           | `ensureDevBrowserServer()`                                                                                        |
@@ -1127,7 +1127,7 @@ The live safeguard is in `handleCompleteTaskDetection`: if the agent calls `comp
 | **IPC Handlers**                   | apps/desktop | Thin proxies between renderer and daemon-client                                                                     | `ipcMain.handle('task:start'                                                                                      | 'permission:respond' | …)` |
 | **DaemonClient**                   | apps/desktop | Socket transport + retry + crash-recovery respawn                                                                   | `call()`, `onNotification()`, `close()`                                                                           |
 | **Notification Forwarder**         | apps/desktop | Subscribes to every daemon notification channel → `webContents.send()`                                              | internal                                                                                                          |
-| **Preload Bridge**                 | apps/desktop | `contextBridge.exposeInMainWorld('accomplish', ...)`                                                                | ~70 API methods exposed to renderer                                                                               |
+| **Preload Bridge**                 | apps/desktop | `contextBridge.exposeInMainWorld('zmeel', ...)`                                                                | ~70 API methods exposed to renderer                                                                               |
 | **Task Store**                     | apps/web     | Zustand store: single source of truth for UI state                                                                  | `useTaskStore()` with ~25 actions                                                                                 |
 
 ---

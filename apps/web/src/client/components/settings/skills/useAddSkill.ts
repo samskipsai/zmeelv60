@@ -32,19 +32,19 @@ export function useAddSkill(): UseAddSkillResult {
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const handleUploadSkill = async (onSkillAdded?: () => void) => {
-    if (isLoadingRef.current || !window.accomplish) {
+    if (isLoadingRef.current || !window.zmeel) {
       return;
     }
     try {
       isLoadingRef.current = true;
       setIsLoading(true);
       setUploadError(null);
-      const folderPath = await window.accomplish.pickSkillFolder();
+      const folderPath = await window.zmeel.pickSkillFolder();
       if (!folderPath) {
         setIsLoading(false);
         return;
       }
-      await window.accomplish.addSkillFromFolder(folderPath);
+      await window.zmeel.addSkillFromFolder(folderPath);
       onSkillAdded?.();
     } catch (err) {
       logger.error('Failed to upload skill:', err);
@@ -63,14 +63,14 @@ export function useAddSkill(): UseAddSkillResult {
 
   const handleImportFromGitHub = async (onSkillAdded?: () => void) => {
     const normalizedGitHubUrl = gitHubUrl.trim();
-    if (isLoadingRef.current || !normalizedGitHubUrl || !window.accomplish) {
+    if (isLoadingRef.current || !normalizedGitHubUrl || !window.zmeel) {
       return;
     }
     try {
       isLoadingRef.current = true;
       setIsLoading(true);
       setError(null);
-      await window.accomplish.addSkillFromGitHub(normalizedGitHubUrl);
+      await window.zmeel.addSkillFromGitHub(normalizedGitHubUrl);
       setGitHubUrl('');
       setIsGitHubDialogOpen(false);
       onSkillAdded?.();

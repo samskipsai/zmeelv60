@@ -20,7 +20,7 @@
  * (`app-startup.ts`) keeps compiling. The daemon does its own init on
  * boot, before any `skills.*` RPC can arrive.
  */
-import type { Skill } from '@accomplish_ai/agent-core/desktop-main';
+import type { Skill } from '@zmeel/agent-core/desktop-main';
 import { getDaemonClient } from '../daemon-bootstrap';
 
 export class SkillsManager {

@@ -5,7 +5,7 @@ import os from 'os';
 import {
   generateConfig,
   getOpenCodeConfigPath,
-  ACCOMPLISH_AGENT_NAME,
+  ZMEEL_AGENT_NAME,
   ConfigGeneratorOptions,
   ProviderConfig,
 } from '../../../src/opencode/config-generator.js';
@@ -65,9 +65,9 @@ describe('ConfigGenerator', () => {
     }
   });
 
-  describe('ACCOMPLISH_AGENT_NAME', () => {
-    it('should be "accomplish"', () => {
-      expect(ACCOMPLISH_AGENT_NAME).toBe('accomplish');
+  describe('ZMEEL_AGENT_NAME', () => {
+    it('should be "zmeel"', () => {
+      expect(ZMEEL_AGENT_NAME).toBe('zmeel');
     });
   });
 
@@ -326,7 +326,7 @@ describe('ConfigGenerator', () => {
       expect(result.config.enabled_providers).toContain('google');
     });
 
-    it('should set default agent to accomplish', () => {
+    it('should set default agent to zmeel', () => {
       const options: ConfigGeneratorOptions = {
         ...baseOptions,
         mcpToolsPath,
@@ -335,7 +335,7 @@ describe('ConfigGenerator', () => {
 
       const result = generateConfig(options);
 
-      expect(result.config.default_agent).toBe(ACCOMPLISH_AGENT_NAME);
+      expect(result.config.default_agent).toBe(ZMEEL_AGENT_NAME);
     });
 
     it('should configure agent with correct mode', () => {
@@ -347,7 +347,7 @@ describe('ConfigGenerator', () => {
 
       const result = generateConfig(options);
 
-      expect(result.config.agent?.[ACCOMPLISH_AGENT_NAME]?.mode).toBe('primary');
+      expect(result.config.agent?.[ZMEEL_AGENT_NAME]?.mode).toBe('primary');
     });
 
     it('should include schema in config', () => {
@@ -713,7 +713,7 @@ describe('ConfigGenerator', () => {
       const result = generateConfig(options);
 
       expect(result.systemPrompt).toContain('<identity>');
-      expect(result.systemPrompt).toContain('Accomplish');
+      expect(result.systemPrompt).toContain('Zmeel');
     });
 
     it('should include task planning behavior with needs_planning', () => {
@@ -812,7 +812,7 @@ describe('ConfigGenerator', () => {
       const result = generateConfig(options);
 
       expect(result.systemPrompt).toContain('OpenCode `question` tool');
-      expect(result.systemPrompt).toContain('does not create the Accomplish QuestionCard');
+      expect(result.systemPrompt).toContain('does not create the Zmeel QuestionCard');
       expect(result.systemPrompt).toContain('user CANNOT see your text output');
       expect(result.systemPrompt).not.toContain('AskUserQuestion');
       expect(result.systemPrompt).not.toContain('ask-user-question');

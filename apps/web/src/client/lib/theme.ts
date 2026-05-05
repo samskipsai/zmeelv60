@@ -1,4 +1,4 @@
-import { getAccomplish } from './accomplish';
+import { getZmeel } from './zmeel';
 import { type ThemePreference, THEME_KEY, resolveTheme, applyClass } from './theme-core';
 
 let mediaQuery: MediaQueryList | null = null;
@@ -40,14 +40,14 @@ export function applyTheme(preference: string): void {
 }
 
 export function initTheme(): void {
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
 
-  accomplish.getTheme().then((preference) => {
+  zmeel.getTheme().then((preference) => {
     applyTheme(preference);
   });
 
-  if (accomplish.onThemeChange) {
-    themeChangeCleanup = accomplish.onThemeChange(({ theme }) => {
+  if (zmeel.onThemeChange) {
+    themeChangeCleanup = zmeel.onThemeChange(({ theme }) => {
       applyTheme(theme);
     });
   }

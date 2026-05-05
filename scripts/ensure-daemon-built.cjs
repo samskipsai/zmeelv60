@@ -6,7 +6,7 @@
  * to spawn the daemon process.
  *
  * Only builds if the output is missing or stale relative to source.
- * The daemon bundle includes @accomplish_ai/agent-core code, so agent-core
+ * The daemon bundle includes @zmeel/agent-core code, so agent-core
  * source changes must also invalidate this output.
  */
 
@@ -87,16 +87,16 @@ function needsBuild() {
 }
 
 if (needsBuild()) {
-  console.log('Building @accomplish/daemon for dev...');
+  console.log('Building @zmeel/daemon for dev...');
   try {
-    runPnpmSync(['-F', '@accomplish/daemon', 'build'], {
+    runPnpmSync(['-F', '@zmeel/daemon', 'build'], {
       cwd: rootDir,
       env: process.env,
       stdio: 'inherit',
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error(`Failed to build @accomplish/daemon: ${message}`);
+    console.error(`Failed to build @zmeel/daemon: ${message}`);
     process.exit(1);
   }
 
@@ -106,5 +106,5 @@ if (needsBuild()) {
   }
 }
 
-console.log('✓ @accomplish/daemon build output found');
+console.log('✓ @zmeel/daemon build output found');
 process.exit(0);

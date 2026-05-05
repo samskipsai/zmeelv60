@@ -26,7 +26,7 @@ CACHE_INPUT=$(
       -type f -print0 | sort -z | xargs -0 cat
   } | sha256sum | cut -c1-12
 )
-IMAGE_NAME="accomplish-e2e:${CACHE_INPUT}"
+IMAGE_NAME="zmeel-e2e:${CACHE_INPUT}"
 
 # Support --print-tag flag: print the image tag this script would use and exit
 if [ "$1" = "--print-tag" ]; then

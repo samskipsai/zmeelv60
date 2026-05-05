@@ -6,7 +6,7 @@
  */
 
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import type { MessagingConnectionStatus } from '@accomplish_ai/agent-core/common';
+import type { MessagingConnectionStatus } from '@zmeel/agent-core/common';
 import type {
   ProviderType,
   Skill,
@@ -18,13 +18,13 @@ import type {
   KnowledgeNote,
   KnowledgeNoteCreateInput,
   KnowledgeNoteUpdateInput,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import type {
   CloudBrowserConfig,
   GoogleAccount,
   OAuthProviderId,
   ConnectorAuthStatus,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 
 // Safe analytics IPC invoke — silently catches "No handler" errors for OSS builds
 // where analytics IPC handlers are not registered.
@@ -32,8 +32,8 @@ import type {
 const analyticsInvoke = (channel: string, ...args: any[]): Promise<void> =>
   ipcRenderer.invoke(channel, ...args).catch(() => {});
 
-// Expose the accomplish API to the renderer
-const accomplishAPI = {
+// Expose the zmeel API to the renderer
+const zmeelAPI = {
   // Utility for safely extracting native paths from DOM File objects in drop events
   getFilePath: (file: File): string => webUtils.getPathForFile(file),
   // App info
@@ -649,11 +649,11 @@ const accomplishAPI = {
 
   // File attachments
   pickFolder: (): Promise<string | null> => ipcRenderer.invoke('files:pick-folder'),
-  pickFiles: (): Promise<import('@accomplish_ai/agent-core/common').FileAttachmentInfo[]> =>
+  pickFiles: (): Promise<import('@zmeel/agent-core/common').FileAttachmentInfo[]> =>
     ipcRenderer.invoke('files:pick'),
   processDroppedFiles: (
     paths: string[],
-  ): Promise<import('@accomplish_ai/agent-core/common').FileAttachmentInfo[]> =>
+  ): Promise<import('@zmeel/agent-core/common').FileAttachmentInfo[]> =>
     ipcRenderer.invoke('files:process-dropped', paths),
 
   // Sandbox configuration
@@ -874,17 +874,17 @@ const accomplishAPI = {
     ipcRenderer.invoke('scheduler:set-enabled', scheduleId, enabled),
   isAutoStartEnabled: (): Promise<boolean> => ipcRenderer.invoke('daemon:is-auto-start-enabled'),
 
-  // ── Accomplish AI Free Tier ──────────────────────────────────────────────
-  accomplishAiConnect: (): Promise<unknown> => ipcRenderer.invoke('accomplish-ai:connect'),
-  accomplishAiEnsureReady: (): Promise<unknown> => ipcRenderer.invoke('accomplish-ai:ensure-ready'),
-  accomplishAiDisconnect: (): Promise<void> => ipcRenderer.invoke('accomplish-ai:disconnect'),
-  accomplishAiGetUsage: (): Promise<unknown> => ipcRenderer.invoke('accomplish-ai:get-usage'),
-  accomplishAiGetStatus: (): Promise<{ connected: boolean }> =>
-    ipcRenderer.invoke('accomplish-ai:get-status'),
-  onAccomplishAiUsageUpdate: (callback: (usage: unknown) => void) => {
+  // ── Zmeel AI Free Tier ──────────────────────────────────────────────
+  zmeelAiConnect: (): Promise<unknown> => ipcRenderer.invoke('zmeel-ai:connect'),
+  zmeelAiEnsureReady: (): Promise<unknown> => ipcRenderer.invoke('zmeel-ai:ensure-ready'),
+  zmeelAiDisconnect: (): Promise<void> => ipcRenderer.invoke('zmeel-ai:disconnect'),
+  zmeelAiGetUsage: (): Promise<unknown> => ipcRenderer.invoke('zmeel-ai:get-usage'),
+  zmeelAiGetStatus: (): Promise<{ connected: boolean }> =>
+    ipcRenderer.invoke('zmeel-ai:get-status'),
+  onZmeelAiUsageUpdate: (callback: (usage: unknown) => void) => {
     const listener = (_: unknown, usage: unknown) => callback(usage);
-    ipcRenderer.on('accomplish-ai:usage-updated', listener);
-    return () => ipcRenderer.removeListener('accomplish-ai:usage-updated', listener);
+    ipcRenderer.on('zmeel-ai:usage-updated', listener);
+    return () => ipcRenderer.removeListener('zmeel-ai:usage-updated', listener);
   },
 
   // ── Build Capabilities ───────────────────────────────────────────────────
@@ -1142,18 +1142,18 @@ const accomplishAPI = {
 };
 
 // Expose the API to the renderer
-contextBridge.exposeInMainWorld('accomplish', accomplishAPI);
+contextBridge.exposeInMainWorld('zmeel', zmeelAPI);
 
 // Also expose shell info for compatibility checks
 const packageVersion = process.env.npm_package_version;
 if (!packageVersion) {
   throw new Error('Package version is not defined. Build is misconfigured.');
 }
-contextBridge.exposeInMainWorld('accomplishShell', {
+contextBridge.exposeInMainWorld('zmeelShell', {
   version: packageVersion,
   platform: process.platform,
   isElectron: true,
 });
 
 // Type declarations
-export type AccomplishAPI = typeof accomplishAPI;
+export type ZmeelAPI = typeof zmeelAPI;

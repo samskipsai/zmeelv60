@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence } from 'framer-motion';
-import type { ConnectedProvider, NimCredentials } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider, NimCredentials } from '@zmeel/agent-core/common';
 import { ProviderFormHeader } from '../shared';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { DisconnectedNimForm, ConnectedNimDetails, NIM_DEFAULT_BASE_URL } from './NimFormSections';
 
 import nimLogo from '/assets/ai-logos/nim.svg';
@@ -36,7 +36,7 @@ export function NimProviderForm({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const trimmedKey = apiKey.trim();
 
       if (!trimmedKey) {
@@ -47,14 +47,14 @@ export function NimProviderForm({
 
       const trimmedUrl = serverUrl.trim() || NIM_DEFAULT_BASE_URL;
 
-      const result = await accomplish.testNimConnection(trimmedUrl, trimmedKey);
+      const result = await zmeel.testNimConnection(trimmedUrl, trimmedKey);
       if (!result.success) {
         setError(result.error || t('status.connectionFailed'));
         setConnecting(false);
         return;
       }
 
-      await accomplish.addApiKey('nim', trimmedKey);
+      await zmeel.addApiKey('nim', trimmedKey);
 
       const models = result.models?.map((m) => ({ ...m })) || [];
 

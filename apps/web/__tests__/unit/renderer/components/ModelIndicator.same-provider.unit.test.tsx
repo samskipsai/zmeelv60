@@ -5,7 +5,7 @@
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import type { ProviderSettings } from '@accomplish_ai/agent-core/common';
+import type { ProviderSettings } from '@zmeel/agent-core/common';
 import { baseSettings } from './ModelIndicator.test-utils';
 
 const mocks = vi.hoisted(() => ({

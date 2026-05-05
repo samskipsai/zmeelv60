@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { Skill } from '@accomplish_ai/agent-core';
+import type { Skill } from '@zmeel/agent-core';
 import { createLogger } from '@/lib/logger';
 import {
   type FilterType,
@@ -64,12 +64,12 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
   useEffect(() => {
     let isCurrent = true;
 
-    if (!window.accomplish) {
-      logger.error('Accomplish API not available');
+    if (!window.zmeel) {
+      logger.error('Zmeel API not available');
       setLoading(false);
       return;
     }
-    window.accomplish
+    window.zmeel
       .getSkills()
       .then((nextSkills) => {
         if (isCurrent) {
@@ -91,11 +91,11 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
   const handleToggle = useCallback(
     async (id: string) => {
       const skill = skills.find((s) => s.id === id);
-      if (!skill || !window.accomplish) {
+      if (!skill || !window.zmeel) {
         return;
       }
       try {
-        await window.accomplish.setSkillEnabled(id, !skill.isEnabled);
+        await window.zmeel.setSkillEnabled(id, !skill.isEnabled);
         setSkills((prev) => prev.map((s) => (s.id === id ? { ...s, isEnabled: !s.isEnabled } : s)));
       } catch (err) {
         logger.error('Failed to toggle skill:', err);
@@ -107,7 +107,7 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
   const handleDelete = useCallback(
     async (id: string) => {
       const skill = skills.find((s) => s.id === id);
-      if (!skill || !window.accomplish) {
+      if (!skill || !window.zmeel) {
         return;
       }
       if (skill.source === 'official') {
@@ -115,7 +115,7 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
         return;
       }
       try {
-        await window.accomplish.deleteSkill(id);
+        await window.zmeel.deleteSkill(id);
         setSkills((prev) => prev.filter((s) => s.id !== id));
       } catch (err) {
         logger.error('Failed to delete skill:', err);
@@ -125,22 +125,22 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
   );
 
   const handleEdit = useCallback(async (filePath: string) => {
-    if (!window.accomplish) {
+    if (!window.zmeel) {
       return;
     }
     try {
-      await window.accomplish.openSkillInEditor(filePath);
+      await window.zmeel.openSkillInEditor(filePath);
     } catch (err) {
       logger.error('Failed to open skill in editor:', err);
     }
   }, []);
 
   const handleShowInFolder = useCallback(async (filePath: string) => {
-    if (!window.accomplish) {
+    if (!window.zmeel) {
       return;
     }
     try {
-      await window.accomplish.showSkillInFolder(filePath);
+      await window.zmeel.showSkillInFolder(filePath);
     } catch (err) {
       logger.error('Failed to show skill in folder:', err);
     }
@@ -151,13 +151,13 @@ export function useSkillsPanel(refreshTrigger?: number): UseSkillsPanelResult {
   }, []);
 
   const handleResync = useCallback(async () => {
-    if (!window.accomplish || isResyncing) {
+    if (!window.zmeel || isResyncing) {
       return;
     }
     setIsResyncing(true);
     try {
       const [updatedSkills] = await Promise.all([
-        window.accomplish.resyncSkills(),
+        window.zmeel.resyncSkills(),
         new Promise((resolve) => setTimeout(resolve, 600)),
       ]);
       setSkills(updatedSkills);

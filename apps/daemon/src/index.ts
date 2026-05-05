@@ -9,9 +9,9 @@ import {
   installCrashHandlers,
   noopRuntime,
   type PidLockHandle,
-  type AccomplishRuntime,
+  type ZmeelRuntime,
   WHATSAPP_API_PORT,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import { StorageService } from './storage-service.js';
 import { TaskService } from './task-service.js';
 import { SchedulerService } from './scheduler-service.js';
@@ -54,20 +54,20 @@ async function main(): Promise<void> {
 
   installCrashHandlers();
 
-  // ── Load Accomplish AI runtime (noop in OSS, real impl in commercial) ───
-  let accomplishRuntime: AccomplishRuntime = noopRuntime;
+  // ── Load Zmeel AI runtime (noop in OSS, real impl in commercial) ───
+  let zmeelRuntime: ZmeelRuntime = noopRuntime;
   try {
-    const mod = await import('@accomplish/llm-gateway-client');
-    accomplishRuntime = mod.createRuntime();
+    const mod = await import('@zmeel/llm-gateway-client');
+    zmeelRuntime = mod.createRuntime();
   } catch (err: unknown) {
     const isTargetPackageMissing =
       err &&
       typeof err === 'object' &&
       'code' in err &&
       (err as { code: string }).code === 'ERR_MODULE_NOT_FOUND' &&
-      String(err).includes("Cannot find package '@accomplish/llm-gateway-client'");
+      String(err).includes("Cannot find package '@zmeel/llm-gateway-client'");
     if (isTargetPackageMissing) {
-      console.log('[Daemon] @accomplish/llm-gateway-client not installed — OSS mode');
+      console.log('[Daemon] @zmeel/llm-gateway-client not installed — OSS mode');
     } else {
       throw err;
     }
@@ -77,24 +77,24 @@ async function main(): Promise<void> {
   // --data-dir is required by default. Only explicitly opted-in dev mode skips it,
   // so a misconfigured launcher can never silently use the wrong profile.
   const dataDir = args.dataDir;
-  const isDevMode = process.env.ACCOMPLISH_DAEMON_DEV === '1';
+  const isDevMode = process.env.ZMEEL_DAEMON_DEV === '1';
   if (!dataDir && !isDevMode) {
     log.error(
       '[Daemon] Error: --data-dir is required.\n' +
         'The daemon must know which data directory to use so it shares the same\n' +
         'database, socket, and PID file as the desktop app.\n\n' +
         'Usage: node daemon/index.js --data-dir /path/to/userData\n\n' +
-        'For local development without --data-dir, set ACCOMPLISH_DAEMON_DEV=1\n' +
-        'to fall back to ~/.accomplish.',
+        'For local development without --data-dir, set ZMEEL_DAEMON_DEV=1\n' +
+        'to fall back to ~/.zmeel.',
     );
     process.exit(1);
   }
 
   if (!dataDir && isDevMode) {
-    log.warn('[Daemon] Warning: running in dev mode without --data-dir, using ~/.accomplish');
+    log.warn('[Daemon] Warning: running in dev mode without --data-dir, using ~/.zmeel');
   }
 
-  log.info(`[Daemon] Starting... (dataDir=${dataDir ?? '~/.accomplish (dev fallback)'})`);
+  log.info(`[Daemon] Starting... (dataDir=${dataDir ?? '~/.zmeel (dev fallback)'})`);
 
   // 1. Acquire PID lock scoped to dataDir (atomic, with stale detection)
   const pidPath = getPidFilePath(dataDir);
@@ -118,10 +118,10 @@ async function main(): Promise<void> {
 
   // 5. Create services
   // Packaged-mode context: CLI args take precedence over env vars (for Windows login-item).
-  const userDataPath = dataDir || path.join(homedir(), '.accomplish');
-  const isPackaged = args.isPackaged || process.env.ACCOMPLISH_IS_PACKAGED === '1';
-  const resourcesPath = args.resourcesPath || process.env.ACCOMPLISH_RESOURCES_PATH || '';
-  const appPath = args.appPath || process.env.ACCOMPLISH_APP_PATH || '';
+  const userDataPath = dataDir || path.join(homedir(), '.zmeel');
+  const isPackaged = args.isPackaged || process.env.ZMEEL_IS_PACKAGED === '1';
+  const resourcesPath = args.resourcesPath || process.env.ZMEEL_RESOURCES_PATH || '';
+  const appPath = args.appPath || process.env.ZMEEL_APP_PATH || '';
   const mcpToolsPath = isPackaged
     ? path.join(resourcesPath, 'mcp-tools')
     : process.env.MCP_TOOLS_PATH ||
@@ -138,10 +138,10 @@ async function main(): Promise<void> {
 
   // Optional runtime-proxy tagger. The adapter's proxy-tagging path
   // becomes a no-op in pure OSS builds where the optional package is
-  // not installed. Mirrors the `accomplishRuntime` bootstrap pattern at
+  // not installed. Mirrors the `zmeelRuntime` bootstrap pattern at
   // the top of this function — distinguishes "not installed" (silent)
   // from "installed but broken" (logs).
-  const OPTIONAL_RUNTIME_MODULE = '@accomplish/llm-gateway-client';
+  const OPTIONAL_RUNTIME_MODULE = '@zmeel/llm-gateway-client';
   let setProxyTaskId: ((taskId: string | undefined) => void) | undefined;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -175,7 +175,7 @@ async function main(): Promise<void> {
     isPackaged,
     resourcesPath,
     appPath,
-    accomplishRuntime,
+    zmeelRuntime,
     rpcConnectivityProbe: { hasConnectedClients: () => rpc.hasConnectedClients() },
     setProxyTaskId,
   });
@@ -200,7 +200,7 @@ async function main(): Promise<void> {
     isPackaged,
     resourcesPath,
     appPath,
-    accomplishRuntime,
+    zmeelRuntime,
   });
 
   // Phase 2 of the SDK cutover port deleted PermissionService. Permission and
@@ -261,7 +261,7 @@ async function main(): Promise<void> {
     healthService,
     storageService,
     schedulerService,
-    accomplishRuntime,
+    zmeelRuntime,
     whatsappService,
     openAiOauthManager,
     secretsService,
@@ -287,10 +287,10 @@ async function main(): Promise<void> {
   await whatsappSendApi.start(WHATSAPP_API_PORT);
 
   // Pass auth token and actual ports to child processes via environment
-  process.env.ACCOMPLISH_DAEMON_AUTH_TOKEN = authToken;
+  process.env.ZMEEL_DAEMON_AUTH_TOKEN = authToken;
   const whatsappPort = whatsappSendApi.getPort();
   if (whatsappPort) {
-    process.env.ACCOMPLISH_WHATSAPP_API_PORT = String(whatsappPort);
+    process.env.ZMEEL_WHATSAPP_API_PORT = String(whatsappPort);
   }
 
   // Start scheduler after RPC server is ready

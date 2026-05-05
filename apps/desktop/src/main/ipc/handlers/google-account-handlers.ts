@@ -15,7 +15,7 @@
  */
 import { BrowserWindow } from 'electron';
 import type { IpcMainInvokeEvent } from 'electron';
-import type { GoogleAccount } from '@accomplish_ai/agent-core/desktop-main';
+import type { GoogleAccount } from '@zmeel/agent-core/desktop-main';
 import type { startGoogleOAuth, cancelGoogleOAuth } from '../../google-accounts/google-auth.js';
 import { handle } from './utils.js';
 import { getDaemonClient } from '../../daemon-bootstrap';

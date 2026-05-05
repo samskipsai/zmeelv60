@@ -40,7 +40,7 @@ export function useBrowserPreviewIpc({
 }: UseBrowserPreviewIpcOptions): void {
   // Register IPC listeners — re-run when any handler reference changes (e.g. pageName change).
   useEffect(() => {
-    const api = window.accomplish;
+    const api = window.zmeel;
     if (!api) {
       return;
     }
@@ -67,7 +67,7 @@ export function useBrowserPreviewIpc({
   // Stop the browser preview only when taskId changes or the component unmounts,
   // not when the IPC listener callbacks are rebound (e.g. on pageName change).
   useEffect(() => {
-    const api = window.accomplish;
+    const api = window.zmeel;
     return () => {
       api?.stopBrowserPreview?.(taskId).catch(() => {});
     };

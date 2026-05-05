@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider } from '@accomplish_ai/agent-core/common';
-import type { HuggingFaceLocalCredentials } from '@accomplish_ai/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider } from '@zmeel/agent-core/common';
+import type { HuggingFaceLocalCredentials } from '@zmeel/agent-core/common';
 
 export interface SuggestedModel {
   id: string;
@@ -44,8 +44,8 @@ export function useHuggingFaceProviderConnect({
   const [cachedModels, setCachedModels] = useState<SuggestedModel[]>([]);
 
   useEffect(() => {
-    const accomplish = getAccomplish();
-    accomplish
+    const zmeel = getZmeel();
+    zmeel
       .listHuggingFaceModels()
       .then(({ cached, suggested }) => {
         setCachedModels(cached);
@@ -62,8 +62,8 @@ export function useHuggingFaceProviderConnect({
   }, []);
 
   useEffect(() => {
-    const accomplish = getAccomplish();
-    const unsub = accomplish.onHuggingFaceDownloadProgress((progress) => {
+    const zmeel = getZmeel();
+    const unsub = zmeel.onHuggingFaceDownloadProgress((progress) => {
       if (progress.status === 'downloading') {
         setDownloadProgress(progress.progress);
       } else if (progress.status === 'complete') {
@@ -91,9 +91,9 @@ export function useHuggingFaceProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
-      const downloadResult = await accomplish.downloadHuggingFaceModel(selectedModelId);
+      const downloadResult = await zmeel.downloadHuggingFaceModel(selectedModelId);
       if (!downloadResult.success) {
         setError(downloadResult.error ?? 'Download failed');
         setIsDownloading(false);
@@ -103,7 +103,7 @@ export function useHuggingFaceProviderConnect({
 
       setIsDownloading(false);
 
-      const serverResult = await accomplish.startHuggingFaceServer(selectedModelId);
+      const serverResult = await zmeel.startHuggingFaceServer(selectedModelId);
       if (!serverResult.success) {
         setError(serverResult.error ?? 'Failed to start inference server');
         setConnecting(false);
@@ -140,8 +140,8 @@ export function useHuggingFaceProviderConnect({
 
   const handleDisconnect = async () => {
     try {
-      const accomplish = getAccomplish();
-      await accomplish.stopHuggingFaceServer();
+      const zmeel = getZmeel();
+      await zmeel.stopHuggingFaceServer();
     } catch {
       // Ignore errors during disconnect
     }

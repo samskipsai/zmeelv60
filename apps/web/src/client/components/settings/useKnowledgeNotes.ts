@@ -1,9 +1,9 @@
 import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
-import type { KnowledgeNote, KnowledgeNoteType } from '@accomplish_ai/agent-core';
+import { getZmeel } from '@/lib/zmeel';
+import type { KnowledgeNote, KnowledgeNoteType } from '@zmeel/agent-core';
 
-type AccomplishInstance = ReturnType<typeof getAccomplish>;
+type ZmeelInstance = ReturnType<typeof getZmeel>;
 
 export interface UseKnowledgeNotesReturn {
   notes: KnowledgeNote[];
@@ -27,7 +27,7 @@ export interface UseKnowledgeNotesReturn {
 }
 
 export function useKnowledgeNotes(
-  accomplish: AccomplishInstance,
+  zmeel: ZmeelInstance,
   workspaceId: string,
 ): UseKnowledgeNotesReturn {
   const { t } = useTranslation('settings');
@@ -53,7 +53,7 @@ export function useKnowledgeNotes(
   const loadNotes = useCallback(async () => {
     const requestId = ++activeRequestRef.current;
     try {
-      const loaded = await accomplish.listKnowledgeNotes(workspaceId);
+      const loaded = await zmeel.listKnowledgeNotes(workspaceId);
       if (requestId === activeRequestRef.current && workspaceIdRef.current === workspaceId) {
         setError(null);
         setNotes(loaded);
@@ -63,14 +63,14 @@ export function useKnowledgeNotes(
         setError(err instanceof Error ? err.message : String(err));
       }
     }
-  }, [accomplish, workspaceId]);
+  }, [zmeel, workspaceId]);
 
   // Initial load on mount / workspaceId change. Uses the same activeRequestRef
   // guard so a cleanup (workspace switch) abandons any in-flight request from
   // either this effect or a concurrent mutation-triggered loadNotes call.
   useEffect(() => {
     const requestId = ++activeRequestRef.current;
-    accomplish
+    zmeel
       .listKnowledgeNotes(workspaceId)
       .then((loaded) => {
         if (requestId === activeRequestRef.current && workspaceIdRef.current === workspaceId) {
@@ -87,14 +87,14 @@ export function useKnowledgeNotes(
       // eslint-disable-next-line react-hooks/exhaustive-deps
       activeRequestRef.current++;
     };
-  }, [accomplish, workspaceId]);
+  }, [zmeel, workspaceId]);
 
   const handleAdd = useCallback(async () => {
     if (!newContent.trim()) {
       return;
     }
     try {
-      await accomplish.createKnowledgeNote({
+      await zmeel.createKnowledgeNote({
         workspaceId,
         type: newType,
         content: newContent.trim(),
@@ -112,7 +112,7 @@ export function useKnowledgeNotes(
         setError(err instanceof Error ? err.message : String(err));
       }
     }
-  }, [accomplish, workspaceId, newType, newContent, loadNotes]);
+  }, [zmeel, workspaceId, newType, newContent, loadNotes]);
 
   const handleEdit = useCallback(
     async (id: string) => {
@@ -120,7 +120,7 @@ export function useKnowledgeNotes(
         return;
       }
       try {
-        const updated = await accomplish.updateKnowledgeNote(id, workspaceId, {
+        const updated = await zmeel.updateKnowledgeNote(id, workspaceId, {
           type: editType,
           content: editContent.trim(),
         });
@@ -140,13 +140,13 @@ export function useKnowledgeNotes(
         }
       }
     },
-    [accomplish, workspaceId, editType, editContent, loadNotes, t],
+    [zmeel, workspaceId, editType, editContent, loadNotes, t],
   );
 
   const handleDelete = useCallback(
     async (id: string) => {
       try {
-        const deleted = await accomplish.deleteKnowledgeNote(id, workspaceId);
+        const deleted = await zmeel.deleteKnowledgeNote(id, workspaceId);
         if (workspaceIdRef.current !== workspaceId) {
           return;
         }
@@ -162,7 +162,7 @@ export function useKnowledgeNotes(
         }
       }
     },
-    [accomplish, workspaceId, loadNotes, t],
+    [zmeel, workspaceId, loadNotes, t],
   );
 
   const startEdit = useCallback((note: KnowledgeNote) => {

@@ -5,8 +5,8 @@ import type { UseSlashCommandReturn } from '@/hooks/useSlashCommand';
 
 const mockGetEnabledSkills = vi.fn().mockResolvedValue(mockSkillsWithHidden);
 
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => ({
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => ({
     getEnabledSkills: mockGetEnabledSkills,
   }),
 }));

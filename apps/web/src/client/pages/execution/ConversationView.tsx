@@ -9,7 +9,7 @@ import { ToolProgress } from '../../components/execution/ToolProgress';
 import { BrowserPreview } from '../../components/execution/BrowserPreview';
 import { PermissionDialog } from '../../components/execution/PermissionDialog';
 import { TodoSidebar } from '../../components/TodoSidebar';
-import type { Task, PermissionRequest, TodoItem } from '@accomplish_ai/agent-core/common';
+import type { Task, PermissionRequest, TodoItem } from '@zmeel/agent-core/common';
 import type { StartupStageInfo } from './types';
 
 interface ConversationViewProps {

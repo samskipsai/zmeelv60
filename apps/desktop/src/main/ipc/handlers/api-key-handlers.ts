@@ -18,9 +18,9 @@ export {
   validateAzureFoundry,
   fetchBedrockModels,
   fetchProviderModels,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 export { storeApiKey } from '../../store/secureStorage';
-export { ALLOWED_API_KEY_PROVIDERS } from '@accomplish_ai/agent-core/desktop-main';
+export { ALLOWED_API_KEY_PROVIDERS } from '@zmeel/agent-core/desktop-main';
 export { API_KEY_VALIDATION_TIMEOUT_MS } from './utils';
 // Milestone 5: `getStorage` re-export removed — the desktop-side
 // singleton is gone. Callers that used `getStorage()` from here have

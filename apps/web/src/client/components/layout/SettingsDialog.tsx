@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { settingsVariants, settingsTransitions } from '@/lib/animations';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { ProviderId } from '@accomplish_ai/agent-core/common';
+import type { ProviderId } from '@zmeel/agent-core/common';
 import { ProviderGrid } from '@/components/settings/ProviderGrid';
 import { ProviderSettingsPanel } from '@/components/settings/ProviderSettingsPanel';
 import { SpeechSettingsForm } from '@/components/settings/SpeechSettingsForm';
@@ -72,7 +72,7 @@ export function SettingsDialog({
           <div className="px-3 py-2 mb-1">
             <img
               src={logoImage}
-              alt="Accomplish"
+              alt="Zmeel"
               className="dark:invert"
               style={{ height: '20px', paddingLeft: '6px' }}
             />

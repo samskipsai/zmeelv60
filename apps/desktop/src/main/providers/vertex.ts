@@ -2,8 +2,8 @@ import { execFile } from 'child_process';
 import {
   validateVertexCredentials,
   fetchVertexModels,
-} from '@accomplish_ai/agent-core/desktop-main';
-import type { VertexCredentials } from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
+import type { VertexCredentials } from '@zmeel/agent-core/desktop-main';
 import { storeApiKey, getApiKey } from '../store/secureStorage';
 import { getLogCollector } from '../logging';
 import { normalizeIpcError } from '../ipc/validation';

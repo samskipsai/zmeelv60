@@ -1,5 +1,5 @@
 /**
- * Protocol URL handler helpers for `accomplish://` deep-link callbacks.
+ * Protocol URL handler helpers for `zmeel://` deep-link callbacks.
  *
  * Handles both the macOS `open-url` event and the Windows argv-based
  * protocol activation on startup and second-instance events.
@@ -21,9 +21,9 @@ type WindowGetter = () => BrowserWindow | null;
 const protocolUrlQueue: string[] = [];
 
 function dispatchProtocolUrl(win: BrowserWindow, url: string): void {
-  if (url.startsWith('accomplish://callback/mcp')) {
+  if (url.startsWith('zmeel://callback/mcp')) {
     win.webContents.send('auth:mcp-callback', url);
-  } else if (url.startsWith('accomplish://callback')) {
+  } else if (url.startsWith('zmeel://callback')) {
     win.webContents.send('auth:callback', url);
   }
 }
@@ -69,7 +69,7 @@ export function handleProtocolUrlFromArgs(getMainWindow: WindowGetter): void {
     return;
   }
 
-  const protocolUrl = process.argv.find((arg) => arg.startsWith('accomplish://'));
+  const protocolUrl = process.argv.find((arg) => arg.startsWith('zmeel://'));
   if (!protocolUrl) {
     return;
   }
@@ -103,7 +103,7 @@ export function handleSecondInstanceProtocolUrl(
     return;
   }
 
-  const protocolUrl = commandLine.find((arg) => arg.startsWith('accomplish://'));
+  const protocolUrl = commandLine.find((arg) => arg.startsWith('zmeel://'));
   if (protocolUrl) {
     enqueueProtocolUrl(protocolUrl, getMainWindow);
   }

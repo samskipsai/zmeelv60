@@ -1,5 +1,5 @@
 /**
- * Gateway types for the Accomplish LLM-Gateway integration.
+ * Gateway types for the Zmeel LLM-Gateway integration.
  */
 
 export interface CreditUsage {

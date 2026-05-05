@@ -3,7 +3,7 @@ import fs from 'fs';
 import { createConsoleLogger } from '../utils/logging.js';
 import {
   getPlatformEnvironmentInstructions,
-  ACCOMPLISH_SYSTEM_PROMPT_TEMPLATE,
+  ZMEEL_SYSTEM_PROMPT_TEMPLATE,
 } from './system-prompt.js';
 import { buildMcpServers } from './generator-mcp.js';
 import { formatBuiltInConnectorStatusSection } from './completion/context-providers/connector-status.js';
@@ -62,7 +62,7 @@ const BASH_PERMISSION_POLICY = {
   'unzip *': 'ask',
   'rsync *': 'ask',
 } as const;
-const ACCOMPLISH_PERMISSION_POLICY = {
+const ZMEEL_PERMISSION_POLICY = {
   bash: BASH_PERMISSION_POLICY,
   edit: 'ask',
   write: 'ask',
@@ -106,7 +106,7 @@ function getLanguageInstruction(language: string | undefined): string {
   return `Always respond in ${displayName}`;
 }
 
-export const ACCOMPLISH_AGENT_NAME = 'accomplish';
+export const ZMEEL_AGENT_NAME = 'zmeel';
 
 function syncPermissionPolicyIntoDefaultConfig(configDir: string, activeConfigPath: string): void {
   const defaultConfigPath = path.join(configDir, DEFAULT_CONFIG_FILE_NAME);
@@ -127,11 +127,11 @@ function syncPermissionPolicyIntoDefaultConfig(configDir: string, activeConfigPa
 
   const maybeConfig = parsed as { permission?: unknown };
   if (!maybeConfig.permission || typeof maybeConfig.permission !== 'object') {
-    maybeConfig.permission = { ...ACCOMPLISH_PERMISSION_POLICY };
+    maybeConfig.permission = { ...ZMEEL_PERMISSION_POLICY };
   } else {
     const permission = maybeConfig.permission as Record<string, unknown>;
     delete permission['*'];
-    Object.assign(permission, ACCOMPLISH_PERMISSION_POLICY);
+    Object.assign(permission, ZMEEL_PERMISSION_POLICY);
   }
 
   fs.writeFileSync(defaultConfigPath, JSON.stringify(parsed, null, 2));
@@ -155,7 +155,7 @@ export function generateConfig(options: ConfigGeneratorOptions): GeneratedConfig
   } = options;
 
   const environmentInstructions = getPlatformEnvironmentInstructions(platform);
-  let systemPrompt = ACCOMPLISH_SYSTEM_PROMPT_TEMPLATE.replace(
+  let systemPrompt = ZMEEL_SYSTEM_PROMPT_TEMPLATE.replace(
     /\{\{ENVIRONMENT_INSTRUCTIONS\}\}/g,
     environmentInstructions,
   ).replace(/\{\{LANGUAGE_INSTRUCTION\}\}/g, getLanguageInstruction(options.language));
@@ -314,7 +314,7 @@ ${options.knowledgeContext}
   if (!bundledNodeBinPath) {
     throw new Error(
       '[OpenCode Config] Missing bundled Node.js path; cannot launch MCP tools. ' +
-        'Run "pnpm -F @accomplish/desktop download:nodejs" and rebuild artifacts.',
+        'Run "pnpm -F @zmeel/desktop download:nodejs" and rebuild artifacts.',
     );
   }
 
@@ -362,7 +362,7 @@ ${options.knowledgeContext}
     $schema: 'https://opencode.ai/config.json',
     ...(model && { model }),
     ...(smallModel && { small_model: smallModel }),
-    default_agent: ACCOMPLISH_AGENT_NAME,
+    default_agent: ZMEEL_AGENT_NAME,
     enabled_providers: enabledProviders,
     // Permission policy: leave OpenCode's built-in defaults in charge of
     // normal non-mutating tools, and only add overrides for risky native file
@@ -390,11 +390,11 @@ ${options.knowledgeContext}
     // which prompted for everything including browser and webfetch actions.
     // Keep this policy narrow; see
     // `config-generator.test.ts` for the guard.
-    permission: { ...ACCOMPLISH_PERMISSION_POLICY },
+    permission: { ...ZMEEL_PERMISSION_POLICY },
     provider: Object.keys(providerConfig).length > 0 ? providerConfig : undefined,
     plugin: ['@tarquinen/opencode-dcp@^2.0.0'],
     agent: {
-      [ACCOMPLISH_AGENT_NAME]: {
+      [ZMEEL_AGENT_NAME]: {
         description: 'Browser automation assistant using dev-browser',
         prompt: systemPrompt,
         mode: 'primary',

@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
-import type { Task, TaskMessage } from '@accomplish_ai/agent-core/desktop-main';
-import { createMessageId } from '@accomplish_ai/agent-core/desktop-main';
+import type { Task, TaskMessage } from '@zmeel/agent-core/desktop-main';
+import { createMessageId } from '@zmeel/agent-core/desktop-main';
 import { getLogCollector } from '../logging';
 
 /**

@@ -1,5 +1,5 @@
 import type { IpcMainInvokeEvent } from 'electron';
-import { sanitizeString } from '@accomplish_ai/agent-core/desktop-main';
+import { sanitizeString } from '@zmeel/agent-core/desktop-main';
 import type { IpcHandler } from '../../types';
 import { getDaemonClient } from '../../../daemon-bootstrap';
 

@@ -1,5 +1,5 @@
 import { FileText, Image, Code, File, FilePdf } from '@phosphor-icons/react';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 
 interface FileTypeIconProps {
   type: FileAttachmentInfo['type'];

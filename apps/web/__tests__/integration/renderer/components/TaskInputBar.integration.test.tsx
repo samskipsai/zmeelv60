@@ -1,6 +1,6 @@
 /**
  * Integration tests for TaskInputBar component
- * Tests component rendering and user interactions with mocked window.accomplish API
+ * Tests component rendering and user interactions with mocked window.zmeel API
  * @module __tests__/integration/renderer/components/TaskInputBar.integration.test
  * @vitest-environment jsdom
  */
@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { PROMPT_DEFAULT_MAX_LENGTH } from '@accomplish_ai/agent-core/common';
+import { PROMPT_DEFAULT_MAX_LENGTH } from '@zmeel/agent-core/common';
 import { TaskInputBar } from '@/components/landing/TaskInputBar';
 import { PlusMenu } from '@/components/landing/PlusMenu';
 
@@ -17,8 +17,8 @@ const renderWithRouter = (ui: React.ReactElement) => {
   return render(<MemoryRouter>{ui}</MemoryRouter>);
 };
 
-// Mock accomplish API
-const mockAccomplish = {
+// Mock zmeel API
+const mockZmeel = {
   logEvent: vi.fn().mockResolvedValue(undefined),
   getSelectedModel: vi.fn().mockResolvedValue({ provider: 'anthropic', id: 'claude-3-opus' }),
   getOllamaConfig: vi.fn().mockResolvedValue(null),
@@ -47,9 +47,9 @@ const mockAccomplish = {
   getEnabledSkills: vi.fn().mockResolvedValue([]),
 };
 
-// Mock the accomplish module
-vi.mock('@/lib/accomplish', () => ({
-  getAccomplish: () => mockAccomplish,
+// Mock the zmeel module
+vi.mock('@/lib/zmeel', () => ({
+  getZmeel: () => mockZmeel,
 }));
 
 // Mock Radix Tooltip to render content directly (portals don't work in jsdom)
@@ -520,11 +520,11 @@ describe('TaskInputBar Integration', () => {
     ];
 
     beforeEach(() => {
-      vi.mocked(mockAccomplish.getEnabledSkills).mockResolvedValue(mockSkills);
+      vi.mocked(mockZmeel.getEnabledSkills).mockResolvedValue(mockSkills);
     });
 
     afterEach(() => {
-      vi.mocked(mockAccomplish.getEnabledSkills).mockResolvedValue([]);
+      vi.mocked(mockZmeel.getEnabledSkills).mockResolvedValue([]);
     });
 
     it('should show slash command popover when "/" is typed', async () => {
@@ -603,7 +603,7 @@ describe('TaskInputBar Integration', () => {
       const onChange = vi.fn();
       const onSubmit = vi.fn();
 
-      (window as Window & { accomplish: Record<string, unknown> }).accomplish = {
+      (window as Window & { zmeel: Record<string, unknown> }).zmeel = {
         getEnabledSkills: vi.fn().mockResolvedValue([
           {
             id: 'skill-git-helper',
@@ -656,7 +656,7 @@ describe('TaskInputBar Integration', () => {
       const onChange = vi.fn();
       const onSubmit = vi.fn();
 
-      (window as Window & { accomplish: Record<string, unknown> }).accomplish = {
+      (window as Window & { zmeel: Record<string, unknown> }).zmeel = {
         getEnabledSkills: vi.fn().mockResolvedValue([
           {
             id: 'skill-git-helper',

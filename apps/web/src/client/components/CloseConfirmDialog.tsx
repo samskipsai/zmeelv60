@@ -14,35 +14,35 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useAccomplish } from '@/lib/accomplish';
+import { useZmeel } from '@/lib/zmeel';
 
 type CloseDecision = 'keep-daemon' | 'stop-daemon';
 
 export function CloseConfirmDialog() {
-  const accomplish = useAccomplish();
+  const zmeel = useZmeel();
   const [open, setOpen] = useState(false);
   const [decision, setDecision] = useState<CloseDecision>('keep-daemon');
 
   useEffect(() => {
-    if (!accomplish.onCloseRequested) {
+    if (!zmeel.onCloseRequested) {
       return;
     }
-    const unsubscribe = accomplish.onCloseRequested(() => {
+    const unsubscribe = zmeel.onCloseRequested(() => {
       setDecision('keep-daemon');
       setOpen(true);
     });
     return unsubscribe;
-  }, [accomplish]);
+  }, [zmeel]);
 
   const handleConfirm = useCallback(() => {
     setOpen(false);
-    accomplish.respondToClose?.(decision);
-  }, [accomplish, decision]);
+    zmeel.respondToClose?.(decision);
+  }, [zmeel, decision]);
 
   const handleCancel = useCallback(() => {
     setOpen(false);
-    accomplish.respondToClose?.('cancel');
-  }, [accomplish]);
+    zmeel.respondToClose?.('cancel');
+  }, [zmeel]);
 
   const isKeepDaemon = decision === 'keep-daemon';
 
@@ -59,7 +59,7 @@ export function CloseConfirmDialog() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-base">
             <Power className="h-5 w-5" weight="bold" />
-            Close Accomplish
+            Close Zmeel
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
             Choose how to close the application.
@@ -125,7 +125,7 @@ export function CloseConfirmDialog() {
               <Warning className="h-4 w-4 text-destructive flex-shrink-0 mt-0.5" weight="bold" />
               <p className="text-xs text-destructive leading-relaxed">
                 Background tasks, scheduled jobs, and WhatsApp message processing will stop
-                immediately. They will resume when you reopen Accomplish.
+                immediately. They will resume when you reopen Zmeel.
               </p>
             </div>
           )}

@@ -3,7 +3,7 @@
 > [!WARNING]
 > **This document describes the pre-SDK-cutover PTY architecture.** The OpenCode SDK cutover port (commercial PR #720) replaced `node-pty` + `StreamParser` with `@opencode-ai/sdk` + `opencode serve`, so the `PTY Process` / `StreamParser` participants and byte-stream flows shown below no longer reflect runtime behaviour. The transport, participant names, and byte-stream fan-out are stale; the participants and data they exchange (adapter, TaskManager, daemon, UI) are still structurally accurate, as are the ordering and causality of events. Treat these diagrams as historical reference until they are rewritten in a follow-up docs PR. Current flow: `apps/daemon/src/opencode/server-manager.ts` spawns `opencode serve` per task; `packages/agent-core/src/internal/classes/OpenCodeAdapter.ts` subscribes to the SDK event stream; permissions/questions go through `client.permission.reply` / `client.question.reply` (not HTTP+MCP bridges).
 
-This document captures all stateful data, information models, state machines, and data flows within the Accomplish system. It follows the Rozanski & Woods Information Viewpoint to document data ownership, lifecycle, and structure.
+This document captures all stateful data, information models, state machines, and data flows within the Zmeel system. It follows the Rozanski & Woods Information Viewpoint to document data ownership, lifecycle, and structure.
 
 ---
 
@@ -135,11 +135,11 @@ AES-256-GCM encrypted file-based storage, separate from SQLite.
 
 **File locations (macOS):**
 
-- SQLite DB: `~/Library/Application Support/Accomplish/accomplish.db` (prod) / `accomplish-dev.db` (dev)
-- Secure Storage: `~/Library/Application Support/Accomplish/secure-storage.json`
-- Logs: `~/Library/Application Support/Accomplish/logs/`
-- Skills: `~/Library/Application Support/Accomplish/skills/`
-- OpenCode configs: `~/Library/Application Support/Accomplish/opencode/`
+- SQLite DB: `~/Library/Application Support/Zmeel/zmeel.db` (prod) / `zmeel-dev.db` (dev)
+- Secure Storage: `~/Library/Application Support/Zmeel/secure-storage.json`
+- Logs: `~/Library/Application Support/Zmeel/logs/`
+- Skills: `~/Library/Application Support/Zmeel/skills/`
+- OpenCode configs: `~/Library/Application Support/Zmeel/opencode/`
 
 SQLite is opened with WAL mode (`journal_mode = WAL`), so it can be safely read by external tools while the app is running.
 
@@ -487,7 +487,7 @@ Which process/layer owns which data, and the persistence mechanism.
 flowchart LR
     subgraph Persistent["Persistent Storage"]
         direction TB
-        DB[(SQLite DB<br/>accomplish.db)]
+        DB[(SQLite DB<br/>zmeel.db)]
         SS[(SecureStorage<br/>secure-storage.json)]
         OCS[(OpenCode Data<br/>~/.local/share/opencode/)]
     end
@@ -788,20 +788,20 @@ flowchart TB
 
 ## 18. userData Directory Reference
 
-Location: `~/Library/Application Support/Accomplish/` (macOS)
+Location: `~/Library/Application Support/Zmeel/` (macOS)
 
 All files and folders found in this directory at runtime:
 
-### Accomplish Application Data
+### Zmeel Application Data
 
 | Path                    | Owner               | Description                                                                                                                                                                         |
 | ----------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `accomplish.db`         | agent-core (SQLite) | Main database — tasks, messages, todos, providers, settings, skills, connectors. All application state.                                                                             |
-| `accomplish.db-wal`     | SQLite engine       | Write-Ahead Log — buffered writes not yet checkpointed to main DB. Auto-managed.                                                                                                    |
-| `accomplish.db-shm`     | SQLite engine       | Shared memory index for WAL. Enables concurrent readers. Auto-managed.                                                                                                              |
-| `accomplish-dev.db`     | agent-core (SQLite) | Development-mode database (used when running `pnpm dev`). Same schema as prod.                                                                                                      |
-| `accomplish-dev.db-wal` | SQLite engine       | WAL for dev database.                                                                                                                                                               |
-| `accomplish-dev.db-shm` | SQLite engine       | Shared memory for dev database.                                                                                                                                                     |
+| `zmeel.db`         | agent-core (SQLite) | Main database — tasks, messages, todos, providers, settings, skills, connectors. All application state.                                                                             |
+| `zmeel.db-wal`     | SQLite engine       | Write-Ahead Log — buffered writes not yet checkpointed to main DB. Auto-managed.                                                                                                    |
+| `zmeel.db-shm`     | SQLite engine       | Shared memory index for WAL. Enables concurrent readers. Auto-managed.                                                                                                              |
+| `zmeel-dev.db`     | agent-core (SQLite) | Development-mode database (used when running `pnpm dev`). Same schema as prod.                                                                                                      |
+| `zmeel-dev.db-wal` | SQLite engine       | WAL for dev database.                                                                                                                                                               |
+| `zmeel-dev.db-shm` | SQLite engine       | Shared memory for dev database.                                                                                                                                                     |
 | `opencode/`             | config-generator.ts | Contains `opencode.json` — generated OpenCode CLI config (system prompt, MCP servers, provider settings). Regenerated before each task. Single file shared across concurrent tasks. |
 | `skills/`               | SkillsManager       | Skill markdown files (official, community, custom). Each skill is a `.md` with frontmatter.                                                                                         |
 | `logs/`                 | log-file-writer.ts  | Application log files written by Electron main process.                                                                                                                             |
@@ -809,21 +809,21 @@ All files and folders found in this directory at runtime:
 
 ### Chromium / Electron Auto-Created
 
-These are standard Chromium storage directories created automatically by Electron. Not managed by Accomplish code.
+These are standard Chromium storage directories created automatically by Electron. Not managed by Zmeel code.
 
 | Path                                                  | Owner           | Description                                                                                      |
 | ----------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------ |
-| `Cache/`                                              | Chromium        | HTTP cache for the renderer process (the Accomplish UI webview).                                 |
+| `Cache/`                                              | Chromium        | HTTP cache for the renderer process (the Zmeel UI webview).                                 |
 | `Code Cache/`                                         | Chromium        | Compiled/cached JavaScript bytecode for faster UI startup.                                       |
-| `Cookies`                                             | Chromium        | Cookie database for the Electron renderer (Accomplish UI, not the automation browser).           |
+| `Cookies`                                             | Chromium        | Cookie database for the Electron renderer (Zmeel UI, not the automation browser).           |
 | `Cookies-journal`                                     | Chromium        | SQLite journal for Cookies DB.                                                                   |
 | `GPUCache/`                                           | Chromium        | Cached GPU shader compilations.                                                                  |
 | `DawnGraphiteCache/`                                  | Chromium (Dawn) | WebGPU shader cache (Dawn graphics backend).                                                     |
 | `DawnWebGPUCache/`                                    | Chromium (Dawn) | WebGPU pipeline cache.                                                                           |
 | `DIPS`, `DIPS-shm`, `DIPS-wal`                        | Chromium        | Bounce Tracking Mitigations database (Detection of Indirect Proxy for Stateful bounce tracking). |
-| `IndexedDB/`                                          | Chromium        | Browser IndexedDB storage for the Accomplish UI renderer.                                        |
-| `Local Storage/`                                      | Chromium        | `localStorage` for the Accomplish React app (theme preference synced here).                      |
-| `Session Storage/`                                    | Chromium        | `sessionStorage` for the Accomplish React app.                                                   |
+| `IndexedDB/`                                          | Chromium        | Browser IndexedDB storage for the Zmeel UI renderer.                                        |
+| `Local Storage/`                                      | Chromium        | `localStorage` for the Zmeel React app (theme preference synced here).                      |
+| `Session Storage/`                                    | Chromium        | `sessionStorage` for the Zmeel React app.                                                   |
 | `Network Persistent State`                            | Chromium        | Network stack state (HSTS, transport security policies).                                         |
 | `Preferences`                                         | Chromium        | Electron/Chromium browser preferences JSON.                                                      |
 | `Shared Dictionary/`                                  | Chromium        | Shared Brotli/Zstandard compression dictionaries.                                                |
@@ -839,9 +839,9 @@ These are standard Chromium storage directories created automatically by Electro
 
 | Scenario                           | Look at                                                                           |
 | ---------------------------------- | --------------------------------------------------------------------------------- |
-| Task not completing / wrong status | `accomplish.db` → `tasks` table (status, session_id)                              |
-| Messages missing or corrupt        | `accomplish.db` → `task_messages` table (sort_order, content)                     |
-| Provider connection issues         | `accomplish.db` → `providers` table (connection_status, credentials_type)         |
+| Task not completing / wrong status | `zmeel.db` → `tasks` table (status, session_id)                              |
+| Messages missing or corrupt        | `zmeel.db` → `task_messages` table (sort_order, content)                     |
+| Provider connection issues         | `zmeel.db` → `providers` table (connection_status, credentials_type)         |
 | API key not working                | `secure-storage.json` (encrypted — verify key exists, can't read value)           |
 | OpenCode config wrong              | `opencode/opencode.json` (inspect generated system prompt, MCP servers)           |
 | Browser automation state           | `dev-browser/` (Playwright profile with cookies/sessions from automated browsing) |

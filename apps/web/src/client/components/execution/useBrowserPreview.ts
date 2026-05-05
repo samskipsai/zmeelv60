@@ -89,7 +89,7 @@ export function useBrowserPreview({
       return;
     }
 
-    const api = window.accomplish;
+    const api = window.zmeel;
     if (!api?.startBrowserPreview) {
       return;
     }

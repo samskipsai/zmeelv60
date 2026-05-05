@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ProviderId, ConnectedProvider, OAuthCredentials } from '@accomplish_ai/agent-core';
-import { DEFAULT_PROVIDERS } from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '@/lib/accomplish';
+import type { ProviderId, ConnectedProvider, OAuthCredentials } from '@zmeel/agent-core';
+import { DEFAULT_PROVIDERS } from '@zmeel/agent-core/common';
+import { getZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('useOAuthSignIn');
@@ -61,8 +61,8 @@ export function useOAuthSignIn({
     const providerConfig = DEFAULT_PROVIDERS.find((p) => p.id === providerId);
 
     try {
-      const accomplish = getAccomplish();
-      const result = await accomplish.loginOpenAiWithChatGpt();
+      const zmeel = getZmeel();
+      const result = await zmeel.loginOpenAiWithChatGpt();
 
       if (abortController.signal.aborted || attemptId !== signInAttemptRef.current) {
         shouldBail = true;
@@ -98,7 +98,7 @@ export function useOAuthSignIn({
             return;
           }
 
-          const status = await accomplish.getOpenAiOauthStatus();
+          const status = await zmeel.getOpenAiOauthStatus();
 
           if (abortController.signal.aborted || attemptId !== signInAttemptRef.current) {
             return;
@@ -107,7 +107,7 @@ export function useOAuthSignIn({
           if (status.connected) {
             let availableModels = OPENAI_OAUTH_FALLBACK_MODELS;
             if (providerConfig?.modelsEndpoint) {
-              const fetchResult = await accomplish.fetchProviderModels(providerId, {});
+              const fetchResult = await zmeel.fetchProviderModels(providerId, {});
               if (fetchResult.success && fetchResult.models?.length) {
                 availableModels = fetchResult.models;
               }

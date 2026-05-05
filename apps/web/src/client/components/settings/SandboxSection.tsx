@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
-import type { SandboxConfig } from '@accomplish_ai/agent-core';
+import { getZmeel } from '@/lib/zmeel';
+import type { SandboxConfig } from '@zmeel/agent-core';
 
 interface SandboxSectionProps {
   visible: boolean;
@@ -10,13 +10,13 @@ export function SandboxSection({ visible }: SandboxSectionProps) {
   const [sandboxEnabled, setSandboxEnabled] = useState(false);
   const [sandboxConfig, setSandboxConfig] = useState<SandboxConfig | null>(null);
   const [loading, setLoading] = useState(true);
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
 
   useEffect(() => {
     if (!visible) {
       return;
     }
-    accomplish
+    zmeel
       .getSandboxConfig()
       .then((config) => {
         setSandboxConfig(config);
@@ -24,7 +24,7 @@ export function SandboxSection({ visible }: SandboxSectionProps) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [visible, accomplish]);
+  }, [visible, zmeel]);
 
   const handleToggle = useCallback(async () => {
     const newEnabled = !sandboxEnabled;
@@ -36,10 +36,10 @@ export function SandboxSection({ visible }: SandboxSectionProps) {
       ...(sandboxConfig ?? { allowedPaths: [], networkRestricted: false, allowedHosts: [] }),
       mode: newMode,
     };
-    await accomplish.setSandboxConfig(updated);
+    await zmeel.setSandboxConfig(updated);
     setSandboxConfig(updated);
     setSandboxEnabled(newEnabled);
-  }, [sandboxEnabled, sandboxConfig, accomplish]);
+  }, [sandboxEnabled, sandboxConfig, zmeel]);
 
   if (loading || !visible) {
     return null;
@@ -68,12 +68,12 @@ export function SandboxSection({ visible }: SandboxSectionProps) {
             aria-pressed={sandboxEnabled}
             data-testid="settings-sandbox-toggle"
             onClick={handleToggle}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-accomplish ${
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-zmeel ${
               sandboxEnabled ? 'bg-primary' : 'bg-muted'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ease-accomplish ${
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ease-zmeel ${
                 sandboxEnabled ? 'translate-x-6' : 'translate-x-1'
               }`}
             />

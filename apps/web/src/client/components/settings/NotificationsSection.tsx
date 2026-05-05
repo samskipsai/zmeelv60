@@ -23,12 +23,12 @@ export function NotificationsSection({ enabled, onToggle }: NotificationsSection
             aria-checked={enabled}
             data-testid="settings-notifications-toggle"
             onClick={onToggle}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-accomplish ${
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-zmeel ${
               enabled ? 'bg-primary' : 'bg-muted'
             }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ease-accomplish ${
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ease-zmeel ${
                 enabled ? 'translate-x-6' : 'translate-x-1'
               }`}
             />

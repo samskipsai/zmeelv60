@@ -12,7 +12,7 @@ import { DatadogConnectorCard } from '@/components/settings/connectors/DatadogCo
 import { LightdashConnectorCard } from '@/components/settings/connectors/LightdashConnectorCard';
 import { useConnectorsPanel } from '@/components/settings/connectors/useConnectorsPanel';
 import { GoogleAccountsSection } from '../google-accounts/GoogleAccountsSection';
-import { OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import { OAuthProviderId } from '@zmeel/agent-core/common';
 import jiraIcon from '/assets/icons/integrations/jira.svg';
 import githubIcon from '/assets/icons/integrations/github.svg';
 import notionIcon from '/assets/icons/integrations/notion.svg';

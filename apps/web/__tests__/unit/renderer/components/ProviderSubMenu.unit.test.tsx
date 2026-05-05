@@ -5,7 +5,7 @@
 import '@testing-library/jest-dom/vitest';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import type { ConnectedProvider } from '@accomplish_ai/agent-core/common';
+import type { ConnectedProvider } from '@zmeel/agent-core/common';
 
 // Render Radix sub-menu primitives as plain markup so we can test content
 vi.mock('@/components/ui/dropdown-menu', () => ({

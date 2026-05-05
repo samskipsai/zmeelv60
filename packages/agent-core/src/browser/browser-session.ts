@@ -65,7 +65,7 @@ export async function startDevBrowserServer(
   if (!fs.existsSync(serverScript)) {
     throw new Error(
       `[Browser] Missing dev-browser launcher script: ${serverScript}. ` +
-        'Run "pnpm -F @accomplish/desktop build:mcp-tools:dev" before starting the app.',
+        'Run "pnpm -F @zmeel/desktop build:mcp-tools:dev" before starting the app.',
     );
   }
   const spawnEnv = buildNodeEnvironment(config.bundledNodeBinPath);

@@ -153,7 +153,7 @@ describe('integration: legacy-meta upgrade happy path', () => {
     }
 
     // --- Step 2: run initializeDatabase with a fresh main DB + the legacy path ---
-    const mainPath = path.join(testDir, 'accomplish-dev.db');
+    const mainPath = path.join(testDir, 'zmeel-dev.db');
     dbModule.initializeDatabase({
       databasePath: mainPath,
       runMigrations: true,

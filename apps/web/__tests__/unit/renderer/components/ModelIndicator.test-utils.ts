@@ -1,4 +1,4 @@
-import type { ProviderSettings } from '@accomplish_ai/agent-core/common';
+import type { ProviderSettings } from '@zmeel/agent-core/common';
 
 export const baseSettings = (overrides: Partial<ProviderSettings> = {}): ProviderSettings => ({
   activeProviderId: 'anthropic',

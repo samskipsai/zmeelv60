@@ -1,24 +1,24 @@
 import { useEffect } from 'react';
-import type { TaskUpdateEvent } from '@accomplish_ai/agent-core/common';
+import type { TaskUpdateEvent } from '@zmeel/agent-core/common';
 import type { DebugLogEntry } from '../../components/execution/DebugPanel';
-import { getAccomplish } from '../../lib/accomplish';
+import { getZmeel } from '../../lib/zmeel';
 import { useTaskStore } from '../../stores/taskStore';
 
-type Accomplish = ReturnType<typeof getAccomplish>;
+type Zmeel = ReturnType<typeof getZmeel>;
 
 interface UseExecutionEventsOptions {
   id: string | undefined;
-  accomplish: Accomplish;
+  zmeel: Zmeel;
   addTaskUpdate: (event: TaskUpdateEvent) => void;
   addTaskUpdateBatch: (event: {
     taskId: string;
-    messages: import('@accomplish_ai/agent-core/common').TaskMessage[];
+    messages: import('@zmeel/agent-core/common').TaskMessage[];
   }) => void;
   updateTaskStatus: (
     taskId: string,
-    status: import('@accomplish_ai/agent-core/common').TaskStatus,
+    status: import('@zmeel/agent-core/common').TaskStatus,
   ) => void;
-  setPermissionRequest: (req: import('@accomplish_ai/agent-core/common').PermissionRequest) => void;
+  setPermissionRequest: (req: import('@zmeel/agent-core/common').PermissionRequest) => void;
   setCurrentTool: (tool: string | null) => void;
   setCurrentToolInput: (input: unknown) => void;
   clearStartupStage: (taskId: string) => void;
@@ -30,7 +30,7 @@ interface UseExecutionEventsOptions {
 export function useExecutionEvents(opts: UseExecutionEventsOptions) {
   const {
     id,
-    accomplish,
+    zmeel,
     addTaskUpdate,
     addTaskUpdateBatch,
     updateTaskStatus,
@@ -48,12 +48,12 @@ export function useExecutionEvents(opts: UseExecutionEventsOptions) {
       setDebugLogs([]);
       setCurrentTool(null);
       setCurrentToolInput(null);
-      accomplish.getTodosForTask(id).then((todos) => {
+      zmeel.getTodosForTask(id).then((todos) => {
         useTaskStore.getState().setTodos(id, todos);
       });
     }
 
-    const unsubscribeTask = accomplish.onTaskUpdate((event) => {
+    const unsubscribeTask = zmeel.onTaskUpdate((event) => {
       addTaskUpdate(event);
       if (event.taskId === id && event.type === 'message' && event.message?.type === 'tool') {
         const toolName =
@@ -76,7 +76,7 @@ export function useExecutionEvents(opts: UseExecutionEventsOptions) {
       }
     });
 
-    const unsubscribeTaskBatch = accomplish.onTaskUpdateBatch?.((event) => {
+    const unsubscribeTaskBatch = zmeel.onTaskUpdateBatch?.((event) => {
       if (event.messages?.length) {
         addTaskUpdateBatch(event);
         if (event.taskId === id) {
@@ -98,17 +98,17 @@ export function useExecutionEvents(opts: UseExecutionEventsOptions) {
       }
     });
 
-    const unsubscribePermission = accomplish.onPermissionRequest((request) => {
+    const unsubscribePermission = zmeel.onPermissionRequest((request) => {
       setPermissionRequest(request);
     });
 
-    const unsubscribeStatusChange = accomplish.onTaskStatusChange?.((data) => {
+    const unsubscribeStatusChange = zmeel.onTaskStatusChange?.((data) => {
       if (data.taskId === id) {
         updateTaskStatus(data.taskId, data.status);
       }
     });
 
-    const unsubscribeDebugLog = accomplish.onDebugLog((log) => {
+    const unsubscribeDebugLog = zmeel.onDebugLog((log) => {
       const entry = log as DebugLogEntry;
       if (entry.taskId === id) {
         setDebugLogs((prev) => [...prev, entry]);
@@ -120,13 +120,13 @@ export function useExecutionEvents(opts: UseExecutionEventsOptions) {
     // status dot already show "Reconnecting..." to the user.
     // On reconnect: re-fetch task to get authoritative state from daemon DB.
     // On reconnect-failed: only then mark running task as failed.
-    const unsubscribeDaemonReconnected = accomplish.onDaemonReconnected(() => {
+    const unsubscribeDaemonReconnected = zmeel.onDaemonReconnected(() => {
       if (id) {
         loadTaskById(id);
       }
     });
 
-    const unsubscribeDaemonReconnectFailed = accomplish.onDaemonReconnectFailed?.(() => {
+    const unsubscribeDaemonReconnectFailed = zmeel.onDaemonReconnectFailed?.(() => {
       if (id) {
         const state = useTaskStore.getState();
         if (state.currentTask?.id === id && state.currentTask.status === 'running') {

@@ -4,7 +4,7 @@
  * Handles persistence of phoneNumber, connectionStatus, and lastConnectedAt
  * in response to WhatsApp service events.
  */
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import type { WhatsAppService } from './WhatsAppService.js';
 import type { TaskBridge } from './taskBridge.js';
 

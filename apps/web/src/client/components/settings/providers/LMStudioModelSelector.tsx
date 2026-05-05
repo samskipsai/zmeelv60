@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ToolSupportStatus } from '@accomplish_ai/agent-core/common';
+import type { ToolSupportStatus } from '@zmeel/agent-core/common';
 import { ModelSelector, ToolSupportBadge, AlertCallout } from '../shared';
 import type { LMStudioModel } from './useLMStudioProviderConnect';
 

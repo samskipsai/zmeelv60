@@ -1,4 +1,4 @@
-# Accomplish — System Context Diagram
+# Zmeel — System Context Diagram
 
 > **Viewpoint**: Context (Rozanski & Woods)
 >
@@ -18,7 +18,7 @@ graph TB
 
     User["👤 <b>User</b><br/><i>[Person]</i>"]:::person
 
-    Accomplish["<b>Accomplish</b><br/><i>[Software System]</i><br/><br/>AI desktop agent that automates<br/>tasks via natural language"]:::system
+    Zmeel["<b>Zmeel</b><br/><i>[Software System]</i><br/><br/>AI desktop agent that automates<br/>tasks via natural language"]:::system
 
     AI["☁️ <b>AI Providers</b><br/><i>Anthropic · OpenAI · Google<br/>+ 12 more (cloud & local)</i>"]:::external
     FS["💾 <b>Local File System</b><br/><i>User's files & folders</i>"]:::local
@@ -27,14 +27,14 @@ graph TB
     VOICE["🎤 <b>ElevenLabs</b><br/><i>Speech-to-text</i>"]:::external
     SKILLS["📦 <b>GitHub</b><br/><i>Skill imports</i>"]:::external
 
-    User -->|"natural language tasks<br/>+ approvals"| Accomplish
-    Accomplish -->|"progress · results<br/>· permission requests"| User
-    Accomplish <-->|"LLM prompts / responses"| AI
-    Accomplish <-->|"read · write · organize"| FS
-    Accomplish -->|"browse · click · extract"| BROWSER
-    Accomplish <-->|"remote tool calls"| MCP
-    Accomplish -->|"voice input"| VOICE
-    Accomplish -->|"download skills"| SKILLS
+    User -->|"natural language tasks<br/>+ approvals"| Zmeel
+    Zmeel -->|"progress · results<br/>· permission requests"| User
+    Zmeel <-->|"LLM prompts / responses"| AI
+    Zmeel <-->|"read · write · organize"| FS
+    Zmeel -->|"browse · click · extract"| BROWSER
+    Zmeel <-->|"remote tool calls"| MCP
+    Zmeel -->|"voice input"| VOICE
+    Zmeel -->|"download skills"| SKILLS
 ```
 
 ---
@@ -52,7 +52,7 @@ graph TB
 
     User["<b>User</b><br/><i>[Person]</i><br/><br/>Uses the desktop app to<br/>describe tasks in natural<br/>language and approve<br/>file operations"]:::person
 
-    Accomplish["<b>Accomplish</b><br/><i>[Software System]</i><br/><br/>AI desktop agent that automates<br/>file management, document creation,<br/>and browser tasks locally"]:::system
+    Zmeel["<b>Zmeel</b><br/><i>[Software System]</i><br/><br/>AI desktop agent that automates<br/>file management, document creation,<br/>and browser tasks locally"]:::system
 
     %% ── AI Model Providers ──────────────────────────────
 
@@ -102,21 +102,21 @@ graph TB
 
     %% ── Relationships ──────────────────────────────────
 
-    User -- "Describes tasks,<br/>approves file operations,<br/>answers questions" --> Accomplish
-    Accomplish -- "Shows progress,<br/>asks permissions,<br/>presents results" --> User
+    User -- "Describes tasks,<br/>approves file operations,<br/>answers questions" --> Zmeel
+    Zmeel -- "Shows progress,<br/>asks permissions,<br/>presents results" --> User
 
-    Accomplish -- "Sends prompts,<br/>receives AI responses<br/>(via OpenCode CLI)" --> CloudAI
-    Accomplish -- "Sends prompts,<br/>receives AI responses<br/>(via OpenCode CLI)" --> LocalAI
+    Zmeel -- "Sends prompts,<br/>receives AI responses<br/>(via OpenCode CLI)" --> CloudAI
+    Zmeel -- "Sends prompts,<br/>receives AI responses<br/>(via OpenCode CLI)" --> LocalAI
 
-    Accomplish -- "Reads, creates, moves,<br/>renames, deletes files<br/>(with user permission)" --> FileSystem
+    Zmeel -- "Reads, creates, moves,<br/>renames, deletes files<br/>(with user permission)" --> FileSystem
 
-    Accomplish -- "Launches, navigates,<br/>clicks, fills forms,<br/>extracts data" --> ChromeBrowser
+    Zmeel -- "Launches, navigates,<br/>clicks, fills forms,<br/>extracts data" --> ChromeBrowser
     ChromeBrowser -- "Accesses" --> SaaS
 
-    Accomplish -- "Connects via OAuth 2.0,<br/>calls remote tools" --> MCPRemote
+    Zmeel -- "Connects via OAuth 2.0,<br/>calls remote tools" --> MCPRemote
 
-    Accomplish -- "Transcribes<br/>voice input" --> ElevenLabs
-    Accomplish -- "Downloads<br/>skill definitions" --> GitHub
+    Zmeel -- "Transcribes<br/>voice input" --> ElevenLabs
+    Zmeel -- "Downloads<br/>skill definitions" --> GitHub
 ```
 
 ---
@@ -139,9 +139,9 @@ graph TB
 
 ## Key Architectural Decisions at Context Level
 
-1. **Local-first**: Accomplish runs entirely on the user's machine. No Accomplish backend exists. Data stays local.
+1. **Local-first**: Zmeel runs entirely on the user's machine. No Zmeel backend exists. Data stays local.
 
-2. **Bring-your-own-AI**: Users provide their own API keys or run local models. Accomplish is a tool, not a service.
+2. **Bring-your-own-AI**: Users provide their own API keys or run local models. Zmeel is a tool, not a service.
 
 3. **Browser as integration layer**: SaaS apps (Gmail, Sheets, Notion, Slack) are accessed via browser automation, not dedicated API integrations. This means no OAuth per service and no stored SaaS credentials — the user's existing browser sessions are reused.
 

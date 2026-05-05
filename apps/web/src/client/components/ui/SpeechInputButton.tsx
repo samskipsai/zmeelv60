@@ -126,7 +126,7 @@ export function SpeechInputButton({
             onClick={handleClick}
             disabled={disabled || isTranscribing}
             className={cn(
-              'inline-flex items-center justify-center rounded-lg transition-all duration-200 ease-accomplish shrink-0',
+              'inline-flex items-center justify-center rounded-lg transition-all duration-200 ease-zmeel shrink-0',
               'disabled:cursor-not-allowed disabled:opacity-50',
               sizeClasses,
               buttonClasses,

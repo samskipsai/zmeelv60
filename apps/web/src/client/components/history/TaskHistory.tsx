@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StarButton } from '../ui/StarButton';
 import { FAVORITABLE_STATUSES } from '../../lib/task-utils';
 import { useTaskStore } from '../../stores/taskStore';
-import type { Task, TaskStatus } from '@accomplish_ai/agent-core/common';
+import type { Task, TaskStatus } from '@zmeel/agent-core/common';
 
 interface TaskHistoryProps {
   limit?: number;

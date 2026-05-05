@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { PROMPT_DEFAULT_MAX_LENGTH } from '@accomplish_ai/agent-core/common';
+import { PROMPT_DEFAULT_MAX_LENGTH } from '@zmeel/agent-core/common';
 import { useTaskStore } from '../../stores/taskStore';
-import { getAccomplish } from '../../lib/accomplish';
+import { getZmeel } from '../../lib/zmeel';
 import { useSpeechInput } from '../../hooks/useSpeechInput';
 import { useSlashCommand } from '../../hooks/useSlashCommand';
 import { useExecutionAttachments } from './useExecutionAttachments';
@@ -15,7 +15,7 @@ import { useExecutionDebugState } from './useExecutionDebugState';
 export function useExecutionCore() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
   const { t } = useTranslation('execution');
   const { t: tCommon } = useTranslation('common');
 
@@ -60,14 +60,14 @@ export function useExecutionCore() {
   const scroll = useExecutionScroll();
 
   const debug = useExecutionDebugState({
-    accomplish,
+    zmeel,
     startupStageTaskId,
     startupStage,
     id,
     currentTool,
   });
 
-  const attachmentState = useExecutionAttachments(accomplish);
+  const attachmentState = useExecutionAttachments(zmeel);
 
   const speechInput = useSpeechInput({
     onTranscriptionComplete: (text) => {
@@ -91,7 +91,7 @@ export function useExecutionCore() {
 
   useExecutionEvents({
     id,
-    accomplish,
+    zmeel,
     addTaskUpdate,
     addTaskUpdateBatch,
     updateTaskStatus,
@@ -138,7 +138,7 @@ export function useExecutionCore() {
   return {
     id,
     navigate,
-    accomplish,
+    zmeel,
     t,
     tCommon,
     followUpInputRef,

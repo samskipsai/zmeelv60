@@ -2,7 +2,7 @@
  * WhatsApp session/connection update handler.
  * Extracted from WhatsAppService to keep each file under 200 lines.
  */
-import type { MessagingConnectionStatus } from '@accomplish_ai/agent-core/common';
+import type { MessagingConnectionStatus } from '@zmeel/agent-core/common';
 import { cleanupAuthState } from './authCleanup.js';
 import { scheduleReconnect, type ReconnectState } from './reconnection.js';
 import { log } from '../logger.js';

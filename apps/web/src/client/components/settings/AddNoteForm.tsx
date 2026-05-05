@@ -1,6 +1,6 @@
 import { Check, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { KnowledgeNoteType } from '@accomplish_ai/agent-core';
+import type { KnowledgeNoteType } from '@zmeel/agent-core';
 import { Textarea } from '@/components/ui/textarea';
 
 const NOTE_TYPES: KnowledgeNoteType[] = ['context', 'instruction', 'reference'];

@@ -69,7 +69,7 @@ importers:
 
   apps/daemon:
     dependencies:
-      '@accomplish_ai/agent-core':
+      '@zmeel/agent-core':
         specifier: workspace:*
         version: link:../../packages/agent-core
       '@opencode-ai/sdk':
@@ -109,7 +109,7 @@ importers:
 
   apps/desktop:
     dependencies:
-      '@accomplish_ai/agent-core':
+      '@zmeel/agent-core':
         specifier: workspace:*
         version: link:../../packages/agent-core
       '@aws-sdk/client-bedrock':
@@ -258,7 +258,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@accomplish_ai/agent-core':
+      '@zmeel/agent-core':
         specifier: workspace:*
         version: link:../../packages/agent-core
       '@phosphor-icons/react':

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useAccomplish } from '@/lib/accomplish';
+import { useZmeel } from '@/lib/zmeel';
 import { createLogger } from '@/lib/logger';
-import type { SandboxConfig } from '@accomplish_ai/agent-core';
+import type { SandboxConfig } from '@zmeel/agent-core';
 
 const logger = createLogger('SandboxPanel');
 const DEFAULT_NETWORK_POLICY = { allowOutbound: true };
@@ -45,14 +45,14 @@ export function useSandboxPanel(): UseSandboxPanelResult {
   const hostsRef = useRef<HTMLTextAreaElement>(null);
   const pathsRef = useRef<HTMLTextAreaElement>(null);
   const configRef = useRef<SandboxConfig>(DEFAULT_CONFIG);
-  const accomplish = useAccomplish();
+  const zmeel = useZmeel();
 
   useEffect(() => {
     configRef.current = config;
   }, [config]);
 
   useEffect(() => {
-    accomplish
+    zmeel
       .getSandboxConfig()
       .then((c) => {
         const mergedConfig: SandboxConfig = {
@@ -71,7 +71,7 @@ export function useSandboxPanel(): UseSandboxPanelResult {
         setLoadError('Failed to load sandbox configuration');
         logger.error('Failed to load sandbox config:', err);
       });
-  }, [accomplish]);
+  }, [zmeel]);
 
   const saveConfig = useCallback(
     async (patch: Partial<SandboxConfig>) => {
@@ -96,7 +96,7 @@ export function useSandboxPanel(): UseSandboxPanelResult {
       configRef.current = merged;
       setConfig(merged);
       try {
-        await accomplish.setSandboxConfig(merged);
+        await zmeel.setSandboxConfig(merged);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to save sandbox configuration';
         setSaveError(message);
@@ -105,7 +105,7 @@ export function useSandboxPanel(): UseSandboxPanelResult {
         setSaving(false);
       }
     },
-    [accomplish, isLoaded, loadError],
+    [zmeel, isLoaded, loadError],
   );
 
   const handleModeChange = useCallback(

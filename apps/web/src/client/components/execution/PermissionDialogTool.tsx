@@ -1,4 +1,4 @@
-import type { PermissionRequest } from '@accomplish_ai/agent-core/common';
+import type { PermissionRequest } from '@zmeel/agent-core/common';
 
 interface PermissionDialogToolProps {
   permissionRequest: PermissionRequest;

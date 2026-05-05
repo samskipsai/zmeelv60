@@ -91,7 +91,7 @@ export function AddSkillDropdown({ onSkillAdded, onClose }: AddSkillDropdownProp
                 <circle cx="12" cy="12" r="10" />
                 <path d="M8 12h8M12 8v8" />
               </svg>
-              <span className="font-medium">{t('skills.buildWithAccomplish')}</span>
+              <span className="font-medium">{t('skills.buildWithZmeel')}</span>
             </div>
             <span className="pl-6 text-xs text-muted-foreground">
               {t('skills.buildDescription')}

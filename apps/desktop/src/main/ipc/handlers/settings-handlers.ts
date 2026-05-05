@@ -101,7 +101,7 @@ export function registerSettingsHandlers(): void {
   // ── Daemon ──────────────────────────────────────────────────────────
 
   handle('daemon:get-socket-path', async () => {
-    const { getSocketPath } = await import('@accomplish_ai/agent-core/desktop-main');
+    const { getSocketPath } = await import('@zmeel/agent-core/desktop-main');
     return getSocketPath(app.getPath('userData'));
   });
 
@@ -138,7 +138,7 @@ export function registerSettingsHandlers(): void {
       // The daemon deletes its PID lock on exit. Once the PID file is gone
       // (or its PID is no longer alive), it's safe to spawn a new one.
       try {
-        const { getPidFilePath } = await import('@accomplish_ai/agent-core/desktop-main');
+        const { getPidFilePath } = await import('@zmeel/agent-core/desktop-main');
         const { getDataDir } = await import('../../daemon/daemon-connector');
         const fs = await import('fs');
         const pidPath = getPidFilePath(getDataDir());
@@ -165,7 +165,7 @@ export function registerSettingsHandlers(): void {
 
       // Remove stale socket file so bootstrapDaemon spawns fresh
       try {
-        const { getSocketPath } = await import('@accomplish_ai/agent-core/desktop-main');
+        const { getSocketPath } = await import('@zmeel/agent-core/desktop-main');
         const { getDataDir } = await import('../../daemon/daemon-connector');
         const fs = await import('fs');
         const socketPath = getSocketPath(getDataDir());
@@ -200,7 +200,7 @@ export function registerSettingsHandlers(): void {
     // Wait for the daemon to fully exit before reporting success.
     // Same PID polling approach as restart.
     try {
-      const { getPidFilePath } = await import('@accomplish_ai/agent-core/desktop-main');
+      const { getPidFilePath } = await import('@zmeel/agent-core/desktop-main');
       const { getDataDir } = await import('../../daemon/daemon-connector');
       const fs = await import('fs');
       const pidPath = getPidFilePath(getDataDir());

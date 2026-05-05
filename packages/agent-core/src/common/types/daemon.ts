@@ -436,13 +436,13 @@ export interface DaemonMethodMap {
   'daemon.shutdown': { params: undefined; result: void };
   'health.check': { params: undefined; result: HealthCheckResult };
 
-  // Accomplish AI free tier
-  'accomplish-ai.connect': {
+  // Zmeel AI free tier
+  'zmeel-ai.connect': {
     params: undefined;
     result: { deviceFingerprint: string; usage: CreditUsage | null };
   };
-  'accomplish-ai.get-usage': { params: undefined; result: CreditUsage };
-  'accomplish-ai.disconnect': { params: undefined; result: void };
+  'zmeel-ai.get-usage': { params: undefined; result: CreditUsage };
+  'zmeel-ai.disconnect': { params: undefined; result: void };
 
   // OpenAI ChatGPT OAuth (Phase 4a of the SDK cutover port).
   // Four-method protocol — desktop calls `startLogin` + `awaitCompletion`
@@ -559,8 +559,8 @@ export interface DaemonMethodMap {
   };
   'provider.setDebugMode': { params: { enabled: boolean }; result: void };
   'provider.getDebugMode': { params: undefined; result: boolean };
-  'provider.getAccomplishAiCredits': { params: undefined; result: CreditUsage | null };
-  'provider.saveAccomplishAiCredits': { params: { usage: CreditUsage }; result: void };
+  'provider.getZmeelAiCredits': { params: undefined; result: CreditUsage | null };
+  'provider.saveZmeelAiCredits': { params: { usage: CreditUsage }; result: void };
   'provider.getHuggingFaceLocalConfig': {
     params: undefined;
     result: HuggingFaceLocalConfig | null;
@@ -724,16 +724,16 @@ export interface DaemonNotificationMap {
   'permission.request': PermissionRequest;
   'todo.update': { taskId: string; todos: TodoItem[] };
   // Connector auth-required marker observed in tool output. Renderer
-  // subscribes via `accomplish.onAuthError`. Added alongside the P1
+  // subscribes via `zmeel.onAuthError`. Added alongside the P1
   // task-callbacks wiring fix (Codex R4 P1 #1).
   'auth.error': { taskId: string; providerId: string; message: string };
   // Browser preview frames from `dev-browser-mcp` tool output. Renderer
-  // subscribes via `accomplish.onBrowserFrame`. ENG-695 / PR #414 —
+  // subscribes via `zmeel.onBrowserFrame`. ENG-695 / PR #414 —
   // plan decision #7 explicitly preserves this path.
   'browser.frame': { taskId: string; [key: string]: unknown };
 
-  // Accomplish AI credit usage updates (emitted by proxy on each gateway response)
-  'accomplish-ai.usage-update': CreditUsage;
+  // Zmeel AI credit usage updates (emitted by proxy on each gateway response)
+  'zmeel-ai.usage-update': CreditUsage;
   // WhatsApp notifications
   'whatsapp.qr': { qr: string };
   'whatsapp.status': { status: import('./messaging.js').MessagingConnectionStatus };

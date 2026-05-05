@@ -121,8 +121,8 @@ vi.mock('@main/store/storage', () => ({
 
 // ── Mock agent-core ──────────────────────────────────────────────────────────
 
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@accomplish_ai/agent-core')>();
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@zmeel/agent-core')>();
   return {
     validateApiKey: vi.fn(() => Promise.resolve({ valid: true })),
     validateBedrockCredentials: vi.fn(() => Promise.resolve({ valid: true })),
@@ -166,7 +166,7 @@ vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
   };
 });
 
-vi.mock('@accomplish_ai/agent-core/common', () => ({
+vi.mock('@zmeel/agent-core/common', () => ({
   DEV_BROWSER_PORT: 9224,
   DEV_BROWSER_CDP_PORT: 9223,
   getConnectorDefinitions: () => [],

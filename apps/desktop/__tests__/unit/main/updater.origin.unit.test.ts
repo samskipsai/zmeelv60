@@ -12,31 +12,31 @@ import {
 } from '../../../src/main/updater/origin';
 
 describe('isSameApex', () => {
-  it('accepts same-apex subdomain (typical accomplish layout)', () => {
-    // Feed lives on d.accomplish.ai; artifacts on downloads.accomplish.ai — shared apex.
-    expect(isSameApex('https://downloads.accomplish.ai/x/a.exe', 'https://d.accomplish.ai')).toBe(
+  it('accepts same-apex subdomain (typical zmeel layout)', () => {
+    // Feed lives on d.zmeel.ai; artifacts on downloads.zmeel.ai — shared apex.
+    expect(isSameApex('https://downloads.zmeel.ai/x/a.exe', 'https://d.zmeel.ai')).toBe(
       true,
     );
   });
 
   it('accepts identical host', () => {
-    expect(isSameApex('https://d.accomplish.ai/x/a.exe', 'https://d.accomplish.ai')).toBe(true);
+    expect(isSameApex('https://d.zmeel.ai/x/a.exe', 'https://d.zmeel.ai')).toBe(true);
   });
 
   it('accepts bare apex (no subdomain)', () => {
-    expect(isSameApex('https://accomplish.ai/x/a.exe', 'https://d.accomplish.ai')).toBe(true);
+    expect(isSameApex('https://zmeel.ai/x/a.exe', 'https://d.zmeel.ai')).toBe(true);
   });
 
   it('rejects different apex (attacker-controlled)', () => {
-    expect(isSameApex('https://evil.example.com/malware.exe', 'https://d.accomplish.ai')).toBe(
+    expect(isSameApex('https://evil.example.com/malware.exe', 'https://d.zmeel.ai')).toBe(
       false,
     );
   });
 
-  it('rejects label-trick hosts (myaccomplish.ai vs accomplish.ai)', () => {
-    // `myaccomplish.ai`.endsWith('accomplish.ai') is true by raw string match, but our
+  it('rejects label-trick hosts (myzmeel.ai vs zmeel.ai)', () => {
+    // `myzmeel.ai`.endsWith('zmeel.ai') is true by raw string match, but our
     // boundary-aware check (hostname === apex || hostname.endsWith('.' + apex)) rejects it.
-    expect(isSameApex('https://myaccomplish.ai/x/a.exe', 'https://d.accomplish.ai')).toBe(false);
+    expect(isSameApex('https://myzmeel.ai/x/a.exe', 'https://d.zmeel.ai')).toBe(false);
   });
 
   it('accepts localhost with localhost feed (dev opt-in)', () => {
@@ -62,13 +62,13 @@ describe('isSameApex', () => {
   });
 
   it('rejects IP candidate against DNS feed (or vice versa)', () => {
-    expect(isSameApex('http://127.0.0.1/a.exe', 'https://d.accomplish.ai')).toBe(false);
-    expect(isSameApex('https://d.accomplish.ai/a.exe', 'http://127.0.0.1')).toBe(false);
+    expect(isSameApex('http://127.0.0.1/a.exe', 'https://d.zmeel.ai')).toBe(false);
+    expect(isSameApex('https://d.zmeel.ai/a.exe', 'http://127.0.0.1')).toBe(false);
   });
 
   it('rejects HTTPS → HTTP downgrade even on same apex', () => {
     // An HTTPS feed must never direct users to a plaintext download URL.
-    expect(isSameApex('http://downloads.accomplish.ai/a.exe', 'https://d.accomplish.ai')).toBe(
+    expect(isSameApex('http://downloads.zmeel.ai/a.exe', 'https://d.zmeel.ai')).toBe(
       false,
     );
   });
@@ -80,40 +80,40 @@ describe('isSameApex', () => {
   });
 
   it('accepts same apex + same scheme (HTTPS)', () => {
-    expect(isSameApex('https://downloads.accomplish.ai/a.exe', 'https://d.accomplish.ai')).toBe(
+    expect(isSameApex('https://downloads.zmeel.ai/a.exe', 'https://d.zmeel.ai')).toBe(
       true,
     );
   });
 
   it('rejects malformed URL candidates (returns false, never throws)', () => {
-    expect(isSameApex('not a url', 'https://d.accomplish.ai')).toBe(false);
-    expect(isSameApex('', 'https://d.accomplish.ai')).toBe(false);
+    expect(isSameApex('not a url', 'https://d.zmeel.ai')).toBe(false);
+    expect(isSameApex('', 'https://d.zmeel.ai')).toBe(false);
   });
 
   it('rejects when reference URL is malformed', () => {
-    expect(isSameApex('https://d.accomplish.ai/a.exe', 'not a url')).toBe(false);
+    expect(isSameApex('https://d.zmeel.ai/a.exe', 'not a url')).toBe(false);
   });
 
   it('accepts deep subdomain chains', () => {
-    expect(isSameApex('https://a.b.c.accomplish.ai/x/a.exe', 'https://d.accomplish.ai')).toBe(true);
+    expect(isSameApex('https://a.b.c.zmeel.ai/x/a.exe', 'https://d.zmeel.ai')).toBe(true);
   });
 });
 
 describe('isTrustedManifestPath', () => {
   it('accepts relative manifest paths', () => {
     expect(
-      isTrustedManifestPath('downloads/1.0.0/app.zip', 'https://downloads.accomplish.ai'),
+      isTrustedManifestPath('downloads/1.0.0/app.zip', 'https://downloads.zmeel.ai'),
     ).toBe(true);
   });
 
   it('rejects protocol-relative URLs', () => {
     expect(
-      isTrustedManifestPath('//evil.example.com/app.zip', 'https://downloads.accomplish.ai'),
+      isTrustedManifestPath('//evil.example.com/app.zip', 'https://downloads.zmeel.ai'),
     ).toBe(false);
   });
 
   it('rejects non-http absolute URLs', () => {
-    expect(isTrustedManifestPath('file:///tmp/app.zip', 'https://downloads.accomplish.ai')).toBe(
+    expect(isTrustedManifestPath('file:///tmp/app.zip', 'https://downloads.zmeel.ai')).toBe(
       false,
     );
   });
@@ -124,10 +124,10 @@ describe('isTrustedUpdateInfo', () => {
     expect(
       isTrustedUpdateInfo(
         {
-          files: [{ url: 'https://downloads.accomplish.ai/downloads/1.0.0/app.zip' }],
-          path: 'https://downloads.accomplish.ai/downloads/1.0.0/app.zip',
+          files: [{ url: 'https://downloads.zmeel.ai/downloads/1.0.0/app.zip' }],
+          path: 'https://downloads.zmeel.ai/downloads/1.0.0/app.zip',
         },
-        'https://downloads.accomplish.ai',
+        'https://downloads.zmeel.ai',
       ),
     ).toBe(true);
   });
@@ -137,9 +137,9 @@ describe('isTrustedUpdateInfo', () => {
       isTrustedUpdateInfo(
         {
           files: [{ url: 'https://evil.example.com/app.zip' }],
-          path: 'https://downloads.accomplish.ai/downloads/1.0.0/app.zip',
+          path: 'https://downloads.zmeel.ai/downloads/1.0.0/app.zip',
         },
-        'https://downloads.accomplish.ai',
+        'https://downloads.zmeel.ai',
       ),
     ).toBe(false);
   });

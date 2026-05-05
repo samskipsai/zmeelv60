@@ -27,7 +27,7 @@
  */
 import { EventEmitter } from 'node:events';
 import type { Database } from 'better-sqlite3';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
+import type { StorageAPI } from '@zmeel/agent-core';
 import type {
   GoogleAccount,
   GoogleAccountStatus,
@@ -35,7 +35,7 @@ import type {
   GwsAccountAddInput,
   GwsAccountStatusChangedPayload,
   GwsAccountTokenResult,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 /** Refresh 10 minutes before the access token's actual expiry. */
 const TOKEN_REFRESH_MARGIN_MS = 10 * 60 * 1000;

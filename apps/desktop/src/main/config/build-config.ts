@@ -33,9 +33,9 @@ const buildConfigSchema = z.object({
   gaApiSecret: z.string().default(''),
   gaMeasurementId: z.string().default(''),
   sentryDsn: z.string().default(''),
-  accomplishGatewayUrl: z.string().default(''),
+  zmeelGatewayUrl: z.string().default(''),
   buildId: z.string().default(''),
-  accomplishUpdaterUrl: z.string().default(''),
+  zmeelUpdaterUrl: z.string().default(''),
 });
 
 export type BuildConfig = z.infer<typeof buildConfigSchema>;
@@ -93,17 +93,17 @@ export function loadBuildConfig(): BuildConfig {
     gaApiSecret: firstNonEmpty(raw.GA_API_SECRET, process.env.GA_API_SECRET),
     gaMeasurementId: firstNonEmpty(raw.GA_MEASUREMENT_ID, process.env.GA_MEASUREMENT_ID),
     sentryDsn: firstNonEmpty(raw.SENTRY_DSN, process.env.SENTRY_DSN),
-    accomplishGatewayUrl: firstNonEmpty(
-      raw.ACCOMPLISH_GATEWAY_URL,
-      process.env.ACCOMPLISH_GATEWAY_URL,
+    zmeelGatewayUrl: firstNonEmpty(
+      raw.ZMEEL_GATEWAY_URL,
+      process.env.ZMEEL_GATEWAY_URL,
     ),
-    buildId: firstNonEmpty(raw.ACCOMPLISH_BUILD_ID, process.env.ACCOMPLISH_BUILD_ID),
+    buildId: firstNonEmpty(raw.ZMEEL_BUILD_ID, process.env.ZMEEL_BUILD_ID),
     // The updater spawns an installer at elevated privilege on some platforms. A rogue
     // URL is a code-execution risk (unlike analytics tokens that only send data). In
     // packaged builds we require build.env as the source — process.env is dev-only.
-    accomplishUpdaterUrl: firstNonEmpty(
-      raw.ACCOMPLISH_UPDATER_URL,
-      app.isPackaged ? undefined : process.env.ACCOMPLISH_UPDATER_URL,
+    zmeelUpdaterUrl: firstNonEmpty(
+      raw.ZMEEL_UPDATER_URL,
+      app.isPackaged ? undefined : process.env.ZMEEL_UPDATER_URL,
     ),
   });
 
@@ -124,8 +124,8 @@ export function loadBuildConfig(): BuildConfig {
     cachedConfig.mixpanelToken ||
     cachedConfig.gaApiSecret ||
     cachedConfig.sentryDsn ||
-    cachedConfig.accomplishGatewayUrl ||
-    cachedConfig.accomplishUpdaterUrl
+    cachedConfig.zmeelGatewayUrl ||
+    cachedConfig.zmeelUpdaterUrl
   ) {
     console.log('[BuildConfig] Loaded build config from process.env (dev / custom fallback)');
   } else {
@@ -148,13 +148,13 @@ export function getBuildConfig(): BuildConfig {
 
 /** True when the gateway URL is configured — Free tier is available. */
 export function isFreeMode(): boolean {
-  return !!getBuildConfig().accomplishGatewayUrl;
+  return !!getBuildConfig().zmeelGatewayUrl;
 }
 
 /** True when an updater feed URL is configured — auto-updater is available.
  *  In packaged builds this requires build.env (process.env fallback is dev-only). */
 export function isAutoUpdaterEnabled(): boolean {
-  return !!getBuildConfig().accomplishUpdaterUrl;
+  return !!getBuildConfig().zmeelUpdaterUrl;
 }
 
 /** True when any analytics or error-tracking service is configured. */
@@ -177,7 +177,7 @@ export function getAppTier(): 'lite' | 'oss' {
  * with every different build, ensuring the new app restarts the daemon.
  *
  * Priority:
- * 1. Packaged builds: ACCOMPLISH_BUILD_ID from build.env (injected by release pipeline)
+ * 1. Packaged builds: ZMEEL_BUILD_ID from build.env (injected by release pipeline)
  * 2. Dev builds: git commit SHA (changes with every committed change / git pull).
  *    NOTE: does not detect uncommitted edits or stale daemon artifacts from
  *    bundled-input changes — developers must rebuild the daemon explicitly.

@@ -50,17 +50,17 @@ pnpm build || exit 1
 
 if echo "$CHANGED" | grep -q "^apps/web/"; then
   echo "[pre-push] Running web unit tests..."
-  pnpm -F @accomplish/web test:unit || exit 1
+  pnpm -F @zmeel/web test:unit || exit 1
 fi
 
 if echo "$CHANGED" | grep -q "^apps/desktop/"; then
   echo "[pre-push] Running desktop unit tests..."
-  pnpm -F @accomplish/desktop test:unit || exit 1
+  pnpm -F @zmeel/desktop test:unit || exit 1
 fi
 
 if echo "$CHANGED" | grep -q "^packages/agent-core/"; then
   echo "[pre-push] Running agent-core tests..."
-  pnpm -F @accomplish_ai/agent-core test || exit 1
+  pnpm -F @zmeel/agent-core test || exit 1
 fi
 
 # 7. Locale alignment check (runs when locale files or the script itself changed)

@@ -34,10 +34,10 @@ import { spawn, spawnSync, type ChildProcess } from 'child_process';
 import {
   resolveCliPath,
   type StorageAPI,
-  type AccomplishRuntime,
+  type ZmeelRuntime,
   type CliResolverConfig,
   type OnBeforeStartContext,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import { createOpencodeClient, type OpencodeClient } from '@opencode-ai/sdk/v2';
 
 import { log } from '../logger.js';
@@ -64,8 +64,8 @@ interface TrackedOpencodeServerHandle {
  */
 export interface ServerManagerDeps extends TaskConfigBuilderOptions {
   storage: StorageAPI;
-  /** Optional Accomplish runtime context (proxy, credits, etc.); daemon wires it. */
-  accomplishRuntime?: AccomplishRuntime;
+  /** Optional Zmeel runtime context (proxy, credits, etc.); daemon wires it. */
+  zmeelRuntime?: ZmeelRuntime;
 }
 
 // ──────────────────────────── process-tree management ──────────────────────

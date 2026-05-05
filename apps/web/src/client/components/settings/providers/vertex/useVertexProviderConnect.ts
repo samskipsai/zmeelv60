@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAccomplish } from '@/lib/accomplish';
-import type { ConnectedProvider, VertexProviderCredentials } from '@accomplish_ai/agent-core';
+import { getZmeel } from '@/lib/zmeel';
+import type { ConnectedProvider, VertexProviderCredentials } from '@zmeel/agent-core';
 import { isCuratedVertexModel } from './vertex-model-utils';
 import type {
   UseVertexProviderConnectParams,
@@ -28,7 +28,7 @@ export function useVertexProviderConnect({
     setError(null);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
 
       const credentials =
         authTab === 'serviceAccount'
@@ -44,7 +44,7 @@ export function useVertexProviderConnect({
               location,
             };
 
-      const validation = await accomplish.validateVertexCredentials(credentials);
+      const validation = await zmeel.validateVertexCredentials(credentials);
 
       if (!validation.valid) {
         setError(validation.error || t('vertex.invalidCredentials'));
@@ -52,9 +52,9 @@ export function useVertexProviderConnect({
         return;
       }
 
-      await accomplish.saveVertexCredentials(credentials);
+      await zmeel.saveVertexCredentials(credentials);
       const credentialsJson = JSON.stringify(credentials);
-      const modelsResult = await accomplish.fetchVertexModels(credentialsJson);
+      const modelsResult = await zmeel.fetchVertexModels(credentialsJson);
       const fetchedModels = modelsResult.success ? modelsResult.models : [];
       setAvailableModels(fetchedModels);
       const preferredDefault = 'vertex/google/gemini-2.5-pro';

@@ -1,7 +1,7 @@
 // =============================================================================
-// @accomplish/core - Public API (v0.4.0)
+// @zmeel/core - Public API (v0.4.0)
 // =============================================================================
-// This file explicitly exports the public API for the @accomplish/core package.
+// This file explicitly exports the public API for the @zmeel/core package.
 // All exports are explicit named exports to ensure API stability and clarity.
 // =============================================================================
 
@@ -101,7 +101,7 @@ export { OpenCodeCliNotFoundError } from './internal/classes/OpenCodeAdapter.js'
 
 // Low-level OpenCode utilities for advanced integrations
 export { resolveCliPath, isCliAvailable } from './opencode/cli-resolver.js';
-export { generateConfig, ACCOMPLISH_AGENT_NAME } from './opencode/config-generator.js';
+export { generateConfig, ZMEEL_AGENT_NAME } from './opencode/config-generator.js';
 // Phase 4b of the OpenCode SDK cutover port deleted `./opencode/cli-args.js`
 // (the SDK adapter uses `session.prompt`, not CLI args).
 
@@ -180,13 +180,13 @@ export { sanitizeAssistantTextForDisplay } from './opencode/message-processor.js
 
 export { getAzureEntraToken } from './opencode/proxies/index.js';
 
-// Accomplish AI runtime adapter
-export { noopRuntime } from './opencode/accomplish-runtime.js';
+// Zmeel AI runtime adapter
+export { noopRuntime } from './opencode/zmeel-runtime.js';
 export type {
-  AccomplishRuntime,
-  AccomplishConnectResult,
+  ZmeelRuntime,
+  ZmeelConnectResult,
   StorageDeps,
-} from './opencode/accomplish-runtime.js';
+} from './opencode/zmeel-runtime.js';
 
 // -----------------------------------------------------------------------------
 // Storage Module (from ./storage/)
@@ -196,7 +196,7 @@ export type {
 export { FutureSchemaError } from './storage/migrations/errors.js';
 
 // Legacy workspace-meta.db cleanup helper. The tables themselves now live
-// in the main `accomplish.db` per v030; this helper deletes the retired
+// in the main `zmeel.db` per v030; this helper deletes the retired
 // file after verified import.
 export { deleteLegacyWorkspaceMetaFiles } from './storage/delete-legacy-workspace-meta.js';
 
@@ -351,7 +351,7 @@ export type { GetApiKeyFn } from './services/summarizer.js';
 // Use createSkillsManager factory from ./factories/skills-manager.js instead
 
 // -----------------------------------------------------------------------------
-// Shared Module (from ./common/) - Merged from @accomplish/shared
+// Shared Module (from ./common/) - Merged from @zmeel/shared
 // -----------------------------------------------------------------------------
 
 // Task types
@@ -426,7 +426,7 @@ export type {
   AzureFoundryCredentials,
   OAuthCredentials,
   CopilotOAuthCredentials,
-  AccomplishAiCredentials,
+  ZmeelAiCredentials,
   CustomCredentials,
   NimCredentials,
   ProviderCredentials,

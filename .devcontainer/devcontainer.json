@@ -1,5 +1,5 @@
 {
-  "name": "Accomplish Dev Environment",
+  "name": "Zmeel Dev Environment",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
   "features": {},
   "forwardPorts": [5173],

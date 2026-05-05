@@ -1,4 +1,4 @@
-import type { HealthCheckResult } from '@accomplish_ai/agent-core';
+import type { HealthCheckResult } from '@zmeel/agent-core';
 
 export const VERSION = '0.1.0';
 const startTime = Date.now();

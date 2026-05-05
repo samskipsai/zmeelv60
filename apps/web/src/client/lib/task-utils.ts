@@ -1,4 +1,4 @@
-import type { Task } from '@accomplish_ai/agent-core/common';
+import type { Task } from '@zmeel/agent-core/common';
 
 /** Task statuses that support the favorites/bookmarking feature */
 export const FAVORITABLE_STATUSES: readonly string[] = ['completed', 'interrupted'] as const;

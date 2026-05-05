@@ -13,9 +13,9 @@ import {
   generatePkceChallenge,
   buildAuthorizationUrl,
   exchangeCodeForTokens,
-} from '@accomplish_ai/agent-core/desktop-main';
-import type { OAuthProviderId, ConnectorDefinition } from '@accomplish_ai/agent-core/common';
-import { getConnectorDefinition } from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/desktop-main';
+import type { OAuthProviderId, ConnectorDefinition } from '@zmeel/agent-core/common';
+import { getConnectorDefinition } from '@zmeel/agent-core/common';
 import { createOAuthCallbackServer } from '../oauth-callback-server';
 import { getConnectorAuthStore } from './connector-auth-registry';
 import type { ConnectorOAuthResult } from './connector-token-resolver';

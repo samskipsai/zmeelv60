@@ -17,11 +17,11 @@ import {
   DaemonClient,
   createSocketTransport,
   getSocketPath,
-} from '@accomplish_ai/agent-core/desktop-main';
+} from '@zmeel/agent-core/desktop-main';
 import { getNodePath } from '../utils/bundled-node';
 import { getLogCollector } from '../logging';
 import { getBuildConfig, getBuildId } from '../config/build-config';
-import { getPidFilePath } from '@accomplish_ai/agent-core/desktop-main';
+import { getPidFilePath } from '@zmeel/agent-core/desktop-main';
 
 /** How long to wait for the daemon to become ready after spawning. */
 const SPAWN_READY_TIMEOUT_MS = 10_000;
@@ -195,7 +195,7 @@ async function waitForDaemonExit(dataDir: string, timeoutMs: number = 30_000): P
  * Preference order:
  *   1. Bundled Node under `resources/nodejs/<platform>-<arch>/…` —
  *      same binary the packaged app uses. Requires
- *      `pnpm -F @accomplish/desktop download:nodejs` to have been run;
+ *      `pnpm -F @zmeel/desktop download:nodejs` to have been run;
  *      the build scripts chain it in, so most dev checkouts already
  *      have it.
  *   2. `process.env.npm_node_execpath` — the Node that launched pnpm.
@@ -238,7 +238,7 @@ export function spawnDaemon(dataDir: string): void {
   const daemonEnv: Record<string, string | undefined> = {
     ...process.env,
     // Build identity for version-guard — daemon returns this in ping response
-    ACCOMPLISH_BUILD_ID: getBuildId(),
+    ZMEEL_BUILD_ID: getBuildId(),
   };
   // M6: `ELECTRON_RUN_AS_NODE` is actively harmful now — it forces
   // Electron's ABI regardless of the launcher binary. Pre-M6 we set
@@ -246,21 +246,21 @@ export function spawnDaemon(dataDir: string): void {
   // the parent Electron process inherited it from its own shell.
   delete daemonEnv.ELECTRON_RUN_AS_NODE;
 
-  // Inject gateway URL so the daemon can start the Accomplish AI proxy.
+  // Inject gateway URL so the daemon can start the Zmeel AI proxy.
   // Only set when build.env is present (Free builds); absent in OSS builds.
   const bc = getBuildConfig();
-  if (bc.accomplishGatewayUrl) {
-    daemonEnv.ACCOMPLISH_GATEWAY_URL = bc.accomplishGatewayUrl;
+  if (bc.zmeelGatewayUrl) {
+    daemonEnv.ZMEEL_GATEWAY_URL = bc.zmeelGatewayUrl;
   }
   if (app.isPackaged) {
-    daemonEnv.ACCOMPLISH_IS_PACKAGED = '1';
-    daemonEnv.ACCOMPLISH_RESOURCES_PATH = process.resourcesPath;
-    daemonEnv.ACCOMPLISH_APP_PATH = app.getAppPath();
+    daemonEnv.ZMEEL_IS_PACKAGED = '1';
+    daemonEnv.ZMEEL_RESOURCES_PATH = process.resourcesPath;
+    daemonEnv.ZMEEL_APP_PATH = app.getAppPath();
   } else {
     // Dev mode: pass desktop app path so daemon can find bundled Node.js
     // and other resources relative to the desktop workspace
-    daemonEnv.ACCOMPLISH_APP_PATH = app.getAppPath();
-    daemonEnv.ACCOMPLISH_RESOURCES_PATH = path.join(app.getAppPath(), 'resources');
+    daemonEnv.ZMEEL_APP_PATH = app.getAppPath();
+    daemonEnv.ZMEEL_RESOURCES_PATH = path.join(app.getAppPath(), 'resources');
   }
 
   // Always redirect daemon stdout/stderr to daemon.log — essential for

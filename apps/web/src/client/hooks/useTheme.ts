@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { applyTheme as applyLibTheme } from '@/lib/theme';
 
 type ThemePreference = 'system' | 'light' | 'dark';
@@ -42,8 +42,8 @@ export function useTheme() {
 
   // Sync from Electron backend on mount and subscribe to host-driven changes
   useEffect(() => {
-    const accomplish = getAccomplish();
-    accomplish
+    const zmeel = getZmeel();
+    zmeel
       .getTheme()
       .then((theme) => {
         // Skip if the user already made a choice before this async call resolved
@@ -57,8 +57,8 @@ export function useTheme() {
         // fall back to locally stored preference
       });
 
-    if (accomplish.onThemeChange) {
-      const cleanup = accomplish.onThemeChange(({ theme, resolved }) => {
+    if (zmeel.onThemeChange) {
+      const cleanup = zmeel.onThemeChange(({ theme, resolved }) => {
         if (theme === 'light' || theme === 'dark' || theme === 'system') {
           setPreference(theme);
         }
@@ -93,7 +93,7 @@ export function useTheme() {
     setPreference(newPreference);
     setIsDark(resolveIsDark(newPreference));
     applyLibTheme(newPreference);
-    getAccomplish()
+    getZmeel()
       .setTheme(newPreference)
       .catch(() => {
         // ignore

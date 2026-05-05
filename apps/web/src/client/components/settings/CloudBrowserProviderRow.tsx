@@ -1,7 +1,7 @@
 import type {
   CloudBrowserProvider,
   CloudBrowserProviderConfig,
-} from '@accomplish_ai/agent-core/common';
+} from '@zmeel/agent-core/common';
 import ProviderForm from './ProviderForm';
 
 interface CloudBrowserProviderDef {

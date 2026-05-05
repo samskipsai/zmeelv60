@@ -88,7 +88,7 @@ export async function initUpdater(window: BrowserWindow): Promise<void> {
       autoUpdater.forceDevUpdateConfig = true;
     }
 
-    // No `channel` key: accomplish-release publishes `latest-<platform>.yml` at the
+    // No `channel` key: zmeel-release publishes `latest-<platform>.yml` at the
     // URL's root (or under a sub-path for non-stable channels). Default `'latest'`
     // channel in electron-updater fetches exactly that filename.
     autoUpdater.setFeedURL({ provider: 'generic', url: getFeedUrl() });

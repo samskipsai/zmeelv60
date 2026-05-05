@@ -5,7 +5,7 @@ import type {
   StorageAPI,
   TaskManagerAPI,
   TaskSource,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 import { createTaskCallbacks } from '../../src/task-callbacks.js';
 
 /**

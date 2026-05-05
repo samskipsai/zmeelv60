@@ -58,8 +58,8 @@ export class DockerSandboxProvider implements SandboxProvider {
    */
   async wrapSpawnArgs(args: SpawnArgs, config: SandboxConfig): Promise<SpawnArgs> {
     const sandboxEnv: Record<string, string> = {
-      ACCOMPLISH_SANDBOX_ENABLED: '1',
-      ACCOMPLISH_SANDBOX_MODE: 'docker',
+      ZMEEL_SANDBOX_ENABLED: '1',
+      ZMEEL_SANDBOX_MODE: 'docker',
     };
     const mergedEnv = { ...(args.env ?? {}), ...sandboxEnv };
     const dockerArgs = buildDockerArgs({ ...args, env: mergedEnv }, config, this.getSandboxPaths);

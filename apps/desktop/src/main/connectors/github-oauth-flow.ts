@@ -7,7 +7,7 @@
 
 import { execFile } from 'child_process';
 import { promisify } from 'util';
-import type { OAuthProviderId } from '@accomplish_ai/agent-core/common';
+import type { OAuthProviderId } from '@zmeel/agent-core/common';
 import { getConnectorAuthStore } from './connector-auth-registry';
 import {
   setDesktopConnectorConnected,

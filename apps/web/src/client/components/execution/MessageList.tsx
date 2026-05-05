@@ -1,7 +1,7 @@
 import { useState, useEffect, memo } from 'react';
 import { motion } from 'framer-motion';
 import { springs } from '../../lib/animations';
-import type { TaskMessage } from '@accomplish_ai/agent-core/common';
+import type { TaskMessage } from '@zmeel/agent-core/common';
 import { Wrench, Terminal } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';

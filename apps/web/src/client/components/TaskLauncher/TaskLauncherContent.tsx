@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { springs } from '@/lib/animations';
 import { TaskLauncherItem } from './TaskLauncherItem';
 import { Input } from '@/components/ui/input';
-import type { Task } from '@accomplish_ai/agent-core/common';
+import type { Task } from '@zmeel/agent-core/common';
 
 interface TaskLauncherContentProps {
   searchQuery: string;

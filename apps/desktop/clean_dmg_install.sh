@@ -1,11 +1,11 @@
 #!/bin/bash
-# Clean all files related to DMG/production installations of Accomplish
+# Clean all files related to DMG/production installations of Zmeel
 # This removes app data, preferences, caches, and optionally the app itself
 # Useful for testing fresh installs or complete uninstallation
 
 set -e
 
-echo "=== ACCOMPLISH DMG INSTALLATION CLEANUP ==="
+echo "=== ZMEEL DMG INSTALLATION CLEANUP ==="
 echo ""
 
 # Parse arguments
@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
       echo "  --help, -h      Show this help message"
       echo ""
       echo "This script cleans up all user data, caches, and preferences"
-      echo "for Accomplish production (DMG) installations."
+      echo "for Zmeel production (DMG) installations."
       exit 0
       ;;
     *)
@@ -44,12 +44,12 @@ done
 
 # Confirm unless --force is used
 if [ "$FORCE" != true ]; then
-  echo "This will remove all Accomplish user data including:"
+  echo "This will remove all Zmeel user data including:"
   echo "  - App settings and task history"
   echo "  - Cached data and logs"
   echo "  - Keychain credentials"
   if [ "$REMOVE_APP" = true ]; then
-    echo "  - The Accomplish application itself"
+    echo "  - The Zmeel application itself"
   fi
   echo ""
   read -p "Are you sure you want to continue? (y/N) " -n 1 -r
@@ -63,21 +63,21 @@ fi
 echo ""
 
 # Kill any running instances
-echo "Stopping any running Accomplish processes..."
-pkill -f "Accomplish" 2>/dev/null || true
-pkill -f "Accomplish Lite" 2>/dev/null || true
+echo "Stopping any running Zmeel processes..."
+pkill -f "Zmeel" 2>/dev/null || true
+pkill -f "Zmeel Lite" 2>/dev/null || true
 sleep 1
 
 # Application Support directories (electron-store data)
 echo "Clearing Application Support data..."
 APP_SUPPORT_DIRS=(
-  "$HOME/Library/Application Support/Accomplish"
-  "$HOME/Library/Application Support/Accomplish Lite"
-  "$HOME/Library/Application Support/com.accomplish.desktop"
-  "$HOME/Library/Application Support/com.accomplish.lite"
-  "$HOME/Library/Application Support/ai.accomplish.desktop"
-  "$HOME/Library/Application Support/ai.accomplish.lite"
-  "$HOME/Library/Application Support/@accomplish/desktop"
+  "$HOME/Library/Application Support/Zmeel"
+  "$HOME/Library/Application Support/Zmeel Lite"
+  "$HOME/Library/Application Support/com.zmeel.desktop"
+  "$HOME/Library/Application Support/com.zmeel.lite"
+  "$HOME/Library/Application Support/ai.zmeel.desktop"
+  "$HOME/Library/Application Support/ai.zmeel.lite"
+  "$HOME/Library/Application Support/@zmeel/desktop"
 )
 
 for dir in "${APP_SUPPORT_DIRS[@]}"; do
@@ -90,11 +90,11 @@ done
 # Preferences (plist files)
 echo "Clearing preferences..."
 PLIST_FILES=(
-  "$HOME/Library/Preferences/com.accomplish.desktop.plist"
-  "$HOME/Library/Preferences/com.accomplish.lite.plist"
-  "$HOME/Library/Preferences/com.accomplish.app.plist"
-  "$HOME/Library/Preferences/ai.accomplish.desktop.plist"
-  "$HOME/Library/Preferences/ai.accomplish.lite.plist"
+  "$HOME/Library/Preferences/com.zmeel.desktop.plist"
+  "$HOME/Library/Preferences/com.zmeel.lite.plist"
+  "$HOME/Library/Preferences/com.zmeel.app.plist"
+  "$HOME/Library/Preferences/ai.zmeel.desktop.plist"
+  "$HOME/Library/Preferences/ai.zmeel.lite.plist"
 )
 
 for plist in "${PLIST_FILES[@]}"; do
@@ -107,13 +107,13 @@ done
 # Caches
 echo "Clearing caches..."
 CACHE_DIRS=(
-  "$HOME/Library/Caches/Accomplish"
-  "$HOME/Library/Caches/Accomplish Lite"
-  "$HOME/Library/Caches/com.accomplish.desktop"
-  "$HOME/Library/Caches/com.accomplish.lite"
-  "$HOME/Library/Caches/ai.accomplish.desktop"
-  "$HOME/Library/Caches/ai.accomplish.lite"
-  "$HOME/Library/Caches/@accomplish/desktop"
+  "$HOME/Library/Caches/Zmeel"
+  "$HOME/Library/Caches/Zmeel Lite"
+  "$HOME/Library/Caches/com.zmeel.desktop"
+  "$HOME/Library/Caches/com.zmeel.lite"
+  "$HOME/Library/Caches/ai.zmeel.desktop"
+  "$HOME/Library/Caches/ai.zmeel.lite"
+  "$HOME/Library/Caches/@zmeel/desktop"
 )
 
 for dir in "${CACHE_DIRS[@]}"; do
@@ -126,11 +126,11 @@ done
 # Logs
 echo "Clearing logs..."
 LOG_DIRS=(
-  "$HOME/Library/Logs/Accomplish"
-  "$HOME/Library/Logs/Accomplish Lite"
-  "$HOME/Library/Logs/ai.accomplish.desktop"
-  "$HOME/Library/Logs/ai.accomplish.lite"
-  "$HOME/Library/Logs/@accomplish/desktop"
+  "$HOME/Library/Logs/Zmeel"
+  "$HOME/Library/Logs/Zmeel Lite"
+  "$HOME/Library/Logs/ai.zmeel.desktop"
+  "$HOME/Library/Logs/ai.zmeel.lite"
+  "$HOME/Library/Logs/@zmeel/desktop"
 )
 
 for dir in "${LOG_DIRS[@]}"; do
@@ -143,10 +143,10 @@ done
 # Saved Application State
 echo "Clearing saved application state..."
 SAVED_STATE_DIRS=(
-  "$HOME/Library/Saved Application State/com.accomplish.desktop.savedState"
-  "$HOME/Library/Saved Application State/com.accomplish.lite.savedState"
-  "$HOME/Library/Saved Application State/ai.accomplish.desktop.savedState"
-  "$HOME/Library/Saved Application State/ai.accomplish.lite.savedState"
+  "$HOME/Library/Saved Application State/com.zmeel.desktop.savedState"
+  "$HOME/Library/Saved Application State/com.zmeel.lite.savedState"
+  "$HOME/Library/Saved Application State/ai.zmeel.desktop.savedState"
+  "$HOME/Library/Saved Application State/ai.zmeel.lite.savedState"
 )
 
 for dir in "${SAVED_STATE_DIRS[@]}"; do
@@ -159,13 +159,13 @@ done
 # Keychain entries
 echo "Clearing keychain entries..."
 KEYCHAIN_SERVICES=(
-  "Accomplish"
-  "Accomplish Lite"
-  "com.accomplish.desktop"
-  "com.accomplish.lite"
-  "ai.accomplish.desktop"
-  "ai.accomplish.lite"
-  "@accomplish/desktop"
+  "Zmeel"
+  "Zmeel Lite"
+  "com.zmeel.desktop"
+  "com.zmeel.lite"
+  "ai.zmeel.desktop"
+  "ai.zmeel.lite"
+  "@zmeel/desktop"
 )
 KEYCHAIN_KEYS=("accessToken" "refreshToken" "userId" "tokenExpiresAt" "tokenIntegrity" "deviceSecret")
 
@@ -192,10 +192,10 @@ done
 if [ "$REMOVE_APP" = true ]; then
   echo "Removing application..."
   APP_PATHS=(
-    "/Applications/Accomplish.app"
-    "/Applications/Accomplish Lite.app"
-    "$HOME/Applications/Accomplish.app"
-    "$HOME/Applications/Accomplish Lite.app"
+    "/Applications/Zmeel.app"
+    "/Applications/Zmeel Lite.app"
+    "$HOME/Applications/Zmeel.app"
+    "$HOME/Applications/Zmeel Lite.app"
   )
 
   for app in "${APP_PATHS[@]}"; do
@@ -209,7 +209,7 @@ fi
 # Clear quarantine attributes if we're keeping the app
 if [ "$REMOVE_APP" != true ]; then
   echo "Clearing quarantine attributes (if app exists)..."
-  for app in "/Applications/Accomplish.app" "/Applications/Accomplish Lite.app"; do
+  for app in "/Applications/Zmeel.app" "/Applications/Zmeel Lite.app"; do
     if [ -d "$app" ]; then
       xattr -rd com.apple.quarantine "$app" 2>/dev/null && echo "  - Cleared quarantine: $app" || true
     fi
@@ -221,9 +221,9 @@ echo "=== CLEANUP COMPLETE ==="
 echo ""
 
 if [ "$REMOVE_APP" = true ]; then
-  echo "All Accomplish data and applications have been removed."
+  echo "All Zmeel data and applications have been removed."
   echo "You can reinstall from the DMG file."
 else
-  echo "All Accomplish user data has been cleared."
+  echo "All Zmeel user data has been cleared."
   echo "The app will behave like a fresh installation on next launch."
 fi

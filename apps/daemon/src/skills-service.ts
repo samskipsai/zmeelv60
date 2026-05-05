@@ -26,7 +26,7 @@ import {
   type SkillsManagerAPI,
   type Skill,
   type SkillsChangedPayload,
-} from '@accomplish_ai/agent-core';
+} from '@zmeel/agent-core';
 
 export const SKILLS_CHANGED = 'skills.changed' as const;
 

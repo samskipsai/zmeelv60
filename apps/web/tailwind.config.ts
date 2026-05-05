@@ -104,7 +104,7 @@ const config: Config = {
         apparat: ['KMR Apparat', 'Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       transitionTimingFunction: {
-        accomplish: 'cubic-bezier(0.64, 0, 0.78, 0)',
+        zmeel: 'cubic-bezier(0.64, 0, 0.78, 0)',
       },
       animation: {
         shimmer: 'shimmer 2s infinite',

@@ -16,7 +16,7 @@ export default defineConfig({
     'better-sqlite3',
     // Optional private package — resolved at runtime via dynamic import, not bundled.
     // In OSS builds it's absent (noop fallback). In Free builds CI copies it into dist/.
-    '@accomplish/llm-gateway-client',
+    '@zmeel/llm-gateway-client',
   ],
   // Bundle all JS dependencies so the packaged daemon is self-contained.
   // Only native modules (above) remain as external imports.
@@ -27,7 +27,7 @@ export default defineConfig({
   // CJS bundle sidesteps the conditional-exports mismatch. Without this
   // entry the daemon won't boot in dev or prod.
   noExternal: [
-    '@accomplish_ai/agent-core',
+    '@zmeel/agent-core',
     '@opencode-ai/sdk',
     'zod',
     '@whiskeysockets/baileys',

@@ -6,8 +6,8 @@ import type {
   Workspace,
   WorkspaceCreateInput,
   WorkspaceUpdateInput,
-} from '@accomplish_ai/agent-core/common';
-import { getAccomplish } from '../lib/accomplish';
+} from '@zmeel/agent-core/common';
+import { getZmeel } from '../lib/zmeel';
 
 interface WorkspaceState {
   workspaces: Workspace[];
@@ -32,10 +32,10 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
   loadWorkspaces: async () => {
     set({ isLoading: true });
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const [workspaces, activeId] = await Promise.all([
-        accomplish.listWorkspaces(),
-        accomplish.getActiveWorkspaceId(),
+        zmeel.listWorkspaces(),
+        zmeel.getActiveWorkspaceId(),
       ]);
       set({ workspaces, activeWorkspaceId: activeId, isLoading: false });
     } catch (err) {
@@ -50,8 +50,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
     }
     set({ isSwitching: true });
     try {
-      const accomplish = getAccomplish();
-      const result = await accomplish.switchWorkspace(id);
+      const zmeel = getZmeel();
+      const result = await zmeel.switchWorkspace(id);
       if (result.success) {
         set({ activeWorkspaceId: id, isSwitching: false });
       } else {
@@ -66,8 +66,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
 
   createWorkspace: async (input: WorkspaceCreateInput) => {
     try {
-      const accomplish = getAccomplish();
-      const workspace = await accomplish.createWorkspace(input);
+      const zmeel = getZmeel();
+      const workspace = await zmeel.createWorkspace(input);
       set((state) => ({
         workspaces: [...state.workspaces, workspace],
       }));
@@ -80,8 +80,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
 
   updateWorkspace: async (id: string, input: WorkspaceUpdateInput) => {
     try {
-      const accomplish = getAccomplish();
-      const updated = await accomplish.updateWorkspace(id, input);
+      const zmeel = getZmeel();
+      const updated = await zmeel.updateWorkspace(id, input);
       if (updated) {
         set((state) => ({
           workspaces: state.workspaces.map((w) => (w.id === id ? updated : w)),
@@ -96,8 +96,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
 
   deleteWorkspace: async (id: string) => {
     try {
-      const accomplish = getAccomplish();
-      const deleted = await accomplish.deleteWorkspace(id);
+      const zmeel = getZmeel();
+      const deleted = await zmeel.deleteWorkspace(id);
       if (deleted) {
         set((state) => ({
           workspaces: state.workspaces.filter((w) => w.id !== id),
@@ -118,9 +118,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
 // Subscribe to workspace events
 let unsubscribeWorkspaceChanged: (() => void) | undefined;
 
-if (typeof window !== 'undefined' && window.accomplish) {
+if (typeof window !== 'undefined' && window.zmeel) {
   unsubscribeWorkspaceChanged?.();
-  const unsub = window.accomplish.onWorkspaceChanged?.((data: { workspaceId: string }) => {
+  const unsub = window.zmeel.onWorkspaceChanged?.((data: { workspaceId: string }) => {
     useWorkspaceStore.getState().setActiveWorkspaceId(data.workspaceId);
   });
   if (unsub) {

@@ -1,5 +1,5 @@
 /**
- * OpenCodeAdapter — SDK-based runtime bridge between Accomplish task lifecycle
+ * OpenCodeAdapter — SDK-based runtime bridge between Zmeel task lifecycle
  * and the `opencode serve` process (via `@opencode-ai/sdk/v2`).
  *
  * Replaces the earlier PTY + stdout-JSON-parsing implementation. Lifecycle:
@@ -76,7 +76,7 @@ import { serializeError } from '../../utils/error.js';
 import { getOAuthProviderDisplayName, isOAuthProviderId } from '../../common/types/connector.js';
 import { CONNECTOR_AUTH_REQUIRED_MARKER } from '../../common/constants.js';
 import { createConsoleLogger } from '../../utils/logging.js';
-import { ACCOMPLISH_AGENT_NAME } from '../../opencode/config-generator.js';
+import { ZMEEL_AGENT_NAME } from '../../opencode/config-generator.js';
 // `toTaskMessage` and `ModelContext` will be wired when we move to emitting
 // pre-processed `TaskMessage` shapes on the event bus (Phase 1c / Phase 2 —
 // renderer upsert-by-ID lands there). Today we still emit `OpenCodeMessage`
@@ -501,11 +501,11 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
 
     // Fire the prompt. We do NOT await — the response streams via events.
     //
-    // CRITICAL: pass `agent: ACCOMPLISH_AGENT_NAME` explicitly.
+    // CRITICAL: pass `agent: ZMEEL_AGENT_NAME` explicitly.
     // The OpenCode SDK's `SessionCreateData` type has NO `agent` field on
     // create, but `SessionPromptData` DOES (`agent?: string`). Without
     // this, OpenCode runs the session under its built-in default agent
-    // and silently ignores the entire `accomplish` agent prompt — which
+    // and silently ignores the entire `zmeel` agent prompt — which
     // contains all workspace instructions, knowledge notes, skills, and
     // connector rules. Symptom: workspace instruction notes are in the
     // generated config but the model never sees them, so instructions
@@ -516,7 +516,7 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
     // Build the compact workspace-instructions runtime block (if the
     // active workspace has any `instruction`-type notes). Passed as the
     // SDK's `system` field on EVERY prompt call so mandatory user rules
-    // reach the model reliably — not just via `agent.accomplish.prompt`,
+    // reach the model reliably — not just via `agent.zmeel.prompt`,
     // which can be crowded out by provider-native instruction channels
     // (observed specifically on OpenAI/Codex paths where OpenCode's own
     // provider `options.instructions` dominates the agent-level prompt).
@@ -525,7 +525,7 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
     this.client.session
       .prompt({
         sessionID: sessionId,
-        agent: ACCOMPLISH_AGENT_NAME,
+        agent: ZMEEL_AGENT_NAME,
         ...(runtimeSystem ? { system: runtimeSystem } : {}),
         parts: [{ type: 'text', text: config.prompt }],
         ...(model ? { model } : {}),
@@ -713,8 +713,8 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
    * `workspaceInstructions` returned by `onBeforeStart`. Returns `undefined`
    * if the workspace has no `instruction`-type notes.
    *
-   * The block is deliberately short and forceful — the full Accomplish
-   * identity + conversational-bypass rules live in `agent.accomplish.prompt`
+   * The block is deliberately short and forceful — the full Zmeel
+   * identity + conversational-bypass rules live in `agent.zmeel.prompt`
    * and reach the model via that channel. Passing the entire 22KB prompt
    * again as `system` would bloat each turn and still bury the rule.
    * Instead we duplicate ONLY the mandatory workspace rules into the SDK's
@@ -750,9 +750,9 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
     const callbacks: CompletionEnforcerCallbacks = {
       onStartContinuation: async (prompt: string) => {
         if (this.currentSessionId && this.client) {
-          // Same `agent: ACCOMPLISH_AGENT_NAME` reason as the initial
+          // Same `agent: ZMEEL_AGENT_NAME` reason as the initial
           // prompt above — continuations are independent SDK calls and
-          // must also select the Accomplish agent, or the continuation
+          // must also select the Zmeel agent, or the continuation
           // nudge runs under OpenCode's default agent with none of the
           // workspace instructions / skills / connector rules loaded.
           // Also pass the compact workspace-instructions `system` block
@@ -762,7 +762,7 @@ export class OpenCodeAdapter extends EventEmitter<OpenCodeAdapterEvents> {
           this.client.session
             .prompt({
               sessionID: this.currentSessionId,
-              agent: ACCOMPLISH_AGENT_NAME,
+              agent: ZMEEL_AGENT_NAME,
               ...(runtimeSystem ? { system: runtimeSystem } : {}),
               parts: [{ type: 'text', text: prompt }],
             })

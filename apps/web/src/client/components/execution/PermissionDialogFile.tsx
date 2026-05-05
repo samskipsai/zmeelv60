@@ -1,4 +1,4 @@
-import type { PermissionRequest } from '@accomplish_ai/agent-core/common';
+import type { PermissionRequest } from '@zmeel/agent-core/common';
 import { cn } from '@/lib/utils';
 import {
   getDisplayFilePaths,

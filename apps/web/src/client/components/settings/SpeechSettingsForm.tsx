@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Microphone, CheckCircle, WarningCircle, SpinnerGap } from '@phosphor-icons/react';
-import { getAccomplish } from '../../lib/accomplish';
+import { getZmeel } from '../../lib/zmeel';
 import { getModifierKeyLabel } from '../../lib/platform';
 
 const modifierKey = getModifierKeyLabel();
@@ -14,16 +14,16 @@ interface SpeechSettingsFormProps {
 
 export function SpeechSettingsForm({ onSave, onChange }: SpeechSettingsFormProps) {
   const { t } = useTranslation('settings');
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
 
   const [apiKey, setApiKey] = useState('');
   const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
-    accomplish.speechGetConfig().then((config) => {
+    zmeel.speechGetConfig().then((config) => {
       setIsConfigured(config.hasApiKey);
     });
-  }, [accomplish]);
+  }, [zmeel]);
   const [isLoading, setIsLoading] = useState(false);
   const [saveResult, setSaveResult] = useState<{ success: boolean; message: string } | null>(null);
 
@@ -37,7 +37,7 @@ export function SpeechSettingsForm({ onSave, onChange }: SpeechSettingsFormProps
     setSaveResult(null);
 
     try {
-      await accomplish.addApiKey('elevenlabs', apiKey, 'ElevenLabs Speech-to-Text');
+      await zmeel.addApiKey('elevenlabs', apiKey, 'ElevenLabs Speech-to-Text');
       setSaveResult({ success: true, message: t('speech.apiKeySaved') });
       setIsConfigured(true);
       setApiKey('');

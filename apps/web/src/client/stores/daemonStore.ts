@@ -46,29 +46,29 @@ export const useDaemonStore = create<DaemonState>((set) => ({
 // Registered at module level so they fire regardless of which component is mounted.
 
 function registerDaemonSubscriptions(): void {
-  if (typeof window === 'undefined' || !window.accomplish) {
+  if (typeof window === 'undefined' || !window.zmeel) {
     return;
   }
 
-  const accomplish = window.accomplish;
+  const zmeel = window.zmeel;
   const { setStatus } = useDaemonStore.getState();
 
-  accomplish.onDaemonDisconnected(() => {
+  zmeel.onDaemonDisconnected(() => {
     useDaemonStore.getState().setStatus('disconnected');
   });
 
-  accomplish.onDaemonReconnected(() => {
+  zmeel.onDaemonReconnected(() => {
     useDaemonStore.getState().setStatus('connected');
   });
 
-  if (accomplish.onDaemonReconnectFailed) {
-    accomplish.onDaemonReconnectFailed(() => {
+  if (zmeel.onDaemonReconnectFailed) {
+    zmeel.onDaemonReconnectFailed(() => {
       useDaemonStore.getState().setStatus('reconnect-failed');
     });
   }
 
   // Initial status check
-  accomplish
+  zmeel
     .daemonPing()
     .then((result) => {
       if (result.status === 'ok') {

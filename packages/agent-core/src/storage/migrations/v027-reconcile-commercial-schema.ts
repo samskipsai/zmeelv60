@@ -140,7 +140,7 @@ export const migration: Migration = {
       );
     }
 
-    // v023 scheduled_tasks, v025 accomplish_ai_credits — these are from OSS v023+
+    // v023 scheduled_tasks, v025 zmeel_credits — these are from OSS v023+
     // which should run on commercial DBs (version 23). But check for safety:
     if (!hasTable(db, 'scheduled_tasks')) {
       db.exec(`
@@ -159,9 +159,9 @@ export const migration: Migration = {
       `);
     }
 
-    if (!hasTable(db, 'accomplish_ai_credits')) {
+    if (!hasTable(db, 'zmeel_credits')) {
       db.exec(`
-        CREATE TABLE accomplish_ai_credits (
+        CREATE TABLE zmeel_credits (
           id INTEGER PRIMARY KEY CHECK (id = 1),
           spent_credits REAL NOT NULL DEFAULT 0,
           remaining_credits REAL NOT NULL DEFAULT 0,

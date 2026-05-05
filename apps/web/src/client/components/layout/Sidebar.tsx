@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useTaskStore } from '@/stores/taskStore';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { staggerContainer } from '@/lib/animations';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -30,7 +30,7 @@ export default function Sidebar() {
     | 'about'
   >('providers');
   const { tasks, loadTasks, updateTaskStatus, addTaskUpdate, openLauncher } = useTaskStore();
-  const accomplish = getAccomplish();
+  const zmeel = getZmeel();
   const { t } = useTranslation('sidebar');
 
   useEffect(() => {
@@ -40,11 +40,11 @@ export default function Sidebar() {
   // Subscribe to task status changes (queued -> running) and task updates (complete/error)
   // This ensures sidebar always reflects current task status
   useEffect(() => {
-    const unsubscribeStatusChange = accomplish.onTaskStatusChange?.((data) => {
+    const unsubscribeStatusChange = zmeel.onTaskStatusChange?.((data) => {
       updateTaskStatus(data.taskId, data.status);
     });
 
-    const unsubscribeTaskUpdate = accomplish.onTaskUpdate((event) => {
+    const unsubscribeTaskUpdate = zmeel.onTaskUpdate((event) => {
       addTaskUpdate(event);
     });
 
@@ -52,7 +52,7 @@ export default function Sidebar() {
       unsubscribeStatusChange?.();
       unsubscribeTaskUpdate();
     };
-  }, [updateTaskStatus, addTaskUpdate, accomplish]);
+  }, [updateTaskStatus, addTaskUpdate, zmeel]);
 
   const handleNewConversation = () => {
     navigate('/');
@@ -132,7 +132,7 @@ export default function Sidebar() {
           <div className="flex items-center">
             <img
               src={logoImage}
-              alt="Accomplish"
+              alt="Zmeel"
               className="dark:invert"
               style={{ height: '20px', paddingLeft: '6px' }}
             />

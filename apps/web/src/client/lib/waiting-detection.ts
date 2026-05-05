@@ -1,1 +1,1 @@
-export { isWaitingForUser } from '@accomplish_ai/agent-core/common';
+export { isWaitingForUser } from '@zmeel/agent-core/common';

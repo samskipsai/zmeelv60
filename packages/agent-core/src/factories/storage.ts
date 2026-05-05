@@ -76,8 +76,8 @@ import {
   getActiveProviderModel,
   hasReadyProvider,
   getConnectedProviderIds,
-  getAccomplishAiCredits,
-  saveAccomplishAiCredits,
+  getZmeelAiCredits,
+  saveZmeelAiCredits,
 } from '../storage/repositories/providerSettings.js';
 import {
   getAllConnectors,
@@ -111,7 +111,7 @@ export function createStorage(options: StorageOptions = {}): StorageAPI {
     databasePath,
     runMigrations = true,
     userDataPath,
-    secureStorageAppId = 'ai.accomplish.desktop',
+    secureStorageAppId = 'ai.zmeel.desktop',
     secureStorageFileName,
     legacyMetaDbPath,
   } = options;
@@ -197,8 +197,8 @@ export function createStorage(options: StorageOptions = {}): StorageAPI {
     getActiveProviderModel: () => getActiveProviderModel(),
     hasReadyProvider: () => hasReadyProvider(),
     getConnectedProviderIds: () => getConnectedProviderIds(),
-    getAccomplishAiCredits: () => getAccomplishAiCredits(),
-    saveAccomplishAiCredits: (usage) => saveAccomplishAiCredits(usage),
+    getZmeelAiCredits: () => getZmeelAiCredits(),
+    saveZmeelAiCredits: (usage) => saveZmeelAiCredits(usage),
 
     // Connectors
     getAllConnectors: () => getAllConnectors(),

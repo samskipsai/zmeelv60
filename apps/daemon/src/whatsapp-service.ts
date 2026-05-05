@@ -10,8 +10,8 @@
  *   'status' — connection status changed
  */
 import { EventEmitter } from 'node:events';
-import type { StorageAPI } from '@accomplish_ai/agent-core';
-import type { MessagingConnectionStatus } from '@accomplish_ai/agent-core/common';
+import type { StorageAPI } from '@zmeel/agent-core';
+import type { MessagingConnectionStatus } from '@zmeel/agent-core/common';
 import {
   WhatsAppService,
   TaskBridge,

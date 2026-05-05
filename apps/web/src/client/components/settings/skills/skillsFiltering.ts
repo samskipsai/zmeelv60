@@ -1,4 +1,4 @@
-import type { Skill } from '@accomplish_ai/agent-core';
+import type { Skill } from '@zmeel/agent-core';
 
 export type FilterType = 'all' | 'active' | 'inactive' | 'official';
 

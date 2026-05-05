@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { WarningCircle } from '@phosphor-icons/react';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core';
+import type { FileAttachmentInfo } from '@zmeel/agent-core';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { TaskInputAttachmentList } from './TaskInputAttachmentList';
@@ -112,7 +112,7 @@ export function TaskInputBar({
 
       <div
         className={cn(
-          'rounded-[12px] border bg-popover/70 transition-all duration-200 ease-accomplish cursor-text focus-within:border-muted-foreground/40',
+          'rounded-[12px] border bg-popover/70 transition-all duration-200 ease-zmeel cursor-text focus-within:border-muted-foreground/40',
           isDragOver
             ? 'border-primary border-dashed ring-1 ring-primary bg-primary/5'
             : 'border-border',

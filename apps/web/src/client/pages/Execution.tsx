@@ -19,15 +19,15 @@ import { CreditExhaustedChatBanner } from '../components/execution/CreditExhaust
 import { useCreditsState } from '../hooks/useCreditsState';
 import { ErrorBoundary, DefaultFallback } from '../components/ui/ErrorBoundary';
 
-/** Detects Accomplish AI free-tier credit exhaustion errors specifically. */
-function isAccomplishCreditExhaustedError(message?: string): boolean {
+/** Detects Zmeel AI free-tier credit exhaustion errors specifically. */
+function isZmeelCreditExhaustedError(message?: string): boolean {
   if (!message) return false;
   const lower = message.toLowerCase();
-  // Only match Accomplish-specific error codes, not generic provider billing errors
+  // Only match Zmeel-specific error codes, not generic provider billing errors
   return (
     lower.includes('credits_exhausted') ||
     lower.includes('monthly_credit_limit_reached') ||
-    (lower.includes('accomplish') && lower.includes('free credits'))
+    (lower.includes('zmeel') && lower.includes('free credits'))
   );
 }
 
@@ -221,7 +221,7 @@ export default function ExecutionPage() {
         {/* Credit exhaustion banner — shown when task fails due to quota or live credits exhausted */}
         {(creditsState.isCreditsBlocked ||
           (s.currentTask?.status === 'failed' &&
-            isAccomplishCreditExhaustedError(s.currentTask?.result?.error))) && (
+            isZmeelCreditExhaustedError(s.currentTask?.result?.error))) && (
           <CreditExhaustedChatBanner
             variant="exhausted"
             resetDate={creditsState.usage?.resetsAt ?? ''}

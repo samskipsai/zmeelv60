@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useTaskStore } from '@/stores/taskStore';
 import { useNavigate } from 'react-router';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import { buildCreateSkillPrompt } from '@/components/skills/createSkillPrompt';
 
 interface CreateSkillModalProps {
@@ -35,8 +35,8 @@ export function CreateSkillModal({ open, onOpenChange, onSettingsClose }: Create
   // Check if there's an active provider when modal opens
   useEffect(() => {
     if (open) {
-      const accomplish = getAccomplish();
-      accomplish
+      const zmeel = getZmeel();
+      zmeel
         .getProviderSettings()
         .then((settings) => {
           setHasProvider(!!settings?.activeProviderId);
@@ -55,10 +55,10 @@ export function CreateSkillModal({ open, onOpenChange, onSettingsClose }: Create
     setIsSubmitting(true);
 
     try {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const [skillsBasePath, platform] = await Promise.all([
-        accomplish.getUserSkillsPath(),
-        accomplish.getPlatform(),
+        zmeel.getUserSkillsPath(),
+        zmeel.getPlatform(),
       ]);
 
       const prompt = buildCreateSkillPrompt({

@@ -1,5 +1,5 @@
-import type { TaskStatus } from '@accomplish_ai/agent-core';
-import { getAccomplish } from '../lib/accomplish';
+import type { TaskStatus } from '@zmeel/agent-core';
+import { getZmeel } from '../lib/zmeel';
 import type { TaskState } from './taskStore';
 import { hasTaskStateToken } from './task-state-helpers';
 
@@ -13,17 +13,17 @@ type GetFn = () => TaskState;
 export function createTaskLifecycleActions(set: SetFn, get: GetFn) {
   return {
     cancelTask: async () => {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const { currentTask } = get();
       if (currentTask) {
         const taskStateToken = get()._taskStateToken;
-        void accomplish.logEvent({
+        void zmeel.logEvent({
           level: 'info',
           message: 'UI cancel task',
           context: { taskId: currentTask.id },
         });
         try {
-          await accomplish.cancelTask(currentTask.id);
+          await zmeel.cancelTask(currentTask.id);
           if (!hasTaskStateToken(get(), taskStateToken)) {
             return;
           }
@@ -42,7 +42,7 @@ export function createTaskLifecycleActions(set: SetFn, get: GetFn) {
             isLoading: false,
             error: err instanceof Error ? err.message : 'Failed to cancel task',
           });
-          void accomplish.logEvent({
+          void zmeel.logEvent({
             level: 'error',
             message: 'UI cancel task failed',
             context: {
@@ -55,23 +55,23 @@ export function createTaskLifecycleActions(set: SetFn, get: GetFn) {
     },
 
     interruptTask: async () => {
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       const { currentTask } = get();
       if (currentTask && currentTask.status === 'running') {
         const taskStateToken = get()._taskStateToken;
-        void accomplish.logEvent({
+        void zmeel.logEvent({
           level: 'info',
           message: 'UI interrupt task',
           context: { taskId: currentTask.id },
         });
         try {
-          await accomplish.interruptTask(currentTask.id);
+          await zmeel.interruptTask(currentTask.id);
         } catch (err) {
           if (!hasTaskStateToken(get(), taskStateToken)) {
             return;
           }
           set({ error: err instanceof Error ? err.message : 'Failed to interrupt task' });
-          void accomplish.logEvent({
+          void zmeel.logEvent({
             level: 'error',
             message: 'UI interrupt task failed',
             context: {

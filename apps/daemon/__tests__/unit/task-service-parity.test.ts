@@ -6,14 +6,14 @@
  * - per-task config file isolation under concurrency
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import type { TaskConfig, Task, FileAttachmentInfo } from '@accomplish_ai/agent-core';
+import type { TaskConfig, Task, FileAttachmentInfo } from '@zmeel/agent-core';
 
 // Track what TaskManager.startTask receives
 let capturedTaskConfigs: Array<{ taskId: string; config: TaskConfig }> = [];
 let capturedSavedTasks: Array<{ task: Task; workspaceId?: string | null }> = [];
 
 // Mock agent-core to avoid DB/pty dependencies
-vi.mock('@accomplish_ai/agent-core', async (importOriginal) => {
+vi.mock('@zmeel/agent-core', async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,

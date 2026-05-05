@@ -15,7 +15,7 @@ import type { StorageAPI } from '../types/storage.js';
 import type { Skill } from '../common/types/skills.js';
 import type { ConfigGeneratorOptions, ProviderConfig } from './config-generator.js';
 import type { BrowserConfig } from './generator-mcp.js';
-import type { AccomplishRuntime, StorageDeps } from './accomplish-runtime.js';
+import type { ZmeelRuntime, StorageDeps } from './zmeel-runtime.js';
 import { isTokenExpired, refreshAccessToken } from '../connectors/oauth-tokens.js';
 import { getFormattedKnowledgeNotes } from '../storage/repositories/knowledgeNotes.js';
 import { buildProviderConfigs } from './config-builder.js';
@@ -66,17 +66,17 @@ export interface ResolveTaskConfigOptions {
   configFileName?: string;
 
   /**
-   * Accomplish AI runtime adapter (noop in OSS, real impl in commercial).
-   * Forwarded into `buildProviderConfigs` so the Accomplish-AI provider can
+   * Zmeel AI runtime adapter (noop in OSS, real impl in commercial).
+   * Forwarded into `buildProviderConfigs` so the Zmeel-AI provider can
    * register itself when the runtime is available.
    */
-  accomplishRuntime?: AccomplishRuntime;
+  zmeelRuntime?: ZmeelRuntime;
 
   /**
-   * Accomplish AI identity storage deps (injected from the caller's
+   * Zmeel AI identity storage deps (injected from the caller's
    * secure storage). Forwarded into `buildProviderConfigs`.
    */
-  accomplishStorageDeps?: StorageDeps;
+  zmeelStorageDeps?: StorageDeps;
 
   /**
    * Optional SQLite handle for GWS manifest generation. The daemon passes
@@ -126,21 +126,21 @@ export async function resolveTaskConfig(
     skills,
     workspaceId,
     configFileName,
-    accomplishRuntime,
-    accomplishStorageDeps,
+    zmeelRuntime,
+    zmeelStorageDeps,
     database,
   } = options;
 
   const log: LogFn = options.log ?? ((_level, msg) => console.warn(msg));
 
-  // 1. Build provider configs. `accomplishRuntime` + `accomplishStorageDeps`
-  // forward to the Accomplish-AI provider when the optional runtime is loaded
+  // 1. Build provider configs. `zmeelRuntime` + `zmeelStorageDeps`
+  // forward to the Zmeel-AI provider when the optional runtime is loaded
   // (Free build); omitted on OSS so the provider stays dormant.
   const { providerConfigs, enabledProviders, modelOverride } = await buildProviderConfigs({
     getApiKey,
     azureFoundryToken,
-    accomplishRuntime,
-    accomplishStorageDeps,
+    zmeelRuntime,
+    zmeelStorageDeps,
   });
 
   // 2. Inject store:false for OpenAI to prevent 403 errors with project-scoped keys

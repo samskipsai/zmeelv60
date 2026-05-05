@@ -4,7 +4,7 @@
  * assert-packaging-invariants.cjs — post-packaging sanity check for the
  * daemon-only-SQLite migration's end-state (Milestone 6).
  *
- * Enforces three invariants on a packaged Accomplish app artifact:
+ * Enforces three invariants on a packaged Zmeel app artifact:
  *
  *   1. `app.asar.unpacked/` MUST NOT contain any path matching
  *      `better-sqlite3`. If it does, Electron main is still carrying
@@ -27,13 +27,13 @@
  *     --app-root <path-to-packaged-app-resources-dir>
  *
  * Intended call sites:
- *   - OSS: `pnpm -F @accomplish/desktop verify:package --app-root <...>`
+ *   - OSS: `pnpm -F @zmeel/desktop verify:package --app-root <...>`
  *     after `pnpm package:mac|win|linux`.
- *   - Free (sibling `accomplish-release` workflow): one step per build
+ *   - Free (sibling `zmeel-release` workflow): one step per build
  *     job, invoking this script via the `commit_sha` checkout — no
  *     private copy to drift.
  *
- * On macOS Resources dir: `<dist>/mac*\/Accomplish.app/Contents/Resources`
+ * On macOS Resources dir: `<dist>/mac*\/Zmeel.app/Contents/Resources`
  * On Windows Resources dir: `<dist>/win-*\/resources`
  * On Linux (AppImage extracted): `<AppImage-mount>/resources`
  */

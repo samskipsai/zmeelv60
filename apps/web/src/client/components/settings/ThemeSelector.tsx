@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sun, Moon, Desktop, CaretDown } from '@phosphor-icons/react';
 import { applyTheme } from '@/lib/theme';
-import { getAccomplish } from '@/lib/accomplish';
+import { getZmeel } from '@/lib/zmeel';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,11 +42,11 @@ export function ThemeSelector() {
   const requestSeqRef = useRef(0);
 
   useEffect(() => {
-    const accomplish = getAccomplish();
+    const zmeel = getZmeel();
 
     // Load the authoritative theme value from the backend and sync both the
     // selector state and the DOM (applyTheme writes localStorage + applies class).
-    accomplish
+    zmeel
       .getTheme()
       .then((theme) => {
         if (isThemeValue(theme)) {
@@ -59,7 +59,7 @@ export function ThemeSelector() {
       });
 
     // Subscribe to live theme changes (e.g. changed from another window/process).
-    const unsubscribe = accomplish.onThemeChange?.((data) => {
+    const unsubscribe = zmeel.onThemeChange?.((data) => {
       if (isThemeValue(data.theme)) {
         setCurrent(data.theme);
         applyTheme(data.theme);
@@ -85,9 +85,9 @@ export function ThemeSelector() {
       setCurrent(value);
       applyTheme(value);
 
-      const accomplish = getAccomplish();
+      const zmeel = getZmeel();
       try {
-        await accomplish.setTheme(value);
+        await zmeel.setTheme(value);
       } catch {
         // Guard against stale async rollback: only revert if this is still the latest request.
         if (requestSeqRef.current !== requestId) {

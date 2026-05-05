@@ -52,7 +52,7 @@ function handleChildExit(label, code, signal) {
   shutdown(typeof code === 'number' ? code : 1);
 }
 
-web = spawnPnpm(['-F', '@accomplish/web', 'dev'], { env });
+web = spawnPnpm(['-F', '@zmeel/web', 'dev'], { env });
 web.on('error', (error) => handleChildError('web dev server', error));
 web.on('exit', (code, signal) => handleChildExit('web dev server', code, signal));
 
@@ -61,7 +61,7 @@ waitForResources(['http://localhost:5173'], 30000)
     if (shuttingDown) return;
 
     const electronCommand = isClean ? 'dev:clean' : 'dev';
-    const electronArgs = ['-F', '@accomplish/desktop', electronCommand];
+    const electronArgs = ['-F', '@zmeel/desktop', electronCommand];
     if (isCheck) {
       electronArgs.push('--', '--check');
     }

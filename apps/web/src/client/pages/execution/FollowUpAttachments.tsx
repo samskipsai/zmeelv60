@@ -1,6 +1,6 @@
 import { XCircle } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
-import type { FileAttachmentInfo } from '@accomplish_ai/agent-core/common';
+import type { FileAttachmentInfo } from '@zmeel/agent-core/common';
 import { getAttachmentIcon } from '../../lib/attachments';
 
 interface DragOverlayProps {

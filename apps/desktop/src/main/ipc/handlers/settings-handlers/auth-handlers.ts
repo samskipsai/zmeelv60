@@ -1,7 +1,7 @@
 import type { IpcMainInvokeEvent } from 'electron';
 import { shell } from 'electron';
-import { validateHttpUrl } from '@accomplish_ai/agent-core/desktop-main';
-import { getSlackMcpOauthStatus } from '@accomplish_ai/agent-core/desktop-main';
+import { validateHttpUrl } from '@zmeel/agent-core/desktop-main';
+import { getSlackMcpOauthStatus } from '@zmeel/agent-core/desktop-main';
 import { loginSlackMcp, logoutSlackMcp } from '../../../opencode/slack-auth';
 import {
   loginGithubCopilot,
@@ -84,7 +84,7 @@ export function registerAuthHandlers(handle: IpcHandler): void {
       throw new Error(completion.error ?? 'OpenAI authentication failed.');
     }
     // Preserve the existing { ok, openedUrl? } contract expected by
-    // apps/desktop/src/preload/index.ts and apps/web/src/client/lib/accomplish.ts.
+    // apps/desktop/src/preload/index.ts and apps/web/src/client/lib/zmeel.ts.
     return { ok: true, openedUrl: authorizeUrl };
   });
 
