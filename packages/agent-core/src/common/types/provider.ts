@@ -493,13 +493,13 @@ export const DEFAULT_PROVIDERS: ProviderConfig[] = [
     id: 'zmeel-ai',
     name: 'Zmeel AI',
     requiresApiKey: false,
-    defaultModelId: 'samskipsai/zmeelv60-free',
+    defaultModelId: 'zmeel-ai/zmeel-free',
     models: [
       {
         id: 'zmeel-free',
         displayName: 'Zmeel',
         provider: 'zmeel-ai',
-        fullId: 'samskipsai/zmeelv60-free',
+        fullId: 'zmeel-ai/zmeel-free',
         contextWindow: 128_000,
         maxOutputTokens: 32_000,
         supportsVision: true,

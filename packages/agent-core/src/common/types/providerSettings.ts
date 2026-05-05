@@ -397,7 +397,7 @@ export const DEFAULT_MODELS: Partial<Record<ProviderId, string>> = {
   venice: 'venice/llama-3.3-70b',
   nim: 'nim/meta/llama-3.1-70b-instruct',
   copilot: 'copilot/gpt-4o',
-  'zmeel-ai': 'samskipsai/zmeelv60-free',
+  'zmeel-ai': 'zmeel-ai/zmeel-free',
 };
 
 export function getDefaultModelForProvider(providerId: ProviderId): string | null {

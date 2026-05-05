@@ -85,7 +85,7 @@ export function registerZmeelAiHandlers(handle: HandleFn): void {
       provider: {
         providerId: 'zmeel-ai',
         connectionStatus: 'connected',
-        selectedModelId: 'samskipsai/zmeelv60-free',
+        selectedModelId: 'zmeel-ai/zmeel-free',
         credentials,
         lastConnectedAt: new Date().toISOString(),
       },
@@ -132,7 +132,7 @@ export function registerZmeelAiHandlers(handle: HandleFn): void {
       provider: {
         providerId: 'zmeel-ai',
         connectionStatus: 'connected',
-        selectedModelId: 'samskipsai/zmeelv60-free',
+        selectedModelId: 'zmeel-ai/zmeel-free',
         credentials,
         lastConnectedAt: new Date().toISOString(),
       },
