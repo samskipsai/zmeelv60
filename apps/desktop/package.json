@@ -65,7 +65,7 @@
     "@sentry/electron": "^7.8.0",
     "@whiskeysockets/baileys": "7.0.0-rc.9",
     "dotenv": "^17.2.3",
-    "electron-store": "^8.2.0",
+    "electron-store": "^11.0.2",
     "electron-updater": "^6.7.3",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
